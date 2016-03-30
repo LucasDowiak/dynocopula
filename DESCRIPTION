@@ -8,7 +8,7 @@ Authors@R: person(“Lucas”, “Dowiak”, email = “lcdowi@gmail.com",
 Description: Provides simple functions for calling, summarizing, and plotting dynamic 
     copulas. Currently, only a markov switching, smooth transition, and sequential
     break point models are implemented.
-Imports:
+Depends:
     VineCopula (>= 1.2)
 License: GPL-2
 RoxygenNote: 5.0.1

@@ -3,6 +3,8 @@
 #' \code{BPfit} performs a recursive search over a bivariate time series of
 #'   uniform marginal distributions.
 #' 
+#' @export
+#' 
 #' @param x Numeric A vector of uniform marginal values.
 #' 
 #' @param y Numeric A vector of uniform marginal values.
@@ -74,7 +76,7 @@
 #'     \item{initial_bp}{information on the initial break points before a
 #'       re-partition method is applied}
 #'     \item{class}{class of the model}
-#'  }
+#'   }
 #' 
 
 BPfit <- function(x, y, fam1, fam2 = NULL, parallel = FALSE, date_names = NULL,
@@ -148,6 +150,10 @@ BPfit <- function(x, y, fam1, fam2 = NULL, parallel = FALSE, date_names = NULL,
 #'
 #' @param Obj An object of class seqBreakPoint 
 #'
+#' @importFrom VineCopula BiCopName
+#'
+#' @export
+#' 
 
 summary.seqBreakPoint <- function(obj) {
   summarize <- function(cmp) {
@@ -188,6 +194,8 @@ summary.seqBreakPoint <- function(obj) {
 #' Plot of the sequential break point model.
 #'
 #' @param Obj An object of class seqBreakPoint 
+#'
+#' @export
 #'
 
 plot.seqBreakPoint <- function(obj) {
@@ -235,6 +243,8 @@ plot.seqBreakPoint <- function(obj) {
 #'
 #' @param Obj An object of class seqBreakPoint 
 #'
+#' @export
+#' 
 
 coef.seqBreakPoint <- function(obj) {
   out <- unlist(lapply(obj, `[[`, "pars"), F, T)
@@ -250,6 +260,8 @@ coef.seqBreakPoint <- function(obj) {
 #'
 #' @param Obj An object of class seqBreakPoint 
 #'
+#' @export
+#'
 
 logLik.seqBreakPoint <- function(obj) {
   unlist(lapply(obj, `[[`, "log.likelihood"), F, T)
@@ -259,7 +271,9 @@ logLik.seqBreakPoint <- function(obj) {
 
 #' Markov-switching copula model.
 #'
+#' @importFrom VineCopula BiCopPar2TailDep
 #'
+#' @export
 #'
 
 MSfit <- function(x, y, family = list(1, 1), tol = 1e-5, initValues) {
@@ -387,6 +401,8 @@ MSfit <- function(x, y, family = list(1, 1), tol = 1e-5, initValues) {
 #'
 #' @param Obj An object of class markovCopula 
 #'
+#' @export
+#'
 
 plot.markovCopula <- function(obj) {
   nr <- obj$nregimes
@@ -404,6 +420,8 @@ plot.markovCopula <- function(obj) {
 #' Summary of the markov switching model.
 #'
 #' @param Obj An object of class markovCopula 
+#'
+#' @export
 #'
 
 summary.markovCopula <- function(obj) {
@@ -457,6 +475,8 @@ summary.markovCopula <- function(obj) {
 #'
 #' @param Obj An object of class markovCopula 
 #'
+#' @export
+#'
 
 coef.markovCopula <- function(obj) {
   obj$par
@@ -468,6 +488,8 @@ coef.markovCopula <- function(obj) {
 #'
 #' @param Obj An object of class markovCopula 
 #'
+#' @export
+#'
 
 logLik.markovCopula <- function(obj) {
   obj$log.likelihood
@@ -476,7 +498,7 @@ logLik.markovCopula <- function(obj) {
 
 #' Smooth-transition copula model.
 #'
-#'
+#' @export
 #'
 
 STfit <- function(x, y, family = 1, regimes = 2, initValues = NULL) {
@@ -599,6 +621,8 @@ STfit <- function(x, y, family = 1, regimes = 2, initValues = NULL) {
 #'
 #' @param Obj An object of class smoothTransCopula 
 #'
+#' @export
+#'
 
 plot.smoothTransCopula <- function(obj) {
   smooth.pars <- obj$smooth.parameters
@@ -622,6 +646,8 @@ plot.smoothTransCopula <- function(obj) {
 #' Summary of the smooth transition model.
 #'
 #' @param Obj An object of class smoothTransCopula 
+#'
+#' @export
 #'
 
 summary.smoothTransCopula <- function(obj) {
@@ -658,6 +684,8 @@ summary.smoothTransCopula <- function(obj) {
 #'
 #' @param Obj An object of class smoothTransCopula 
 #'
+#' @export
+#'
 
 logLik.smoothTransCopula <- function(obj) {
   obj$log.likelihood[length(obj$log.likelihood)]
@@ -669,6 +697,8 @@ logLik.smoothTransCopula <- function(obj) {
 #'
 #' @param Obj An object of class smoothTransCopula 
 #'
+#' @export
+#'
 
 coef.smoothTransCopula <- function(obj) {
   obj$pars
@@ -679,6 +709,10 @@ coef.smoothTransCopula <- function(obj) {
 #' 
 #' @param ... One or more dynamic copula models to compare. They can be comma
 #'   seperated or in a list.
+#'
+#' @importFrom VineCopula BiCopName
+#'
+#' @export
 #'
 
 aic_bic <- function(...) {

@@ -16,7 +16,9 @@
 #'    
 #' @return A numeric vector of the same length as \code{u} and \code{v} whose
 #'    values are the density (pdf) of the given mixture copula
-#'  
+#'
+#' @importFrom VineCopula BiCopPDF
+#'
 
 cop_pdf <- function(theta, u, v, fam1, fam2) {
   th1 = theta[1]; th2 = theta[2]; th3 = theta[3]
@@ -45,6 +47,8 @@ cop_pdf <- function(theta, u, v, fam1, fam2) {
 #' 
 #' @return A numeric vector of the same length as \code{u} and \code{v} whose
 #'    values are the distribution (cdf) of the given mixture copula
+#'
+#' @importFrom VineCopula BiCopCDF
 #'
 
 cop_cdf <- function(theta, u, v, fam1, fam2) {
@@ -100,7 +104,9 @@ cop_llh <- function(theta, u, v, fam1, fam2) {
 #'   \item the log-likelihood value
 #'   \item the estimated copula parameters
 #'   }
-#'  
+#'
+#' @importFrom VineCopula BiCopEst
+#' @importFrom VineCopula BiCopPDF
 
 cop_static <- function(u, v, fam1, fam2 = NULL) {
 
@@ -233,6 +239,9 @@ starting_guess <- function(u, v, fam, k) {
 #'   dependence values for a single coplula. Providing both \code{fam1} and
 #'   \code{fam2} will return the dependence measures for a mixture copula.
 #' 
+#' @importFrom VineCopula BiCopPar2TailDep
+#' @importFrom VineCopula BiCopPar2Tau
+#' 
 
 dependence_measures <- function(pars, fam1, fam2 = NULL) {
   
@@ -342,6 +351,8 @@ ms_boundary <- function(fam, k) {
 #' @param x A vector of uniform marginal values.
 #' 
 #' @param y A vector of uniform marginal values.
+#'
+#' @importFrom VineCopula BiCopPDF
 #'
 
 ms_cop_vpdf <- function(fam, x, y) {
@@ -1160,6 +1171,10 @@ repartitionBP <- function(bpResultList, u, v, f1, f2, parallel = F, date_names) 
 #'    to v. This is passed to \code{\link{cop_static}}
 #' 
 #' @return An n x nr matrix of gradient contributions
+#' 
+#' @importFrom VineCopula BiCopPDF
+#' @importFrom VineCopula BiCopDeriv
+#' 
 
 cop_gradcontr <- function(u, v, theta, f1, f2) {
   
@@ -1200,6 +1215,12 @@ cop_gradcontr <- function(u, v, theta, f1, f2) {
 #'    to v. This is passed to \code{\link{cop_static}}
 #' 
 #' @return An nr x nr matrix of gradient contributions
+#' 
+#' @importFrom VineCopula BiCopPDF
+#' @importFrom VineCopula BiCopDeriv
+#' @importFrom VineCopula BiCopDeriv2
+#' 
+
 
 cop_hessian <- function(u, v, theta, f1, f2) {
   

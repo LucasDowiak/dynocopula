@@ -61,7 +61,7 @@ support, the max number of supported cores will be used.}
     \item{initial_bp}{information on the initial break points before a
       re-partition method is applied}
     \item{class}{class of the model}
- }
+  }
 }
 \description{
 \code{BPfit} performs a recursive search over a bivariate time series of

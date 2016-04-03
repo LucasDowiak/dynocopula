@@ -1,3 +1,4 @@
+
 Package: dynocopula
 Type: Package
 Title: Implementation of markov switching, smooth transition, and sequential break
@@ -7,6 +8,7 @@ Version: 0.0.0.9000
 Description: Provides simple functions for calling, summarizing, and plotting dynamic 
   copulas. Currently, only the markov switching, smooth transition, and sequential
   break point models are implemented.
-Depends: VineCopula (>= 1.2)
+Imports: VineCopula (>= 1.2),
+  cubature (>= 1.2)
 License: GPL-2
 RoxygenNote: 5.0.1

@@ -3,26 +3,24 @@
 #' \code{BPfit} performs a recursive search over a bivariate time series of
 #'   uniform marginal distributions.
 #' 
-#' @export
+#' @param x A numeric vector of uniform marginal values.
 #' 
-#' @param x Numeric A vector of uniform marginal values.
+#' @param y A numeric vector of uniform marginal values.
 #' 
-#' @param y Numeric A vector of uniform marginal values.
-#' 
-#' @param fam1 Integer An integer representing the family of the copula to use.
+#' @param fam1 An integer representing the family of the copula to use.
 #'   If \code{fam2} is not \code{NULL}, this value indicates the copula family
 #'   of the first copula component.
 #'
-#' @param fam2 Integer A second (optional) integer indicating the use of a 
+#' @param fam2 A second (optional) integer indicating the use of a 
 #'   mixture copula and the family of the second copula component. Defaults to
 #'   \code{NULL}.
 #'
-#' @param parallel Logical Switch to run the breakpoint search in parallel.
+#' @param parallel Logical switch to run the breakpoint search in parallel.
 #'
-#' @param date_names Character Vector of (optional) date/timestamp names for the
+#' @param date_names Character vector of (optional) date/timestamp names for the
 #'   marginal distributions.
 #' 
-#' @param ncores Integer Specify the number cores to use in the parallelization.
+#' @param ncores Integer specifying the number cores to use in the parallelization.
 #'   If the user specifies more cores (real or logical) than the CPU can
 #'   support, the max number of supported cores will be used. 
 #' 
@@ -45,38 +43,37 @@
 #'   also available. Standard errors based on the sandwich estimator are used
 #'   in the summary.
 #' 
-#' @return \code{BPfit} returns an object of \code{\link[base]{class}}
-#'   "seqBreakPoint".
+#' @return \code{BPfit} returns an S3 object of \code{\link[base]{class}}
+#'   \code{seqBreakPoint}.
 #'   
 #'   The summary, plot, coef, and logLik functions will, repectively, print a 
 #'   summarization of the output, a plot of dependence measures, extract model
 #'   parameters, and extract the log-likelihood values.
 #'   
-#'   An object of class "seqBreakPoint" is a list of lists, one for each regime.
-#'   Each individual list contains the following components:
-#'   
-#'   \describe{
-#'     \item{pars}{a vector of coefficients for the copula}
-#'     \item{log.likelihood}{log-likelihood value for the regime}
-#'     \item{dep.measures}{a list containing the tail dependence measures and
-#'       Kendall's tau}
-#'     \item{emp_hess}{the emprical hessian}
-#'     \item{opg}{the outer product of the gradient}
-#'     \item{sandwich}{the sandwich estimator}
-#'     \item{family}{integers recorded from the inital call specifying which
-#'       copula family to use}
-#'     \item{points}{start and ending index values that subset the marginal
-#'       series for the regime}
+#'   An object of class \code{seqBreakPoint} is a list of lists, one for each
+#'   regime. Each individual list contains the following components:
+#'   \tabular{ll}{
+#'     \code{pars} \tab a vector of coefficients for the copula \cr
+#'     \code{log.likelihood} \tab log-likelihood value for the regime \cr
+#'     \code{dep.measures} \tab a list tail dependence and Kendall's tau \cr
+#'     \code{emp_hess} \tab the emprical hessian \cr
+#'     \code{opg} \tab the outer product of the gradient \cr
+#'     \code{sandwich} \tab the sandwich estimator \cr
+#'     \code{family} \tab integers recorded which copula family to used \cr
+#'     \code{points} \tab start and ending index values that subset the marginal
+#'       series for the regime \cr
 #'   }
 #'   
 #'   In addition, the following three attributes are included:
 #'   
-#'   \describe{
-#'     \item{marinal_names}{names of the marginal series}
-#'     \item{initial_bp}{information on the initial break points before a
-#'       re-partition method is applied}
-#'     \item{class}{class of the model}
+#'   \tabular{ll}{
+#'     \code{marinal_names} \tab names of the marginal series \cr
+#'     \code{initial_bp} \tab information on the initial break points before a
+#'       re-partition method is applied \cr
+#'     \code{class} \tab class of the model \cr
 #'   }
+#' 
+#' @export
 #' 
 
 BPfit <- function(x, y, fam1, fam2 = NULL, parallel = FALSE, date_names = NULL,
@@ -271,12 +268,60 @@ logLik.seqBreakPoint <- function(obj) {
 
 #' Markov-switching copula model.
 #'
+#' \code{MSfit} estimates a markov switching copula on a bivariate time series
+#'   of uniform marginal distributions.
+#' 
+#' @param x A numeric vector of uniform marginal values.
+#' 
+#' @param y A numeric vector of uniform marginal values.
+#' 
+#' @param family A list of integers specifying the family of the copula to use
+#'   in each regime.
+#'
+#' @param initValues Sometimes optional numeric vector of starting values. See
+#'   Details.
+#'   
+#' @param tol A numeric value specifying the convergence tolerance of the model.
+#'   Specifically, the model reaches convergene if the difference in likelihood
+#'   from successive models falls below \code{tol}. Defaults to \code{1e-5}
+#'
+#' @details For \code{initValues}, if the same copula family is used for each regime, no initial values
+#'   need to be supplied. If the user wants different copula families estimated
+#'   in different regimes, initValues need to be supplied. For a model with K
+#'   regimes, the order of the values should be provided as follows:
+#'   \enumerate{
+#'     \item Copula parameters in the order they appear in \code{family}
+#'     \item K * (K - 1) transition variables: \eqn{p_{1,1},...,p_{1,k-1},p_{2,1},...,p_{2,k-1},...,p_{k,k-1}}
+#'     \item K - 1 initial state parameters: \eqn{p_{0,1},...,p_{0,k-1} }
+#'   }
+#'   
+#' @return \code{MSfit} returns an S3 object of \code{\link[base]{class}}
+#'   \code{markovCopula}.
+#'   
+#'   The summary, plot, coef, and logLik functions will, repectively, print a 
+#'   summarization of the output, a plot of dependence measures, extract model
+#'   parameters, and extract the log-likelihood values.
+#'   
+#'   An object of class \code{markovCopula} has the following components: 
+#'   
+#'   \tabular{ll}{
+#'     \code{log.likelihood} \tab log-likelihood value for the regime \cr
+#'     \code{pars} \tab a vector of coefficients for the copula \cr
+#'     \code{N} \tab the length of the time-series \cr
+#'     \code{solver} \tab the final output from \code{\link{[stats]{optim}} \cr
+#'     \code{regime.inference} \tab the model's condition density, conditional
+#'       probability, conditional forecasts, and the smoothed probabilities \cr
+#'     \code{copula} \tab details of the estimated copulas in each regime
+#'     \code{transition} \tab the transition matrix and initial regime vector \cr
+#'     \code{nregimes} \tab the number of regimes in the model \cr
+#'   }
+#'   
 #' @importFrom VineCopula BiCopPar2TailDep
 #'
 #' @export
 #'
 
-MSfit <- function(x, y, family = list(1, 1), tol = 1e-5, initValues) {
+MSfit <- function(x, y, family = list(1, 1), initValues, tol = 1e-5) {
   
   # Capture x and y names
   xnme <- deparse(substitute(x))

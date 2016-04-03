@@ -161,9 +161,11 @@ cop_static <- function(u, v, fam1, fam2 = NULL) {
 #'
 #' @references Nelson (2006) pg ___, eq ___
 #' 
+#' @importFrom cubature adaptIntegrate
+#' 
 
 numerical_Ktau <- function(theta, fam1, fam2) {
-  library(cubature)
+  
   Q <- function(U, pars) {
     u <- U[1]; v <- U[2]
     cop_cdf(pars, u, v, fam1, fam2) * cop_pdf(pars, u, v, fam1, fam2)

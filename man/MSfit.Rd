@@ -4,9 +4,36 @@
 \alias{MSfit}
 \title{Markov-switching copula model.}
 \usage{
-MSfit(x, y, family = list(1, 1), tol = 1e-05, initValues)
+MSfit(x, y, family = list(1, 1), initValues, tol = 1e-05)
+}
+\arguments{
+\item{x}{A numeric vector of uniform marginal values.}
+
+\item{y}{A numeric vector of uniform marginal values.}
+
+\item{family}{A list of integers specifying the family of the copula to use
+in each regime.}
+
+\item{initValues}{Sometimes optional numeric vector of starting values. See
+Details.}
+
+\item{tol}{A numeric value specifying the convergence tolerance of the model.
+Specifically, the model reaches convergene if the difference in likelihood
+from successive models falls below \code{tol}. Defaults to \code{1e-5}}
 }
 \description{
-Markov-switching copula model.
+\code{MSfit} estimates a markov switching copula on a bivariate time series
+  of uniform marginal distributions.
+}
+\details{
+For \code{initValues}, if the same copula family is used for each regime, no initial values
+  need to be supplied. If the user wants different copula families estimated
+  in different regimes, initValues need to be supplied. For a model with K
+  regimes, the order of the values should be provided as follows:
+  \enumerate{
+    \item Copula parameters in the order they appear in \code{family}
+    \item K * (K - 1) transition variables: \eqn{p_{1,1},...,p_{1,k-1},p_{2,1},...,p_{2,k-1},...,p_{k,k-1}}
+    \item K - 1 initial state parameters: \eqn{p_{0,1},...,p_{0,k-1} }
+  }
 }
 

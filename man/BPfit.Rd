@@ -8,24 +8,24 @@ BPfit(x, y, fam1, fam2 = NULL, parallel = FALSE, date_names = NULL,
   ncores = 2)
 }
 \arguments{
-\item{x}{Numeric A vector of uniform marginal values.}
+\item{x}{A numeric vector of uniform marginal values.}
 
-\item{y}{Numeric A vector of uniform marginal values.}
+\item{y}{A numeric vector of uniform marginal values.}
 
-\item{fam1}{Integer An integer representing the family of the copula to use.
+\item{fam1}{An integer representing the family of the copula to use.
 If \code{fam2} is not \code{NULL}, this value indicates the copula family
 of the first copula component.}
 
-\item{fam2}{Integer A second (optional) integer indicating the use of a 
+\item{fam2}{A second (optional) integer indicating the use of a 
 mixture copula and the family of the second copula component. Defaults to
 \code{NULL}.}
 
-\item{parallel}{Logical Switch to run the breakpoint search in parallel.}
+\item{parallel}{Logical switch to run the breakpoint search in parallel.}
 
-\item{date_names}{Character Vector of (optional) date/timestamp names for the
+\item{date_names}{Character vector of (optional) date/timestamp names for the
 marginal distributions.}
 
-\item{ncores}{Integer Specify the number cores to use in the parallelization.
+\item{ncores}{Integer specifying the number cores to use in the parallelization.
 If the user specifies more cores (real or logical) than the CPU can
 support, the max number of supported cores will be used.}
 }
@@ -39,28 +39,24 @@ support, the max number of supported cores will be used.}
   
   An object of class "seqBreakPoint" is a list of lists, one for each regime.
   Each individual list contains the following components:
-  
-  \describe{
-    \item{pars}{a vector of coefficients for the copula}
-    \item{log.likelihood}{log-likelihood value for the regime}
-    \item{dep.measures}{a list containing the tail dependence measures and
-      Kendall's tau}
-    \item{emp_hess}{the emprical hessian}
-    \item{opg}{the outer product of the gradient}
-    \item{sandwich}{the sandwich estimator}
-    \item{family}{integers recorded from the inital call specifying which
-      copula family to use}
-    \item{points}{start and ending index values that subset the marginal
-      series for the regime}
+  \tabular{ll}{
+    \code{pars} \tab a vector of coefficients for the copula \cr
+    \code{log.likelihood} \tab log-likelihood value for the regime \cr
+    \code{dep.measures} \tab a list tail dependence and Kendall's tau \cr
+    \code{emp_hess} \tab the emprical hessian \cr
+    \code{opg} \tab the outer product of the gradient \cr
+    \code{sandwich} \tab the sandwich estimator \cr
+    \code{family} \tab integers recorded which copula family to used \cr
+    \code{points} \tab start and ending index values that subset the marginal series for the regime \cr
   }
   
   In addition, the following three attributes are included:
   
-  \describe{
-    \item{marinal_names}{names of the marginal series}
-    \item{initial_bp}{information on the initial break points before a
-      re-partition method is applied}
-    \item{class}{class of the model}
+  \tabular{ll}{
+    \code{marinal_names} \tab names of the marginal series \cr
+    \code{initial_bp} \tab information on the initial break points before a
+      re-partition method is applied \cr
+    \code{class} \tab class of the model \cr
   }
 }
 \description{

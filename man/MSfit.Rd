@@ -21,6 +21,28 @@ Details.}
 Specifically, the model reaches convergene if the difference in likelihood
 from successive models falls below \code{tol}. Defaults to \code{1e-5}}
 }
+\value{
+\code{MSfit} returns an S3 object of \code{\link[base]{class}}
+  \code{markovCopula}.
+  
+  The summary, plot, coef, and logLik functions will, repectively, print a 
+  summarization of the output, a plot of dependence measures, extract model
+  parameters, and extract the log-likelihood values.
+  
+  An object of class \code{markovCopula} has the following components: 
+  
+  \tabular{ll}{
+    \code{log.likelihood} \tab log-likelihood value for the regime \cr
+    \code{pars} \tab a vector of coefficients for the copula \cr
+    \code{N} \tab the length of the time-series \cr
+    \code{solver} \tab the final output from \code{\link[stats]{optim}} \cr
+    \code{regime.inference} \tab the model's condition density, conditional
+      probability, conditional forecasts, and the smoothed probabilities \cr
+    \code{copula} \tab details of the estimated copulas in each regime \cr
+    \code{transition} \tab the transition matrix and initial regime vector \cr
+    \code{nregimes} \tab the number of regimes in the model \cr
+  }
+}
 \description{
 \code{MSfit} estimates a markov switching copula on a bivariate time series
   of uniform marginal distributions.

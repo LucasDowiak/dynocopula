@@ -308,10 +308,10 @@ logLik.seqBreakPoint <- function(obj) {
 #'     \code{log.likelihood} \tab log-likelihood value for the regime \cr
 #'     \code{pars} \tab a vector of coefficients for the copula \cr
 #'     \code{N} \tab the length of the time-series \cr
-#'     \code{solver} \tab the final output from \code{\link{[stats]{optim}} \cr
+#'     \code{solver} \tab the final output from \code{\link[stats]{optim}} \cr
 #'     \code{regime.inference} \tab the model's condition density, conditional
 #'       probability, conditional forecasts, and the smoothed probabilities \cr
-#'     \code{copula} \tab details of the estimated copulas in each regime
+#'     \code{copula} \tab details of the estimated copulas in each regime \cr
 #'     \code{transition} \tab the transition matrix and initial regime vector \cr
 #'     \code{nregimes} \tab the number of regimes in the model \cr
 #'   }
@@ -542,6 +542,55 @@ logLik.markovCopula <- function(obj) {
 
 
 #' Smooth-transition copula model.
+#' 
+#' \code{STfit} estimates a smooth-transition copula on a bivariate time series
+#'   of uniform marginal distributions.
+#' 
+#' @param x A numeric vector of uniform marginal values.
+#' 
+#' @param y A numeric vector of uniform marginal values.
+#' 
+#' @param family A vector of integers specifying the family of the copula to use.
+#' 
+#' @param regimes An integers specifying how many regimes to estimate.
+#' 
+#' @param initValues Optional starting values. See Details.
+#' 
+#' @details For \code{initValues}, if the user has specific insight into any
+#'   distributional changes and wants to provide specific initial parameters,
+#'   for a model with K regimes the order of the values should be provided as
+#'   follows:
+#'   \enumerate{
+#'     \item K first parameters of each regime
+#'     \item K second parameters of each regime
+#'     \item (Optional) weight parameter for a mixture copula
+#'     \item K - 1 parameters governing speed of transition
+#'     \item K - 1 location parameters
+#'   }
+#'
+#' @return \code{STfit} returns an S3 object of \code{\link[base]{class}}
+#'   \code{smoothTransCopula}.
+#'   
+#'   The summary, plot, coef, and logLik functions will, repectively, print a 
+#'   summarization of the output, a plot of dependence measures, extract model
+#'   parameters, and extract the log-likelihood values.
+#'   
+#'   An object of class \code{smoothTransCopula} has the following components: 
+#'   
+#'   \tabular{ll}{
+#'     \code{log.likelihood} \tab log-likelihood value for the regime \cr
+#'     \code{pars} \tab a vector of coefficients for the copula \cr
+#'     \code{dep.measures} \tab list containing tail dependence and Kendall's tau \cr
+#'     \code{smooth.parameters} \tab matrix of smooth parameter paths \cr
+#'     \code{N} \tab the length of the time-series \cr
+#'     \code{solver} \tab the output from \code{\link[Rsolnp]{solnp}} \cr
+#'     \code{copula} \tab details of the estimated copulas in each regime \cr
+#'     \code{transition} \tab the transition matrix and initial regime vector \cr
+#'     \code{nregimes} \tab the number of regimes in the model \cr
+#'   }
+#'
+#'
+#' @import Rsolnp solnp
 #'
 #' @export
 #'

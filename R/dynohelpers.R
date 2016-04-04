@@ -399,7 +399,7 @@ st_cop_vpdf <- function(family, x, y) {
   } else if (family == 14) {
     return(function(pp) Sgumbel_pdf(x, y, pp[, 1]))
   } else {
-    stop("Copula PDF not chosen. Check 'family' variable.")
+    stop("Copula PDF not chosen. Check family variable.")
   }
 }
 

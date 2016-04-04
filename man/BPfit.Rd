@@ -30,15 +30,15 @@ If the user specifies more cores (real or logical) than the CPU can
 support, the max number of supported cores will be used.}
 }
 \value{
-\code{BPfit} returns an object of \code{\link[base]{class}}
-  "seqBreakPoint".
+\code{BPfit} returns an S3 object of \code{\link[base]{class}}
+  \code{seqBreakPoint}.
   
   The summary, plot, coef, and logLik functions will, repectively, print a 
   summarization of the output, a plot of dependence measures, extract model
   parameters, and extract the log-likelihood values.
   
-  An object of class "seqBreakPoint" is a list of lists, one for each regime.
-  Each individual list contains the following components:
+  An object of class \code{seqBreakPoint} is a list of lists, one for each
+  regime. Each individual list contains the following components:
   \tabular{ll}{
     \code{pars} \tab a vector of coefficients for the copula \cr
     \code{log.likelihood} \tab log-likelihood value for the regime \cr
@@ -47,7 +47,8 @@ support, the max number of supported cores will be used.}
     \code{opg} \tab the outer product of the gradient \cr
     \code{sandwich} \tab the sandwich estimator \cr
     \code{family} \tab integers recorded which copula family to used \cr
-    \code{points} \tab start and ending index values that subset the marginal series for the regime \cr
+    \code{points} \tab start and ending index values that subset the marginal
+      series for the regime \cr
   }
   
   In addition, the following three attributes are included:

@@ -12,4 +12,5 @@ Imports: VineCopula (>= 1.2),
   cubature (>= 1.1-2),
   Rsolnp (>= 1.15),
 License: GPL-2
+LazyData: true,
 RoxygenNote: 5.0.1

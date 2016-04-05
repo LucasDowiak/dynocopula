@@ -590,7 +590,7 @@ logLik.markovCopula <- function(obj) {
 #'   }
 #'
 #'
-#' @import Rsolnp solnp
+#' @importFrom Rsolnp solnp
 #'
 #' @export
 #'

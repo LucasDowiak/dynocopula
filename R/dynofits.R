@@ -93,14 +93,35 @@ BPfit <- function(x, y, fam1, fam2 = NULL, parallel = FALSE, date_names = NULL,
       stop("Copula family 2 outside scope of analysis") 
   }
   n <- length(x)
-  # here is the place to set up the parallelization stuff  
-  closure <- autoBPtest(x, y, fam1, fam2, parallel, date_names, ncores)
+  
+  # here is the place to set up the parallelization stuff
+  clus <- NULL
+  if (parallel) {
+    dtc <- max(detectCores(logical = T), detectCores(logical = F))
+    if (missing(ncores)) {
+      ncores <- dtc
+    } else if (ncores > dtc) {
+      warning(sprintf("The number of cores has been re-assigned to %d", dtc))
+      ncores <- dtc
+    }
+    on.exit(closeAllConnections())
+    clus <- makeCluster(ncores)
+    clusterExport(clus, c("BreakPointLL","cop_pdf", "cop_cdf", "cop_llh",
+                          "cop_static", "BiCopPDF", "BiCopCDF", "BiCopEst",
+                          "dependence_measures", "numerical_Ktau", "BiCopPar2TailDep",
+                          "BiCopPar2Tau"))
+  }
+  closure <- autoBPtest(x, y, fam1, fam2, parallel, date_names, clus)
   closure$BPtest(1:n)
   repart <- if (length(closure$value()) <= 1) {
     closure$value()
   } else {
-    repartitionBP(closure$value(), x, y, fam1, fam2, parallel, date_names)
-  }	
+    repartitionBP(closure$value(), x, y, fam1, fam2, parallel, date_names, clus)
+  }
+  if (parallel) {
+    stopCluster(clus)
+    rm(clus)
+  }
   bps <- vapply(repart, `[[`, numeric(1), 'index')
   idx <- sort(c(0, bps, 1264))
   nn <- length(bps) + 1

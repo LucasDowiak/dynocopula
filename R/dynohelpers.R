@@ -1003,6 +1003,11 @@ aprx <- function(x, np, N) {
 #' @param date_names Optional vector of date names
 #' 
 #' @param parallel Logical switch to run the breakpoint search in parallel.
+#' 
+#' @param ncores Integer value specifying the number of cores to use
+#' 
+#' @param cluster If run in parallel, cluster is passed from a call to
+#'   \code{\link{BPfit}}
 #'
 #' @return A list of: \describe{
 #'   \item{index}{Index, with resepect to the \strong{full} marginal series, of
@@ -1017,7 +1022,7 @@ aprx <- function(x, np, N) {
 #' 
 
 BreakAnalysis <- function(u, v, series, fam1, fam2 = NULL, date_names = NULL,
-                          parallel = FALSE, ncores) {
+                          parallel = FALSE, ncores, cluster) {
 
   stopifnot(!any(missing(u), missing(v), missing(series), missing(fam1)))
   N <- length(series)
@@ -1032,25 +1037,9 @@ BreakAnalysis <- function(u, v, series, fam1, fam2 = NULL, date_names = NULL,
   low <- ifelse(N < 40, 2, floor(N * 0.05))
   high <- ifelse(N < 40, N - 2, ceiling(N * 0.95))
   Full <- cop_static(uu, vv, fam1, fam2)
-  if (parallel) {
-    library(parallel)
-    dtc <- max(detectCores(logical = T), detectCores(logical = F))
-    if (missing(ncores)) {
-      ncores <- dtc
-    } else if (ncores > dtc) {
-      warning(sprintf("The number of cores has been re-assigned to %d", dtc))
-      ncores <- dtc
-    }
-    on.exit(closeAllConnections())
-    clus <- makeCluster(ncores)
-    clusterExport(clus, c("BreakPointLL","cop_pdf", "cop_cdf", "cop_llh",
-                  "cop_static", "BiCopPDF", "BiCopCDF", "BiCopEst",
-                  "dependence_measures", "numerical_Ktau", "BiCopPar2TailDep",
-                  "BiCopPar2Tau"))
-    lamK <- parSapply(clus, low:high, FUN = BreakPointTestStatistic,
+  if (parallel && !missing(cluster) & !is.null(cluster)) {
+    lamK <- parSapply(cluster, low:high, FUN = BreakPointTestStatistic,
                       u = uu, v = vv, fam1 = fam1, fam2 = fam2, Full = Full) 
-    stopCluster(clus)
-    rm(clus)
   } else {
     lamK <- sapply(low:high, FUN = BreakPointTestStatistic,
                    u = uu, v = vv, fam1 = fam1, fam2 = fam2, Full = Full)
@@ -1093,13 +1082,16 @@ BreakAnalysis <- function(u, v, series, fam1, fam2 = NULL, date_names = NULL,
 #' 
 #' @param date_names Optional vector of date names
 #' 
+#' @param cluster If run in parallel, cluster is passed from a call to
+#'   \code{\link{BPfit}}
+#' 
 
 autoBPtest <- function(x, y, f1, f2 = NULL, parallel = FALSE, date_names = NULL,
-                       ncores) {
+                       cluster = NULL) {
   output <- list()
   force(date_names)
   BPtest <- function(srs) {
-    bptest <- BreakAnalysis(x, y, srs, f1, f2, date_names, parallel, ncores)
+    bptest <- BreakAnalysis(x, y, srs, f1, f2, date_names, parallel, ncores, cluster)
     if (bptest[['p-value']] < 0.05 && bptest[['p-value']] > 0.00 &&
           bptest[['N-Size']] > 15) {
       output[[length(output) + 1]] <<- bptest
@@ -1135,10 +1127,14 @@ autoBPtest <- function(x, y, f1, f2 = NULL, parallel = FALSE, date_names = NULL,
 #' 
 #' @param date_names Optional vector of date names
 #' 
+#' @param cluster If run in parallel, cluster is passed from a call to
+#'   \code{\link{BPfit}}
+#' 
 #' @reference Repartition method from Bai (1997) and Dias & Embrechts (2009)
 #' 
 
-repartitionBP <- function(bpResultList, u, v, f1, f2, parallel = F, date_names) {
+repartitionBP <- function(bpResultList, u, v, f1, f2, parallel = F, date_names,
+                          cluster = NULL) {
   bpList <- bpResultList
   if (length(bpList) < 2) 
     stop("Less than two break points. Repartition is not needed.")
@@ -1149,7 +1145,7 @@ repartitionBP <- function(bpResultList, u, v, f1, f2, parallel = F, date_names) 
   # Implement repartition method and pass results to 'output'
   for(jj in 1:(length(idx) - 2)) {
     t <- idx[jj]; tt <- idx[jj + 2]
-    res <- BreakAnalysis(u, v, t:tt, f1, f2, t:tt, date_names, parallel)
+    res <- BreakAnalysis(u, v, t:tt, f1, f2, t:tt, date_names, parallel, cluster)
     output[[length(output) + 1]] <- res
   }
   output

@@ -46,9 +46,8 @@
 #' @return \code{BPfit} returns an S3 object of \code{\link[base]{class}}
 #'   \code{seqBreakPoint}.
 #'   
-#'   The summary, plot, coef, and logLik functions will, repectively, print a 
-#'   summarization of the output, a plot of dependence measures, extract model
-#'   parameters, and extract the log-likelihood values.
+#'   The summary, plot, coef, and logLik methods will give a decent snapshot of
+#'   the model.
 #'   
 #'   An object of class \code{seqBreakPoint} is a list of lists, one for each
 #'   regime. Each individual list contains the following components:
@@ -659,7 +658,7 @@ STfit <- function(x, y, family = 1, regimes = 2, initValues = NULL) {
     diff(x)
   }
   
-  require(Rsolnp)
+  # require(Rsolnp)
   if (k == 2) {
     # No inequality bounds
     Fit <- solnp(initValues, stLLH, control = list(trace = 1),

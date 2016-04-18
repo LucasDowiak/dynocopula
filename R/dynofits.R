@@ -346,7 +346,7 @@ MSfit <- function(x, y, family = list(1, 1), initValues, tol = 1e-5) {
   # Capture x and y names
   xnme <- deparse(substitute(x))
   ynme <- deparse(substitute(y))
-  if (any(unlist(family) > 2)) require(cubature)
+  # if (any(unlist(family) > 2)) require(cubature)
   
   # Input controls
   stopifnot(length(x) == length(y), is.numeric(x),

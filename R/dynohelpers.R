@@ -20,7 +20,7 @@
 #' @importFrom VineCopula BiCopPDF
 #'
 
-cop_pdf <- function(theta, u, v, fam1, fam2) {
+.cop_pdf <- function(theta, u, v, fam1, fam2) {
   th1 = theta[1]; th2 = theta[2]; th3 = theta[3]
   stopifnot(th3 >= 0 && th3 <= 1)
   
@@ -51,7 +51,7 @@ cop_pdf <- function(theta, u, v, fam1, fam2) {
 #' @importFrom VineCopula BiCopCDF
 #'
 
-cop_cdf <- function(theta, u, v, fam1, fam2) {
+.cop_cdf <- function(theta, u, v, fam1, fam2) {
   th1 = theta[1]; th2 = theta[2]; th3 = theta[3]
   stopifnot(th3 >= 0 && th3 <= 1,
             length(u) == length(v))
@@ -81,9 +81,9 @@ cop_cdf <- function(theta, u, v, fam1, fam2) {
 #' @return The negative log-likelhood value
 #'    
 
-cop_llh <- function(theta, u, v, fam1, fam2) {
+.cop_llh <- function(theta, u, v, fam1, fam2) {
 
-  -sum(log(cop_pdf(theta, u, v, fam1, fam2)))
+  -sum(log(.cop_pdf(theta, u, v, fam1, fam2)))
 }
 
 
@@ -126,7 +126,7 @@ cop_static <- function(u, v, fam1, fam2 = NULL) {
     LB[1] <- switch(as.character(fam1), "3" = S, "4" = 1 + S, "13" = S, "14" = 1 + S)
     LB[2] <- switch(as.character(fam2), "3" = S, "4" = 1 + S, "13" = S, "14" = 1 + S)
     LB[3] <- S
-    Fit <- optim(c(1.5, 1.5, 0.5), cop_llh, u = u, v = v, fam1 = fam1, fam2 = fam2,
+    Fit <- optim(c(1.5, 1.5, 0.5), .cop_llh, u = u, v = v, fam1 = fam1, fam2 = fam2,
                  method = "L-BFGS-B", lower = LB, upper = c(30, 30, 1 - S))
     # Return Log-like as max value
     LL <- -Fit$value
@@ -168,7 +168,7 @@ numerical_Ktau <- function(theta, fam1, fam2) {
   
   Q <- function(U, pars) {
     u <- U[1]; v <- U[2]
-    cop_cdf(pars, u, v, fam1, fam2) * cop_pdf(pars, u, v, fam1, fam2)
+    .cop_cdf(pars, u, v, fam1, fam2) * .cop_pdf(pars, u, v, fam1, fam2)
   }
   4 * adaptIntegrate(Q, lowerLimit = c(0,0), upperLimit = c(1,1),
                      pars = theta)$integral - 1
@@ -364,7 +364,7 @@ ms_cop_vpdf <- function(fam, x, y) {
     return(function(pp) BiCopPDF(u1 = x, u2 = y, family = ff1, par = pp[[1]],
                                  par2 = if (length(pp) == 2) pp[[2]]))
   } else {
-    return(function(pp) cop_pdf(theta = pp, u = x, v = y, fam1 = ff1, fam2 = ff2))
+    return(function(pp) .cop_pdf(theta = pp, u = x, v = y, fam1 = ff1, fam2 = ff2))
   }
 }
 
@@ -389,7 +389,7 @@ st_cop_vpdf <- function(family, x, y) {
   if (family == 1) {
     return(function(pp) gaussian_pdf(x, y, pp[, 1]))
   } else if (family == 2) {
-    return(function(pp) tCop_pdf(x, y, pp[, 1], pp[, 2]))
+    return(function(pp) tcop_pdf(x, y, pp[, 1], pp[, 2]))
   } else if (family == 3) {
     return(function(pp) clayton_pdf(x, y, pp[, 1]))
   } else if (family == 4) {
@@ -886,7 +886,7 @@ gaussian_pdf <- function(u, v, rho){
 #' @return A vector the same length as \code{u} of density values
 #'
 
-tCop_pdf <- function(u, v, rho, nu){
+tcop_pdf <- function(u, v, rho, nu){
 
   stopifnot(abs(rho) <= 1, nu > 2)
   X <- qt(u, df = nu); Y <- qt(v, df = nu)
@@ -1187,9 +1187,9 @@ cop_gradcontr <- function(u, v, theta, f1, f2) {
     return(matrix(c(g1, g2), ncol  = 2))
   } else {
     th1 <- theta[1]; th2 <- theta[2]; th3 <- theta[3]
-    g1 <- (th3 / cop_pdf(theta, u, v, f1, f2)) * BiCopDeriv(u, v, f1, th1, "par")
-    g2 <- ((1 - th3) / cop_pdf(theta, u, v, f1, f2)) * BiCopDeriv(u, v, f2, th2, "par")
-    g3 <- (1 / cop_pdf(theta, u, v, f1, f2)) * (BiCopPDF(u, v, f1, th1) -
+    g1 <- (th3 / .cop_pdf(theta, u, v, f1, f2)) * BiCopDeriv(u, v, f1, th1, "par")
+    g2 <- ((1 - th3) / .cop_pdf(theta, u, v, f1, f2)) * BiCopDeriv(u, v, f2, th2, "par")
+    g3 <- (1 / .cop_pdf(theta, u, v, f1, f2)) * (BiCopPDF(u, v, f1, th1) -
          BiCopPDF(u, v, f2, th2))
     return(matrix(c(g1, g2, g3), ncol = 3))
   }
@@ -1241,20 +1241,20 @@ cop_hessian <- function(u, v, theta, f1, f2) {
     return(H)
   } else {
     th1 <- theta[1]; th2 <- theta[2]; th3 <- theta[3]
-    h11 <- (th3 / cop_pdf(theta, u, v, f1, f2)) * BiCopDeriv2(u, v, f1, th1, "par") - 
-      ((th3 / cop_pdf(theta, u, v, f1, f2)) * BiCopDeriv(u, v, f1, th1, "par"))^2
-    h12 <- -(1 / cop_pdf(theta, u, v, f1, f2)^2) * th3 * (1 - th3) * 
+    h11 <- (th3 / .cop_pdf(theta, u, v, f1, f2)) * BiCopDeriv2(u, v, f1, th1, "par") - 
+      ((th3 / .cop_pdf(theta, u, v, f1, f2)) * BiCopDeriv(u, v, f1, th1, "par"))^2
+    h12 <- -(1 / .cop_pdf(theta, u, v, f1, f2)^2) * th3 * (1 - th3) * 
       BiCopDeriv(u, v, f1, th1, "par") * BiCopDeriv(u, v, f2, th2, "par")
-    h13 <- BiCopDeriv(u, v, f1, th1) * ((1 / cop_pdf(theta, u, v, f1, f2)) -
-          (th3 / cop_pdf(theta, u, v, f1, f2)^2) *
+    h13 <- BiCopDeriv(u, v, f1, th1) * ((1 / .cop_pdf(theta, u, v, f1, f2)) -
+          (th3 / .cop_pdf(theta, u, v, f1, f2)^2) *
           (BiCopPDF(u, v, f1, th1) - BiCopPDF(u, v, f2, th2)))
-    h22 <- ((1 - th3) / cop_pdf(theta, u, v, f1, f2)) *
-      BiCopDeriv2(u, v, f2, th2, "par") - (((1 - th3) / cop_pdf(theta, u, v, f1, f2)) *
+    h22 <- ((1 - th3) / .cop_pdf(theta, u, v, f1, f2)) *
+      BiCopDeriv2(u, v, f2, th2, "par") - (((1 - th3) / .cop_pdf(theta, u, v, f1, f2)) *
          BiCopDeriv(u, v, f2, th2, "par"))^2
-    h23 <- BiCopDeriv(u, v, f2, th2) * ((1 / cop_pdf(theta, u, v, f1, f2)) -
-          ((1 - th3) / cop_pdf(theta, u, v, f1, f2)^2) *
+    h23 <- BiCopDeriv(u, v, f2, th2) * ((1 / .cop_pdf(theta, u, v, f1, f2)) -
+          ((1 - th3) / .cop_pdf(theta, u, v, f1, f2)^2) *
           (BiCopPDF(u, v, f1, th1) - BiCopPDF(u, v, f2, th2)))
-    h33 <- -(1 / cop_pdf(theta, u, v, f1, f2)^2) * (BiCopPDF(u, v, f1, th1) -
+    h33 <- -(1 / .cop_pdf(theta, u, v, f1, f2)^2) * (BiCopPDF(u, v, f1, th1) -
          BiCopPDF(u, v, f2, th2))^2
     h11 <- sum(h11); h12 <- sum(h12); h13 <- sum(h13)
     h22 <- sum(h22); h23 <- sum(h23); h33 <- sum(h33)

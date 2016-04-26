@@ -106,7 +106,7 @@ BPfit <- function(x, y, fam1, fam2 = NULL, parallel = FALSE, date_names = NULL,
     }
     on.exit(closeAllConnections())
     clus <- makeCluster(ncores)
-    clusterExport(clus, c("BreakPointLL","cop_pdf", "cop_cdf", "cop_llh",
+    clusterExport(clus, c("BreakPointLL",".cop_pdf", ".cop_cdf", ".cop_llh",
                           "cop_static", "BiCopPDF", "BiCopCDF", "BiCopEst",
                           "dependence_measures", "numerical_Ktau", "BiCopPar2TailDep",
                           "BiCopPar2Tau"))

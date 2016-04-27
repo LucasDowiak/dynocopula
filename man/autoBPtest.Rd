@@ -6,7 +6,7 @@
 all statistically significant breakpoints.}
 \usage{
 autoBPtest(x, y, f1, f2 = NULL, parallel = FALSE, date_names = NULL,
-  ncores)
+  cluster = NULL)
 }
 \arguments{
 \item{f1}{An integer representing the family of the component copula applied
@@ -18,6 +18,9 @@ to v. This is passed to \code{\link{cop_static}}}
 \item{parallel}{Logical switch to run the breakpoint search in parallel.}
 
 \item{date_names}{Optional vector of date names}
+
+\item{cluster}{If run in parallel, cluster is passed from a call to
+\code{\link{BPfit}}}
 
 \item{u}{A vector of uniform marginal values.}
 

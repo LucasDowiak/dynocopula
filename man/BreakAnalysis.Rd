@@ -6,7 +6,7 @@
 values for two given marginal distributions#'}
 \usage{
 BreakAnalysis(u, v, series, fam1, fam2 = NULL, date_names = NULL,
-  parallel = FALSE, ncores)
+  parallel = FALSE, ncores, cluster)
 }
 \arguments{
 \item{u}{A vector of uniform marginal values.}
@@ -25,6 +25,11 @@ to v. This is passed to \code{\link{cop_static}}}
 \item{date_names}{Optional vector of date names}
 
 \item{parallel}{Logical switch to run the breakpoint search in parallel.}
+
+\item{ncores}{Integer value specifying the number of cores to use}
+
+\item{cluster}{If run in parallel, cluster is passed from a call to
+\code{\link{BPfit}}}
 }
 \value{
 A list of: \describe{

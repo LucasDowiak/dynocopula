@@ -5,7 +5,8 @@
 \title{For the sequential breakpoint model, given a set of breakpoints, run a 
 repartition of the breakpoints for improved consistency}
 \usage{
-repartitionBP(bpResultList, u, v, f1, f2, parallel = F, date_names)
+repartitionBP(bpResultList, u, v, f1, f2, parallel = F, date_names,
+  cluster = NULL)
 }
 \arguments{
 \item{bpResultList}{The output form \code{\link{autoBPtest}}}
@@ -23,6 +24,9 @@ to v. This is passed to \code{\link{cop_static}}}
 \item{parallel}{Logical switch to run the breakpoint search in parallel.}
 
 \item{date_names}{Optional vector of date names}
+
+\item{cluster}{If run in parallel, cluster is passed from a call to
+\code{\link{BPfit}}}
 }
 \description{
 For the sequential breakpoint model, given a set of breakpoints, run a 

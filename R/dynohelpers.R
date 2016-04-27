@@ -88,26 +88,6 @@
 
 
 
-#' Estimates a static copula
-#' 
-#' @param u A vector of uniform marginal values.
-#' 
-#' @param v A vector of uniform marginal values.
-#' 
-#' @param fam1 An integer representing the family of the component copula applied
-#'    to u. See Details.
-#'
-#' @param fam2 An integer representing the family of the component copula applied
-#'    to v. See Details.
-#'  
-#' @return A list of: \enumerate{
-#'   \item the log-likelihood value
-#'   \item the estimated copula parameters
-#'   }
-#'
-#' @importFrom VineCopula BiCopEst
-#' @importFrom VineCopula BiCopPDF
-
 cop_static <- function(u, v, fam1, fam2 = NULL) {
 
   stopifnot(length(u) == length(v))
@@ -193,7 +173,10 @@ numerical_Ktau <- function(theta, fam1, fam2) {
 #' @details This function breaks the given fixed marginals into \code{k} disjoint
 #'   but adjacent sets of equal size. It then returns the estimated parameters of
 #'   a static copula governed by copula family \code{fam} for each of the disjoint
-#'   sets. 
+#'   sets.
+#'
+#' @export
+#' 
 
 starting_guess <- function(u, v, fam, k) {
   
@@ -210,7 +193,7 @@ starting_guess <- function(u, v, fam, k) {
   f2 <- lapply(1:k, function(xx) if(length(fam) == 2) fam[[2]])
   
   cop_est2 <- function(x, y, ff1, ff2) {
-    theta <- cop_static(x, y, ff1, ff2)[["pars"]]
+    theta <- dynocopula:::cop_static(x, y, ff1, ff2)[["pars"]]
     if (ff1 == 1)
       theta <- theta[1]
     theta

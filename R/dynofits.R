@@ -106,10 +106,10 @@ BPfit <- function(x, y, fam1, fam2 = NULL, parallel = FALSE, date_names = NULL,
     }
     on.exit(closeAllConnections())
     clus <- parallel::makeCluster(ncores)
-    parallel::clusterExport(clus, c("dynocopula:::BreakPointLL",".cop_pdf", ".cop_cdf", ".cop_llh",
+    parallel::clusterExport(clus, c("BreakPointLL",".cop_pdf", ".cop_cdf", ".cop_llh",
         "cop_static", "BiCopPDF", "BiCopCDF", "BiCopEst",
         "dependence_measures", "numerical_Ktau", "BiCopPar2TailDep",
-        "BiCopPar2Tau"))
+        "BiCopPar2Tau"), environment())
   }
   closure <- autoBPtest(x, y, fam1, fam2, parallel, date_names, clus)
   closure$BPtest(1:n)

@@ -8,9 +8,9 @@ Version: 0.0.0.9000
 Description: Provides simple functions for calling, summarizing, and plotting dynamic 
   copulas. Currently, only the markov switching, smooth transition, and sequential
   break point models are implemented.
-Imports: VineCopula (>= 1.2),
-  cubature (>= 1.1-2),
-  Rsolnp (>= 1.15)
+Imports: cubature (>= 1.1-2),
+  Rsolnp (>= 1.15),
+  VineCopula (>= 1.2)  
 License: GPL-2
 LazyData: true
 RoxygenNote: 5.0.1

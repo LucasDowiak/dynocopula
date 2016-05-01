@@ -97,7 +97,7 @@ BPfit <- function(x, y, fam1, fam2 = NULL, parallel = FALSE, date_names = NULL,
   # here is the place to set up the parallelization stuff
   clus <- NULL
   if (parallel) {
-    dtc <- max(detectCores(logical = T), detectCores(logical = F))
+    dtc <- max(parallel::detectCores(logical = T), parallel::detectCores(logical = F))
     if (missing(ncores)) {
       ncores <- dtc
     } else if (ncores > dtc) {
@@ -105,8 +105,8 @@ BPfit <- function(x, y, fam1, fam2 = NULL, parallel = FALSE, date_names = NULL,
       ncores <- dtc
     }
     on.exit(closeAllConnections())
-    clus <- makeCluster(ncores)
-    clusterExport(clus, c("BreakPointLL",".cop_pdf", ".cop_cdf", ".cop_llh",
+    clus <- parallel::makeCluster(ncores)
+    parallel::clusterExport(clus, c("BreakPointLL",".cop_pdf", ".cop_cdf", ".cop_llh",
                           "cop_static", "BiCopPDF", "BiCopCDF", "BiCopEst",
                           "dependence_measures", "numerical_Ktau", "BiCopPar2TailDep",
                           "BiCopPar2Tau"))

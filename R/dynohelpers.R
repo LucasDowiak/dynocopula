@@ -108,6 +108,7 @@
 #'
 #' @importFrom VineCopula BiCopEst
 #' @importFrom VineCopula BiCopPDF
+#' @export
 #' 
 
 cop_static <- function(u, v, fam1, fam2 = NULL) {

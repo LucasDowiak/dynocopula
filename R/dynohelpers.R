@@ -116,7 +116,7 @@ cop_static <- function(u, v, fam1, fam2 = NULL) {
   isNullFam2 <- is.null(fam2)
   # Non-mixture Copula
   if (isNullFam2) {
-    Fit <- BiCopEst(u, v, fam1, max.df = 50)
+    Fit <- BiCopEst(u, v, fam1, max.df = 50)[-1]
     Lc <- log(BiCopPDF(u, v, fam1, Fit$par, par2 = if (length(Fit) == 2L) Fit$par2))
     theta <- unlist(Fit)
     names(theta) <- if (fam1 < 3) {c("mu", "nu")} else {c("th1", "th2")}
@@ -1038,7 +1038,6 @@ BreakAnalysis <- function(u, v, series, fam1, fam2 = NULL, date_names = NULL,
   p <- switch(as.character(fam1), "1" = 1, "2" = 2, 3)
   uu <- u[series]
   vv <- v[series]
-  N <- length(series)
   low <- ifelse(N < 40, 2, floor(N * 0.05))
   high <- ifelse(N < 40, N - 2, ceiling(N * 0.95))
   Full <- cop_static(uu, vv, fam1, fam2)

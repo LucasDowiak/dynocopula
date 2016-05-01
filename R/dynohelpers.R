@@ -1054,17 +1054,15 @@ BreakAnalysis <- function(u, v, series, fam1, fam2 = NULL, date_names = NULL,
   Z <- sqrt(lamK[maxidx])
   cc <- (-3:3) + maxidx
   cc <- cc[cc > 0]
-  print(cbind(dat[(min(series) + low:high - 1), c(1, 2)], lamK)[cc, ])
+  # print(cbind(dat[(min(series) + low:high - 1), c(1, 2)], lamK)[cc, ])
   Results <- list()
   Results[[1]] <- min(series) + t - 1
   Results[[2]] <- date_names[min(series) + t - 1]
   Results[[3]] <- Z
   Results[[4]] <- aprx(Z, p, N)
   Results[[5]] <- N
-  Results[[6]] <- series
-  names(Results) <- c("index", "Date", "sqrt(Z)",
-                      "p-value", "N-Size", "series")
-  print(Results[-6])
+  names(Results) <- c("index", "Date", "sqrt(Z)", "p-value", "N-Size")
+  print(Results)
 }
 
 

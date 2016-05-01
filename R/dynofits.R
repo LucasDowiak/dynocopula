@@ -106,8 +106,8 @@ BPfit <- function(x, y, fam1, fam2 = NULL, parallel = FALSE, date_names = NULL,
     }
     on.exit(closeAllConnections())
     clus <- parallel::makeCluster(ncores)
-    parallel::clusterExport(clus, c("BreakPointLL",".cop_pdf", ".cop_cdf", ".cop_llh",
-        "cop_static", "BiCopPDF", "BiCopCDF", "BiCopEst",
+    parallel::clusterExport(clus, c("BreakPointLL",".cop_pdf", ".cop_cdf",
+        ".cop_llh", "cop_static", "BiCopPDF", "BiCopCDF", "BiCopEst",
         "dependence_measures", "numerical_Ktau", "BiCopPar2TailDep",
         "BiCopPar2Tau"), environment())
   }
@@ -119,7 +119,7 @@ BPfit <- function(x, y, fam1, fam2 = NULL, parallel = FALSE, date_names = NULL,
     repartitionBP(closure$value(), x, y, fam1, fam2, parallel, date_names, clus)
   }
   if (parallel) {
-    stopCluster(clus)
+    parallel::stopCluster(clus)
     rm(clus)
   }
   bps <- vapply(repart, `[[`, numeric(1), 'index')

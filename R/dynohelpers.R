@@ -1042,8 +1042,8 @@ BreakAnalysis <- function(u, v, series, fam1, fam2 = NULL, date_names = NULL,
   high <- ifelse(N < 40, N - 2, ceiling(N * 0.95))
   Full <- cop_static(uu, vv, fam1, fam2)
   if (parallel && !missing(cluster) & !is.null(cluster)) {
-    lamK <- parSapply(cluster, low:high, FUN = BreakPointTestStatistic,
-                      u = uu, v = vv, fam1 = fam1, fam2 = fam2, Full = Full) 
+    lamK <- parallel::parSapply(cluster, low:high, FUN = BreakPointTestStatistic,
+                                u = uu, v = vv, fam1 = fam1, fam2 = fam2, Full = Full) 
   } else {
     lamK <- sapply(low:high, FUN = BreakPointTestStatistic,
                    u = uu, v = vv, fam1 = fam1, fam2 = fam2, Full = Full)

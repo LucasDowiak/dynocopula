@@ -19,6 +19,7 @@
 #'
 #' @importFrom VineCopula BiCopPDF
 #'
+ 
 
 .cop_pdf <- function(theta, u, v, fam1, fam2) {
   th1 = theta[1]; th2 = theta[2]; th3 = theta[3]
@@ -87,6 +88,27 @@
 }
 
 
+
+#' Estimates a static copula
+#' 
+#' @param u A vector of uniform marginal values.
+#' 
+#' @param v A vector of uniform marginal values.
+#' 
+#' @param fam1 An integer representing the family of the component copula applied
+#'    to u. See Details.
+#'
+#' @param fam2 An integer representing the family of the component copula applied
+#'    to v. See Details.
+#'  
+#' @return A list of: \enumerate{
+#'   \item the log-likelihood value
+#'   \item the estimated copula parameters
+#'   }
+#'
+#' @importFrom VineCopula BiCopEst
+#' @importFrom VineCopula BiCopPDF
+#' 
 
 cop_static <- function(u, v, fam1, fam2 = NULL) {
 

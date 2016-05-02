@@ -249,6 +249,10 @@ starting_guess <- function(u, v, fam, k) {
 #' 
 #' @importFrom VineCopula BiCopPar2TailDep
 #' @importFrom VineCopula BiCopPar2Tau
+#' @importFrom VineCopula BiCopCDF
+#' @importFrom VineCopula BiCopPDF
+#' @importFrom cubature adaptIntegrate
+#' 
 #' @export
 #' 
 

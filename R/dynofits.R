@@ -72,6 +72,8 @@
 #'     \code{class} \tab class of the model \cr
 #'   }
 #' 
+#' @importFrom VineCopula BiCopDeriv
+#' @importFrom VineCopula BiCopDeriv2
 #' @export
 #' 
 

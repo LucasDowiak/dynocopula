@@ -971,16 +971,7 @@ BreakPointTestStatistic <- function(t, u, v, fam1, fam2, Full) {
 
 
 
-#' Approximate small sample p-value for the generalized likelihood test
-#' 
-#' @param x Test statistic from \code{\link{BreakPointTestStatistic}}
-#' 
-#' @param np The number of parameters for the chosen copula model
-#' 
-#' @param N The length of the time series
-#' 
-#' @return A p-value
-#' 
+
 
 aprx <- function(x, np, N) {
   lh <- log(N)^(3/2) / N

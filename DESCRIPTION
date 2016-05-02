@@ -10,7 +10,8 @@ Description: Provides simple functions for calling, summarizing, and plotting dy
   break point models are implemented.
 Imports: cubature (>= 1.1-2),
   Rsolnp (>= 1.15),
-  VineCopula (>= 1.2)  
+  VineCopula (>= 1.2)
+Suggests: parallel
 License: GPL-2
 LazyData: true
 RoxygenNote: 5.0.1

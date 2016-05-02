@@ -1,27 +1,27 @@
-#' Calculate density of two-component mixture copula
-#' 
-#' @param theta A vector of length 3. The first item is the (single) parameter
-#'    for the first component copula, the second item is the (single) parameter
-#'    for the second component copula, and the third is the copula weight.
-#' 
-#' @param u A vector of uniform marginal values.
-#' 
-#' @param v A vector of uniform marginal values.
-#' 
-#' @param fam1 An integer representing the family of the component copula applied
-#'    to u. See Details.
-#'
-#' @param fam2 An integer representing the family of the component copula applied
-#'    to v. See Details.
-#'    
-#' @return A numeric vector of the same length as \code{u} and \code{v} whose
-#'    values are the density (pdf) of the given mixture copula
-#'
-#' @importFrom VineCopula BiCopPDF
-#'
+# Calculate density of two-component mixture copula
+# 
+# @param theta A vector of length 3. The first item is the (single) parameter
+#    for the first component copula, the second item is the (single) parameter
+#    for the second component copula, and the third is the copula weight.
+# 
+# @param u A vector of uniform marginal values.
+# 
+# @param v A vector of uniform marginal values.
+# 
+# @param fam1 An integer representing the family of the component copula applied
+#    to u. See Details.
+#
+# @param fam2 An integer representing the family of the component copula applied
+#    to v. See Details.
+#    
+# @return A numeric vector of the same length as \code{u} and \code{v} whose
+#    values are the density (pdf) of the given mixture copula
+#
+# @importFrom VineCopula BiCopPDF
+#
  
 
-.cop_pdf <- function(theta, u, v, fam1, fam2) {
+cop_pdf <- function(theta, u, v, fam1, fam2) {
   th1 = theta[1]; th2 = theta[2]; th3 = theta[3]
   stopifnot(th3 >= 0 && th3 <= 1)
   
@@ -30,29 +30,29 @@
 
 
 
-#' Calculate distribution of two-component mixture copula
-#' 
-#' @param theta A vector of length 3. The first item is the (single) parameter
-#'    for the first component copula, the second item is the (single) parameter
-#'    for the second component copula, and the third is the copula weight.
-#' 
-#' @param u A vector of uniform marginal values.
-#' 
-#' @param v A vector of uniform marginal values.
-#' 
-#' @param fam1 An integer representing the family of the component copula applied
-#'    to u. See Details.
-#'
-#' @param fam2 An integer representing the family of the component copula applied
-#'    to v. See Details.
-#' 
-#' @return A numeric vector of the same length as \code{u} and \code{v} whose
-#'    values are the distribution (cdf) of the given mixture copula
-#'
-#' @importFrom VineCopula BiCopCDF
-#'
+# Calculate distribution of two-component mixture copula
+# 
+# @param theta A vector of length 3. The first item is the (single) parameter
+#    for the first component copula, the second item is the (single) parameter
+#    for the second component copula, and the third is the copula weight.
+# 
+# @param u A vector of uniform marginal values.
+# 
+# @param v A vector of uniform marginal values.
+# 
+# @param fam1 An integer representing the family of the component copula applied
+#    to u. See Details.
+#
+# @param fam2 An integer representing the family of the component copula applied
+#    to v. See Details.
+# 
+# @return A numeric vector of the same length as \code{u} and \code{v} whose
+#    values are the distribution (cdf) of the given mixture copula
+#
+# @importFrom VineCopula BiCopCDF
+#
 
-.cop_cdf <- function(theta, u, v, fam1, fam2) {
+cop_cdf <- function(theta, u, v, fam1, fam2) {
   th1 = theta[1]; th2 = theta[2]; th3 = theta[3]
   stopifnot(th3 >= 0 && th3 <= 1,
             length(u) == length(v))
@@ -62,29 +62,29 @@
 
 
 
-#' Convienence function that returns the sum of the negative log-likelihood of
-#' a mixture copula
-#' 
-#' @param theta A vector of length 3. The first item is the (single) parameter
-#'    for the first component copula, the second item is the (single) parameter
-#'    for the second component copula, and the third is the copula weight.
-#' 
-#' @param u A vector of uniform marginal values.
-#' 
-#' @param v A vector of uniform marginal values.
-#' 
-#' @param fam1 An integer representing the family of the component copula applied
-#'    to u. See Details.
-#'
-#' @param fam2 An integer representing the family of the component copula applied
-#'    to v. See Details.
-#'  
-#' @return The negative log-likelhood value
-#'    
+# Convienence function that returns the sum of the negative log-likelihood of
+# a mixture copula
+# 
+# @param theta A vector of length 3. The first item is the (single) parameter
+#    for the first component copula, the second item is the (single) parameter
+#    for the second component copula, and the third is the copula weight.
+# 
+# @param u A vector of uniform marginal values.
+# 
+# @param v A vector of uniform marginal values.
+# 
+# @param fam1 An integer representing the family of the component copula applied
+#    to u. See Details.
+#
+# @param fam2 An integer representing the family of the component copula applied
+#    to v. See Details.
+#  
+# @return The negative log-likelhood value
+#    
 
-.cop_llh <- function(theta, u, v, fam1, fam2) {
+cop_llh <- function(theta, u, v, fam1, fam2) {
 
-  -sum(log(.cop_pdf(theta, u, v, fam1, fam2)))
+  -sum(log(cop_pdf(theta, u, v, fam1, fam2)))
 }
 
 
@@ -129,7 +129,7 @@ cop_static <- function(u, v, fam1, fam2 = NULL) {
     LB[1] <- switch(as.character(fam1), "3" = S, "4" = 1 + S, "13" = S, "14" = 1 + S)
     LB[2] <- switch(as.character(fam2), "3" = S, "4" = 1 + S, "13" = S, "14" = 1 + S)
     LB[3] <- S
-    Fit <- optim(c(1.5, 1.5, 0.5), .cop_llh, u = u, v = v, fam1 = fam1, fam2 = fam2,
+    Fit <- optim(c(1.5, 1.5, 0.5), cop_llh, u = u, v = v, fam1 = fam1, fam2 = fam2,
                  method = "L-BFGS-B", lower = LB, upper = c(30, 30, 1 - S))
     # Return Log-like as max value
     LL <- -Fit$value
@@ -150,28 +150,28 @@ cop_static <- function(u, v, fam1, fam2 = NULL) {
 
 
 
-#' For a mixture copula, estimate Kendall's tau using numerical integration
-#'  
-#' @param theta A vector of length 3. The first item is the (single) parameter
-#'    for the first component copula, the second item is the (single) parameter
-#'    for the second component copula, and the third is the copula weight.
-#'    
-#' @param fam1 An integer representing the family of the first component copula.
-#'    
-#' @param fam1 An integer representing the family of the second component copula.
-#' 
-#' @return Kendall's tau for the given mixture copula
-#'
-#' @references Nelson (2006) pg ___, eq ___
-#' 
-#' @importFrom cubature adaptIntegrate
-#' 
+# For a mixture copula, estimate Kendall's tau using numerical integration
+#  
+# @param theta A vector of length 3. The first item is the (single) parameter
+#    for the first component copula, the second item is the (single) parameter
+#    for the second component copula, and the third is the copula weight.
+#    
+# @param fam1 An integer representing the family of the first component copula.
+#    
+# @param fam1 An integer representing the family of the second component copula.
+# 
+# @return Kendall's tau for the given mixture copula
+#
+# @references Nelson (2006) pg ___, eq ___
+# 
+# @importFrom cubature adaptIntegrate
+# 
 
 numerical_Ktau <- function(theta, fam1, fam2) {
   
   Q <- function(U, pars) {
     u <- U[1]; v <- U[2]
-    .cop_cdf(pars, u, v, fam1, fam2) * .cop_pdf(pars, u, v, fam1, fam2)
+    cop_cdf(pars, u, v, fam1, fam2) * cop_pdf(pars, u, v, fam1, fam2)
   }
   4 * adaptIntegrate(Q, lowerLimit = c(0,0), upperLimit = c(1,1),
                      pars = theta)$integral - 1
@@ -216,7 +216,7 @@ starting_guess <- function(u, v, fam, k) {
   f2 <- lapply(1:k, function(xx) if(length(fam) == 2) fam[[2]])
   
   cop_est2 <- function(x, y, ff1, ff2) {
-    theta <- dynocopula:::cop_static(x, y, ff1, ff2)[["pars"]]
+    theta <- cop_static(x, y, ff1, ff2)[["pars"]]
     if (ff1 == 1)
       theta <- theta[1]
     theta
@@ -249,6 +249,7 @@ starting_guess <- function(u, v, fam, k) {
 #' 
 #' @importFrom VineCopula BiCopPar2TailDep
 #' @importFrom VineCopula BiCopPar2Tau
+#' @export
 #' 
 
 dependence_measures <- function(pars, fam1, fam2 = NULL) {
@@ -277,14 +278,14 @@ dependence_measures <- function(pars, fam1, fam2 = NULL) {
 
 
 
-#' For the smooth transition model, create boundaries with respect to copula
-#' model to pass on to the optimization function
-#' 
-#' @param fam Numeric vector of length one or two indicating the copula type and
-#'   family.
-#' 
-#' @param k Number of regimes
-#'
+# For the smooth transition model, create boundaries with respect to copula
+# model to pass on to the optimization function
+# 
+# @param fam Numeric vector of length one or two indicating the copula type and
+#   family.
+# 
+# @param k Number of regimes
+#
 
 st_boundary <- function(fam, k) {
   
@@ -321,14 +322,14 @@ st_boundary <- function(fam, k) {
 
 
 
-#' For the markov switching model, create boundaries with respect to copula
-#' model to pass on to the optimization function
-#' 
-#' @param fam Numeric vector of length one or two indicating the copula type and
-#'   family.
-#' 
-#' @param k Number of regimes
-#'
+# For the markov switching model, create boundaries with respect to copula
+# model to pass on to the optimization function
+# 
+# @param fam Numeric vector of length one or two indicating the copula type and
+#   family.
+# 
+# @param k Number of regimes
+#
 
 ms_boundary <- function(fam, k) {
   
@@ -350,18 +351,18 @@ ms_boundary <- function(fam, k) {
 
 
 
-#' For the markov switching model, create function factory that returns a
-#' copula density function conditioning on given copula paramaters
-#'
-#' @param fam Numeric vector of length one or two indicating the copula type and
-#'   family.
-#'
-#' @param x A vector of uniform marginal values.
-#' 
-#' @param y A vector of uniform marginal values.
-#'
-#' @importFrom VineCopula BiCopPDF
-#'
+# For the markov switching model, create function factory that returns a
+# copula density function conditioning on given copula paramaters
+#
+# @param fam Numeric vector of length one or two indicating the copula type and
+#   family.
+#
+# @param x A vector of uniform marginal values.
+# 
+# @param y A vector of uniform marginal values.
+#
+# @importFrom VineCopula BiCopPDF
+#
 
 ms_cop_vpdf <- function(fam, x, y) {
   ff1 <- fam[[1]]
@@ -370,24 +371,24 @@ ms_cop_vpdf <- function(fam, x, y) {
     return(function(pp) BiCopPDF(u1 = x, u2 = y, family = ff1, par = pp[[1]],
                                  par2 = if (length(pp) == 2) pp[[2]]))
   } else {
-    return(function(pp) .cop_pdf(theta = pp, u = x, v = y, fam1 = ff1, fam2 = ff2))
+    return(function(pp) cop_pdf(theta = pp, u = x, v = y, fam1 = ff1, fam2 = ff2))
   }
 }
 
 
 
-#' For the smooth transition model, create function factory that returns a
-#' copula density function conditioning on given copula paramaters
-#' 
-#' @param family Numeric vector of length one or two indicating the copula type
-#'   and family.
-#'
-#' @param x A vector of uniform marginal values.
-#' 
-#' @param y A vector of uniform marginal values.
-#' 
-#' @return A density function for a copula for arbitrary parameter(s)
-#' 
+# For the smooth transition model, create function factory that returns a
+# copula density function conditioning on given copula paramaters
+# 
+# @param family Numeric vector of length one or two indicating the copula type
+#   and family.
+#
+# @param x A vector of uniform marginal values.
+# 
+# @param y A vector of uniform marginal values.
+# 
+# @return A density function for a copula for arbitrary parameter(s)
+# 
 
 st_cop_vpdf <- function(family, x, y) {
   
@@ -410,12 +411,12 @@ st_cop_vpdf <- function(family, x, y) {
 }
 
 
-#' For the markov switching model, return copula names
-#' 
-#' @param x Integer indicating copula family
-#' 
-#' @return A vector of parameter names
-#' 
+# For the markov switching model, return copula names
+# 
+# @param x Integer indicating copula family
+# 
+# @return A vector of parameter names
+# 
 
 ms_pnames <- function(x) {
   
@@ -431,24 +432,24 @@ ms_pnames <- function(x) {
 }
 
 
-#' For the markov switching model, run the algorithm that produces the model's
-#' log-likelihood.
-#'
-#' @param P A markov transition matrix for nr regimes
-#' 
-#' @param FF An nr x n matrix where each row represents the densities for each
-#'   of the state dependent regimes
-#' 
-#' @param F_0 An nr x 1 regime of initial regime probabilities
-#' 
-#' @return A list of: \describe{
-#'   \item{logL}{the log-likelihood of the model}
-#'   \item{Xi_t_t}{Xi_t_t}
-#'   \item{Xi_t1_t}{Xi_t1_t}
-#'   }
-#'
-#' @references Hamilton (1994) pg ___, eq [22.4.5] and [22.4.5]
-#'
+# For the markov switching model, run the algorithm that produces the model's
+# log-likelihood.
+#
+# @param P A markov transition matrix for nr regimes
+# 
+# @param FF An nr x n matrix where each row represents the densities for each
+#   of the state dependent regimes
+# 
+# @param F_0 An nr x 1 regime of initial regime probabilities
+# 
+# @return A list of: \describe{
+#   \item{logL}{the log-likelihood of the model}
+#   \item{Xi_t_t}{Xi_t_t}
+#   \item{Xi_t1_t}{Xi_t1_t}
+#   }
+#
+# @references Hamilton (1994) pg ___, eq [22.4.5] and [22.4.5]
+#
 
 markov_llh <- function(P, FF, F_0) {
   
@@ -469,21 +470,21 @@ markov_llh <- function(P, FF, F_0) {
 
 
 
-#' For the markov switching model, an implementation of Kim's smooth inference
-#' alogrithm utilizes the entire series of data to obtain improved inference for
-#' what regime the model occupies at each unit of time 
-#' 
-#' @param P A markov transition matrix for nr regimes
-#' 
-#' @param Xi_t_t An nr x 1 matrix
-#' 
-#' @param Xi_t1_t An nr x 1 matrix
-#' 
-#' @return An nr x n matrix whose columns are the units of time for the time
-#'   series and each row is the probability of being in that regime at that time
-#' 
-#' @references Hamilton (1994) pg ___ eq [22.4.14]
-#' 
+# For the markov switching model, an implementation of Kim's smooth inference
+# alogrithm utilizes the entire series of data to obtain improved inference for
+# what regime the model occupies at each unit of time 
+# 
+# @param P A markov transition matrix for nr regimes
+# 
+# @param Xi_t_t An nr x 1 matrix
+# 
+# @param Xi_t1_t An nr x 1 matrix
+# 
+# @return An nr x n matrix whose columns are the units of time for the time
+#   series and each row is the probability of being in that regime at that time
+# 
+# @references Hamilton (1994) pg ___ eq [22.4.14]
+# 
 
 smooth_inf <- function(P, Xi_t_t, Xi_t1_t) {
   
@@ -501,25 +502,25 @@ smooth_inf <- function(P, Xi_t_t, Xi_t1_t) {
 
 
 
-#' For the markov switching model, given the parameters that define the
-#' markov transition matrix, complete the maximization step of the E-M algorithm
-#' by optimizing the copula parameters
-#' 
-#' @param parm A vector of copula parameters
-#' 
-#' @param x A vector of uniform marginal values.
-#' 
-#' @param y A vector of uniform marginal values. 
-#'
-#' @param family Numeric vector of length one or two indicating the copula type
-#'   and family.
-#'
-#' @return A list of: \describe{
-#'   \item{par}{Estimated copula parameters}
-#'   \item{solver}{Output from the call to \code{\link[stats]{optim}}}
-#'   \item{EMstep}{Good to know for further development}
-#'   }
-#'
+# For the markov switching model, given the parameters that define the
+# markov transition matrix, complete the maximization step of the E-M algorithm
+# by optimizing the copula parameters
+# 
+# @param parm A vector of copula parameters
+# 
+# @param x A vector of uniform marginal values.
+# 
+# @param y A vector of uniform marginal values. 
+#
+# @param family Numeric vector of length one or two indicating the copula type
+#   and family.
+#
+# @return A list of: \describe{
+#   \item{par}{Estimated copula parameters}
+#   \item{solver}{Output from the call to \code{\link[stats]{optim}}}
+#   \item{EMstep}{Good to know for further development}
+#   }
+#
 
 copula_optim <- function(parm, x, y, family) {
   
@@ -565,25 +566,25 @@ copula_optim <- function(parm, x, y, family) {
 
 
 
-#' For the markov switching model, given the copula parameters, start the
-#' expectation step of the E-M algorithm by optimizing the markov transition
-#' matrix
-#' 
-#' @param parm A vector of copula parameters.
-#' 
-#' @param x A vector of uniform marginal values.
-#' 
-#' @param y A vector of uniform marginal values. 
-#'
-#' @param family Numeric vector of length one or two indicating the copula type
-#'   and family.
-#'
-#' @return A list of: \describe{
-#'   \item{par}{Estimated transition parameters and initial state}
-#'   \item{solver}{Output from the call to \code{\link[stats]{optim}}}
-#'   \item{EMstep}{Good to know for further development}
-#'   }
-#'
+# For the markov switching model, given the copula parameters, start the
+# expectation step of the E-M algorithm by optimizing the markov transition
+# matrix
+# 
+# @param parm A vector of copula parameters.
+# 
+# @param x A vector of uniform marginal values.
+# 
+# @param y A vector of uniform marginal values. 
+#
+# @param family Numeric vector of length one or two indicating the copula type
+#   and family.
+#
+# @return A list of: \describe{
+#   \item{par}{Estimated transition parameters and initial state}
+#   \item{solver}{Output from the call to \code{\link[stats]{optim}}}
+#   \item{EMstep}{Good to know for further development}
+#   }
+#
 
 markov_optim <- function(parm, x, y, family) {
   
@@ -626,20 +627,20 @@ markov_optim <- function(parm, x, y, family) {
 
 
 
-#' For the smooth transition model, calculate the negative log-likelihood value.
-#' 
-#' @param x A vector of uniform marginal values.
-#' 
-#' @param y A vector of uniform marginal values.
-#' 
-#' @param M An nr x np matrix whose columns contain the (np) parameters for each
-#'   of the nr regimes
-#' 
-#' @param family Numeric vector of length one or two indicating the copula type
-#'   and family.
-#'
-#' @return The sum of the negalitve log-likelhood
-#' 
+# For the smooth transition model, calculate the negative log-likelihood value.
+# 
+# @param x A vector of uniform marginal values.
+# 
+# @param y A vector of uniform marginal values.
+# 
+# @param M An nr x np matrix whose columns contain the (np) parameters for each
+#   of the nr regimes
+# 
+# @param family Numeric vector of length one or two indicating the copula type
+#   and family.
+#
+# @return The sum of the negalitve log-likelhood
+# 
 
 smooth_llh <- function(x, y, M, family) {
   stopifnot(is.matrix(M))
@@ -655,24 +656,24 @@ smooth_llh <- function(x, y, M, family) {
 
 
 
-#' For the smooth transition model, produce the smooth transition values of a
-#' single parameter
-#' 
-#' @param parm A parameter vector containing a value for each regime
-#' 
-#' @param St A vector the same length as the time series whose value is defined
-#'   as \code{cumsum(rep(1, N)) \ N}.
-#'
-#' @param g A numeric value controlling the pace of transition between states
-#' 
-#' @param gsd The standard deviation of \code{St}. Combines with the parameter
-#'   \code{g} to control the pace of the transition between states
-#' 
-#' @param c A numeric value in the unit interval locating the inflection point
-#'   of the smooth transition
-#'
-#' @return A vector with the smooth transition values for a copula parameter
-#'
+# For the smooth transition model, produce the smooth transition values of a
+# single parameter
+# 
+# @param parm A parameter vector containing a value for each regime
+# 
+# @param St A vector the same length as the time series whose value is defined
+#   as \code{cumsum(rep(1, N)) \ N}.
+#
+# @param g A numeric value controlling the pace of transition between states
+# 
+# @param gsd The standard deviation of \code{St}. Combines with the parameter
+#   \code{g} to control the pace of the transition between states
+# 
+# @param c A numeric value in the unit interval locating the inflection point
+#   of the smooth transition
+#
+# @return A vector with the smooth transition values for a copula parameter
+#
 
 smooth_parm <- function(parm, St, g, c, gsd) {
   stopifnot(length(parm) == length(g) + 1,
@@ -689,27 +690,27 @@ smooth_parm <- function(parm, St, g, c, gsd) {
 
 
 
-#' For the smooth transition model, produce the smooth transition values of a
-#' single parameter
-#' 
-#' @param parm A vector containing all the parameters of the smooth transition
-#'   model
-#' 
-#' @param family Numeric vector of length one or two indicating the copula type
-#'   and family.
-#'
-#' @param k An integer indicating the number of regimes
-#' 
-#' @param St A vector the same length as the time series whose value is defined
-#'   as \code{cumsum(rep(1, N)) \ N}.
-#' 
-#' @param gsd The standard deviation of \code{St}. Combines with the parameter
-#'   \code{g} to control the pace of the transition between states
-#'
-#' @return An n x np matrix whose columns are the smooth transition values of
-#'   the copula model. For a mixture copula, the (single) weight parameter is
-#'   included as an attribute.
-#'
+# For the smooth transition model, produce the smooth transition values of a
+# single parameter
+# 
+# @param parm A vector containing all the parameters of the smooth transition
+#   model
+# 
+# @param family Numeric vector of length one or two indicating the copula type
+#   and family.
+#
+# @param k An integer indicating the number of regimes
+# 
+# @param St A vector the same length as the time series whose value is defined
+#   as \code{cumsum(rep(1, N)) \ N}.
+# 
+# @param gsd The standard deviation of \code{St}. Combines with the parameter
+#   \code{g} to control the pace of the transition between states
+#
+# @return An n x np matrix whose columns are the smooth transition values of
+#   the copula model. For a mixture copula, the (single) weight parameter is
+#   included as an attribute.
+#
 
 transform_parm <- function(parm, family, k, St, gsd) {
   # gsd <- sd(St)
@@ -744,16 +745,16 @@ transform_parm <- function(parm, family, k, St, gsd) {
 
 
 
-#' Vectorized version of the Clayton copula density
-#' 
-#' @param u A vector of uniform marginal values.
-#' 
-#' @param v A vector of uniform marginal values.
-#' 
-#' @param alpha Clayton copula parameter
-#' 
-#' @return A vector the same length as \code{u} of density values
-#' 
+# Vectorized version of the Clayton copula density
+# 
+# @param u A vector of uniform marginal values.
+# 
+# @param v A vector of uniform marginal values.
+# 
+# @param alpha Clayton copula parameter
+# 
+# @return A vector the same length as \code{u} of density values
+# 
 
 clayton_pdf <- function(u, v, alpha){
   
@@ -763,16 +764,16 @@ clayton_pdf <- function(u, v, alpha){
 
 
 
-#' Vectorized version of the Survival Clayton copula density
-#' 
-#' @param u A vector of uniform marginal values.
-#' 
-#' @param v A vector of uniform marginal values.
-#' 
-#' @param alpha Clayton copula parameter
-#' 
-#' @return A vector the same length as \code{u} of density values
-#'
+# Vectorized version of the Survival Clayton copula density
+# 
+# @param u A vector of uniform marginal values.
+# 
+# @param v A vector of uniform marginal values.
+# 
+# @param alpha Clayton copula parameter
+# 
+# @return A vector the same length as \code{u} of density values
+#
 
 Sclayton_pdf <- function(u, v, alpha){
   
@@ -781,16 +782,16 @@ Sclayton_pdf <- function(u, v, alpha){
 
 
 
-#' Vectorized version of the Frank copula density
-#' 
-#' @param u A vector of uniform marginal values.
-#' 
-#' @param v A vector of uniform marginal values.
-#' 
-#' @param delta Frank copula parameter
-#' 
-#' @return A vector the same length as \code{u} of density values
-#'
+# Vectorized version of the Frank copula density
+# 
+# @param u A vector of uniform marginal values.
+# 
+# @param v A vector of uniform marginal values.
+# 
+# @param delta Frank copula parameter
+# 
+# @return A vector the same length as \code{u} of density values
+#
 
 frank_pdf <- function(u, v, delta) {
   
@@ -800,16 +801,16 @@ frank_pdf <- function(u, v, delta) {
 
 
 
-#' Vectorized version of the Survival Frank copula density
-#' 
-#' @param u A vector of uniform marginal values.
-#' 
-#' @param v A vector of uniform marginal values.
-#' 
-#' @param delta Frank copula parameter
-#' 
-#' @return A vector the same length as \code{u} of density values
-#'
+# Vectorized version of the Survival Frank copula density
+# 
+# @param u A vector of uniform marginal values.
+# 
+# @param v A vector of uniform marginal values.
+# 
+# @param delta Frank copula parameter
+# 
+# @return A vector the same length as \code{u} of density values
+#
 
 Sfrank_pdf <- function(u, v, delta) {
  
@@ -818,16 +819,16 @@ Sfrank_pdf <- function(u, v, delta) {
 
 
 
-#' Vectorized version of the Gumbel copula density
-#' 
-#' @param u A vector of uniform marginal values.
-#' 
-#' @param v A vector of uniform marginal values.
-#' 
-#' @param gamma Gumbel copula parameter
-#' 
-#' @return A vector the same length as \code{u} of density values
-#'
+# Vectorized version of the Gumbel copula density
+# 
+# @param u A vector of uniform marginal values.
+# 
+# @param v A vector of uniform marginal values.
+# 
+# @param gamma Gumbel copula parameter
+# 
+# @return A vector the same length as \code{u} of density values
+#
 
 gumbel_pdf <- function(u, v, gamma) {
   
@@ -840,16 +841,16 @@ gumbel_pdf <- function(u, v, gamma) {
 
 
 
-#' Vectorized version of the Survival Gumbel copula density
-#' 
-#' @param u A vector of uniform marginal values.
-#' 
-#' @param v A vector of uniform marginal values.
-#' 
-#' @param gamma Gumbel copula parameter
-#' 
-#' @return A vector the same length as \code{u} of density values
-#'
+# Vectorized version of the Survival Gumbel copula density
+# 
+# @param u A vector of uniform marginal values.
+# 
+# @param v A vector of uniform marginal values.
+# 
+# @param gamma Gumbel copula parameter
+# 
+# @return A vector the same length as \code{u} of density values
+#
 
 Sgumbel_pdf <- function(u, v, gamma) {
   
@@ -858,16 +859,16 @@ Sgumbel_pdf <- function(u, v, gamma) {
 
 
 
-#' Vectorized version of the Gaussian copula density
-#' 
-#' @param u A vector of uniform marginal values.
-#' 
-#' @param v A vector of uniform marginal values.
-#' 
-#' @param rho Correlation parameter
-#' 
-#' @return A vector the same length as \code{u} of density values
-#'
+# Vectorized version of the Gaussian copula density
+# 
+# @param u A vector of uniform marginal values.
+# 
+# @param v A vector of uniform marginal values.
+# 
+# @param rho Correlation parameter
+# 
+# @return A vector the same length as \code{u} of density values
+#
 
 gaussian_pdf <- function(u, v, rho){
   
@@ -879,18 +880,18 @@ gaussian_pdf <- function(u, v, rho){
 
 
 
-#' Vectorized version of the Student-t copula density
-#' 
-#' @param u A vector of uniform marginal values.
-#' 
-#' @param v A vector of uniform marginal values.
-#' 
-#' @param rho Correlation parameter
-#' 
-#' @param nu Degrees of Freedom parameter
-#' 
-#' @return A vector the same length as \code{u} of density values
-#'
+# Vectorized version of the Student-t copula density
+# 
+# @param u A vector of uniform marginal values.
+# 
+# @param v A vector of uniform marginal values.
+# 
+# @param rho Correlation parameter
+# 
+# @param nu Degrees of Freedom parameter
+# 
+# @return A vector the same length as \code{u} of density values
+#
 
 tcop_pdf <- function(u, v, rho, nu){
 
@@ -903,29 +904,29 @@ tcop_pdf <- function(u, v, rho, nu){
 
 
 
-#' For the sequential breakpoint model, calculate a generalized likelihood ratio
-#' test
-#' 
-#' @param u A vector of uniform marginal values.
-#' 
-#' @param v A vector of uniform marginal values.
-#' 
-#' @param t An integer indicating where to seperate \code{u} and \code{v} into
-#'    pre and post regimes
-#'
-#' @param fam1 An integer representing the family of the component copula applied
-#'    to u. This is passed to \code{\link{cop_static}}
-#'
-#' @param fam2 An integer representing the family of the component copula applied
-#'    to v. This is passed to \code{\link{cop_static}}
-#'
-#' @return A list of: \enumerate{
-#'   \item Pre-regime log-likelihood value
-#'   \item Pre-regime copula parameters
-#'   \item Post-regime log-likeihood value
-#'   \item Post-regime copula parameters
-#'   }          
-#' 
+# For the sequential breakpoint model, calculate a generalized likelihood ratio
+# test
+# 
+# @param u A vector of uniform marginal values.
+# 
+# @param v A vector of uniform marginal values.
+# 
+# @param t An integer indicating where to seperate \code{u} and \code{v} into
+#    pre and post regimes
+#
+# @param fam1 An integer representing the family of the component copula applied
+#    to u. This is passed to \code{\link{cop_static}}
+#
+# @param fam2 An integer representing the family of the component copula applied
+#    to v. This is passed to \code{\link{cop_static}}
+#
+# @return A list of: \enumerate{
+#   \item Pre-regime log-likelihood value
+#   \item Pre-regime copula parameters
+#   \item Post-regime log-likeihood value
+#   \item Post-regime copula parameters
+#   }          
+# 
 
 BreakPointLL <- function(u, v, t, fam1, fam2) {
   
@@ -939,30 +940,30 @@ BreakPointLL <- function(u, v, t, fam1, fam2) {
 
 
 
-#' For the sequential breakpoint model, calculate a generalized likelihood ratio
-#' test
-#' 
-#' @param t An integer indicating where to seperate \code{u} and \code{v} into
-#'    pre and post regimes
-#'
-#' @param u A vector of uniform marginal values.
-#' 
-#' @param v A vector of uniform marginal values.
-#' 
-#' @param t An integer indexing where to seperate \code{u} and \code{v} into
-#'    pre and post regimes
-#'
-#' @param fam1 An integer representing the family of the component copula applied
-#'    to u. This is passed to \code{\link{cop_static}}
-#'
-#' @param fam2 An integer representing the family of the component copula applied
-#'    to v. This is passed to \code{\link{cop_static}}
-#'  
-#' @param Full A model from \code{\link{cop_static}} providing the full series'
-#'   log-likelihood value
-#'
-#' @return The test statistic for the generalized likelihood ratio test        
-#' 
+# For the sequential breakpoint model, calculate a generalized likelihood ratio
+# test
+# 
+# @param t An integer indicating where to seperate \code{u} and \code{v} into
+#    pre and post regimes
+#
+# @param u A vector of uniform marginal values.
+# 
+# @param v A vector of uniform marginal values.
+# 
+# @param t An integer indexing where to seperate \code{u} and \code{v} into
+#    pre and post regimes
+#
+# @param fam1 An integer representing the family of the component copula applied
+#    to u. This is passed to \code{\link{cop_static}}
+#
+# @param fam2 An integer representing the family of the component copula applied
+#    to v. This is passed to \code{\link{cop_static}}
+#  
+# @param Full A model from \code{\link{cop_static}} providing the full series'
+#   log-likelihood value
+#
+# @return The test statistic for the generalized likelihood ratio test        
+# 
 
 BreakPointTestStatistic <- function(t, u, v, fam1, fam2, Full) {
   Break <- BreakPointLL(u, v, t, fam1, fam2)
@@ -971,7 +972,16 @@ BreakPointTestStatistic <- function(t, u, v, fam1, fam2, Full) {
 
 
 
-
+# Approximate small sample p-value for the generalized likelihood test
+# 
+# @param x Test statistic from \code{\link{BreakPointTestStatistic}}
+# 
+# @param np The number of parameters for the chosen copula model
+# 
+# @param N The length of the time series
+# 
+# @return A p-value
+# 
 
 aprx <- function(x, np, N) {
   lh <- log(N)^(3/2) / N
@@ -981,42 +991,42 @@ aprx <- function(x, np, N) {
 
 
 
-#' For the sequential breakpoint model, search for a breakpoint in a subset of 
-#' values for two given marginal distributions#' 
-#' 
-#' @param u A vector of uniform marginal values.
-#' 
-#' @param v A vector of uniform marginal values.
-#' 
-#' @param series An index vector that subsets the full marginal values
-#'   \code{u, v}
-#' 
-#' @param fam1 An integer representing the family of the component copula applied
-#'    to u. This is passed to \code{\link{cop_static}}
-#'
-#' @param fam2 An integer representing the family of the component copula applied
-#'    to v. This is passed to \code{\link{cop_static}}
-#'
-#' @param date_names Optional vector of date names
-#' 
-#' @param parallel Logical switch to run the breakpoint search in parallel.
-#' 
-#' @param ncores Integer value specifying the number of cores to use
-#' 
-#' @param cluster If run in parallel, cluster is passed from a call to
-#'   \code{\link{BPfit}}
-#'
-#' @return A list of: \describe{
-#'   \item{index}{Index, with resepect to the \strong{full} marginal series, of
-#'     largest breakpoint test statistic}
-#'   \item{Date}{If \code{date_names} was provided, the date that corresponds
-#'     with \code{index}}
-#'   \item{sqrt(Z)}{The value of the largest breakpoint test statistic}
-#'   \item{p-value}{The approximated p-value of the breakpoint test statistic}
-#'   \item{N-size}{The number of observations in \code{series} where the function
-#'     searched for a breakpoint}
-#'   }
-#' 
+# For the sequential breakpoint model, search for a breakpoint in a subset of 
+# values for two given marginal distributions#' 
+# 
+# @param u A vector of uniform marginal values.
+# 
+# @param v A vector of uniform marginal values.
+# 
+# @param series An index vector that subsets the full marginal values
+#   \code{u, v}
+# 
+# @param fam1 An integer representing the family of the component copula applied
+#    to u. This is passed to \code{\link{cop_static}}
+#
+# @param fam2 An integer representing the family of the component copula applied
+#    to v. This is passed to \code{\link{cop_static}}
+#
+# @param date_names Optional vector of date names
+# 
+# @param parallel Logical switch to run the breakpoint search in parallel.
+# 
+# @param ncores Integer value specifying the number of cores to use
+# 
+# @param cluster If run in parallel, cluster is passed from a call to
+#   \code{\link{BPfit}}
+#
+# @return A list of: \describe{
+#   \item{index}{Index, with resepect to the \strong{full} marginal series, of
+#     largest breakpoint test statistic}
+#   \item{Date}{If \code{date_names} was provided, the date that corresponds
+#     with \code{index}}
+#   \item{sqrt(Z)}{The value of the largest breakpoint test statistic}
+#   \item{p-value}{The approximated p-value of the breakpoint test statistic}
+#   \item{N-size}{The number of observations in \code{series} where the function
+#     searched for a breakpoint}
+#   }
+# 
 
 BreakAnalysis <- function(u, v, series, fam1, fam2 = NULL, date_names = NULL,
                           parallel = FALSE, ncores, cluster) {
@@ -1059,26 +1069,26 @@ BreakAnalysis <- function(u, v, series, fam1, fam2 = NULL, date_names = NULL,
 
 
 
-#' For the sequential breakpoint model, a closure that recursively searchs for
-#' all statistically significant breakpoints.
-#' 
-#' @param u A vector of uniform marginal values.
-#' 
-#' @param v A vector of uniform marginal values.
-#' 
-#' @param f1 An integer representing the family of the component copula applied
-#'    to u. This is passed to \code{\link{cop_static}}
-#'
-#' @param f2 An integer representing the family of the component copula applied
-#'    to v. This is passed to \code{\link{cop_static}}
-#' 
-#' @param parallel Logical switch to run the breakpoint search in parallel.
-#' 
-#' @param date_names Optional vector of date names
-#' 
-#' @param cluster If run in parallel, cluster is passed from a call to
-#'   \code{\link{BPfit}}
-#' 
+# For the sequential breakpoint model, a closure that recursively searchs for
+# all statistically significant breakpoints.
+# 
+# @param u A vector of uniform marginal values.
+# 
+# @param v A vector of uniform marginal values.
+# 
+# @param f1 An integer representing the family of the component copula applied
+#    to u. This is passed to \code{\link{cop_static}}
+#
+# @param f2 An integer representing the family of the component copula applied
+#    to v. This is passed to \code{\link{cop_static}}
+# 
+# @param parallel Logical switch to run the breakpoint search in parallel.
+# 
+# @param date_names Optional vector of date names
+# 
+# @param cluster If run in parallel, cluster is passed from a call to
+#   \code{\link{BPfit}}
+# 
 
 autoBPtest <- function(x, y, f1, f2 = NULL, parallel = FALSE, date_names = NULL,
                        cluster = NULL) {
@@ -1102,30 +1112,30 @@ autoBPtest <- function(x, y, f1, f2 = NULL, parallel = FALSE, date_names = NULL,
 
 
 
-#' For the sequential breakpoint model, given a set of breakpoints, run a 
-#' repartition of the breakpoints for improved consistency
-#' 
-#' @param bpResultList The output form \code{\link{autoBPtest}}
-#' 
-#' @param u A vector of uniform marginal values.
-#' 
-#' @param v A vector of uniform marginal values.
-#' 
-#' @param f1 An integer representing the family of the component copula applied
-#'    to u. This is passed to \code{\link{cop_static}}
-#'
-#' @param f2 An integer representing the family of the component copula applied
-#'    to v. This is passed to \code{\link{cop_static}}
-#'    
-#' @param parallel Logical switch to run the breakpoint search in parallel.
-#' 
-#' @param date_names Optional vector of date names
-#' 
-#' @param cluster If run in parallel, cluster is passed from a call to
-#'   \code{\link{BPfit}}
-#' 
-#' @reference Repartition method from Bai (1997) and Dias & Embrechts (2009)
-#' 
+# For the sequential breakpoint model, given a set of breakpoints, run a 
+# repartition of the breakpoints for improved consistency
+# 
+# @param bpResultList The output form \code{\link{autoBPtest}}
+# 
+# @param u A vector of uniform marginal values.
+# 
+# @param v A vector of uniform marginal values.
+# 
+# @param f1 An integer representing the family of the component copula applied
+#    to u. This is passed to \code{\link{cop_static}}
+#
+# @param f2 An integer representing the family of the component copula applied
+#    to v. This is passed to \code{\link{cop_static}}
+#    
+# @param parallel Logical switch to run the breakpoint search in parallel.
+# 
+# @param date_names Optional vector of date names
+# 
+# @param cluster If run in parallel, cluster is passed from a call to
+#   \code{\link{BPfit}}
+# 
+# @reference Repartition method from Bai (1997) and Dias & Embrechts (2009)
+# 
 
 repartitionBP <- function(bpResultList, u, v, f1, f2, parallel = F, date_names,
                           cluster = NULL) {
@@ -1147,26 +1157,26 @@ repartitionBP <- function(bpResultList, u, v, f1, f2, parallel = F, date_names,
 
 
 
-#' For the sequential breakpoint model, calculate copula gradients for var-cov
-#' estimation
-#' 
-#' @param u A vector of uniform marginal values.
-#' 
-#' @param v A vector of uniform marginal values.
-#' 
-#' @param theta A vector of copula parameters
-#' 
-#' @param f1 An integer representing the family of the component copula applied
-#'    to u. This is passed to \code{\link{cop_static}}
-#'
-#' @param f2 An integer representing the family of the component copula applied
-#'    to v. This is passed to \code{\link{cop_static}}
-#' 
-#' @return An n x nr matrix of gradient contributions
-#' 
-#' @importFrom VineCopula BiCopPDF
-#' @importFrom VineCopula BiCopDeriv
-#' 
+# For the sequential breakpoint model, calculate copula gradients for var-cov
+# estimation
+# 
+# @param u A vector of uniform marginal values.
+# 
+# @param v A vector of uniform marginal values.
+# 
+# @param theta A vector of copula parameters
+# 
+# @param f1 An integer representing the family of the component copula applied
+#    to u. This is passed to \code{\link{cop_static}}
+#
+# @param f2 An integer representing the family of the component copula applied
+#    to v. This is passed to \code{\link{cop_static}}
+# 
+# @return An n x nr matrix of gradient contributions
+# 
+# @importFrom VineCopula BiCopPDF
+# @importFrom VineCopula BiCopDeriv
+# 
 
 cop_gradcontr <- function(u, v, theta, f1, f2) {
   
@@ -1181,9 +1191,9 @@ cop_gradcontr <- function(u, v, theta, f1, f2) {
     return(matrix(c(g1, g2), ncol  = 2))
   } else {
     th1 <- theta[1]; th2 <- theta[2]; th3 <- theta[3]
-    g1 <- (th3 / .cop_pdf(theta, u, v, f1, f2)) * BiCopDeriv(u, v, f1, th1, "par")
-    g2 <- ((1 - th3) / .cop_pdf(theta, u, v, f1, f2)) * BiCopDeriv(u, v, f2, th2, "par")
-    g3 <- (1 / .cop_pdf(theta, u, v, f1, f2)) * (BiCopPDF(u, v, f1, th1) -
+    g1 <- (th3 / cop_pdf(theta, u, v, f1, f2)) * BiCopDeriv(u, v, f1, th1, "par")
+    g2 <- ((1 - th3) / cop_pdf(theta, u, v, f1, f2)) * BiCopDeriv(u, v, f2, th2, "par")
+    g3 <- (1 / cop_pdf(theta, u, v, f1, f2)) * (BiCopPDF(u, v, f1, th1) -
          BiCopPDF(u, v, f2, th2))
     return(matrix(c(g1, g2, g3), ncol = 3))
   }
@@ -1191,28 +1201,27 @@ cop_gradcontr <- function(u, v, theta, f1, f2) {
 
 
 
-#' For the sequential breakpoint model, calculate copula hessians for var-cov
-#' estimation
-#' 
-#' @param u A vector of uniform marginal values.
-#' 
-#' @param v A vector of uniform marginal values.
-#' 
-#' @param theta A vector of copula parameters
-#' 
-#' @param f1 An integer representing the family of the component copula applied
-#'    to u. This is passed to \code{\link{cop_static}}
-#'
-#' @param f2 An integer representing the family of the component copula applied
-#'    to v. This is passed to \code{\link{cop_static}}
-#' 
-#' @return An nr x nr matrix of gradient contributions
-#' 
-#' @importFrom VineCopula BiCopPDF
-#' @importFrom VineCopula BiCopDeriv
-#' @importFrom VineCopula BiCopDeriv2
-#' 
-
+# For the sequential breakpoint model, calculate copula hessians for var-cov
+# estimation
+# 
+# @param u A vector of uniform marginal values.
+# 
+# @param v A vector of uniform marginal values.
+# 
+# @param theta A vector of copula parameters
+# 
+# @param f1 An integer representing the family of the component copula applied
+#    to u. This is passed to \code{\link{cop_static}}
+#
+# @param f2 An integer representing the family of the component copula applied
+#    to v. This is passed to \code{\link{cop_static}}
+# 
+# @return An nr x nr matrix of gradient contributions
+# 
+# @importFrom VineCopula BiCopPDF
+# @importFrom VineCopula BiCopDeriv
+# @importFrom VineCopula BiCopDeriv2
+# 
 
 cop_hessian <- function(u, v, theta, f1, f2) {
   
@@ -1235,20 +1244,20 @@ cop_hessian <- function(u, v, theta, f1, f2) {
     return(H)
   } else {
     th1 <- theta[1]; th2 <- theta[2]; th3 <- theta[3]
-    h11 <- (th3 / .cop_pdf(theta, u, v, f1, f2)) * BiCopDeriv2(u, v, f1, th1, "par") - 
-      ((th3 / .cop_pdf(theta, u, v, f1, f2)) * BiCopDeriv(u, v, f1, th1, "par"))^2
-    h12 <- -(1 / .cop_pdf(theta, u, v, f1, f2)^2) * th3 * (1 - th3) * 
+    h11 <- (th3 / cop_pdf(theta, u, v, f1, f2)) * BiCopDeriv2(u, v, f1, th1, "par") - 
+      ((th3 / cop_pdf(theta, u, v, f1, f2)) * BiCopDeriv(u, v, f1, th1, "par"))^2
+    h12 <- -(1 / cop_pdf(theta, u, v, f1, f2)^2) * th3 * (1 - th3) * 
       BiCopDeriv(u, v, f1, th1, "par") * BiCopDeriv(u, v, f2, th2, "par")
-    h13 <- BiCopDeriv(u, v, f1, th1) * ((1 / .cop_pdf(theta, u, v, f1, f2)) -
-          (th3 / .cop_pdf(theta, u, v, f1, f2)^2) *
+    h13 <- BiCopDeriv(u, v, f1, th1) * ((1 / cop_pdf(theta, u, v, f1, f2)) -
+          (th3 / cop_pdf(theta, u, v, f1, f2)^2) *
           (BiCopPDF(u, v, f1, th1) - BiCopPDF(u, v, f2, th2)))
-    h22 <- ((1 - th3) / .cop_pdf(theta, u, v, f1, f2)) *
-      BiCopDeriv2(u, v, f2, th2, "par") - (((1 - th3) / .cop_pdf(theta, u, v, f1, f2)) *
+    h22 <- ((1 - th3) / cop_pdf(theta, u, v, f1, f2)) *
+      BiCopDeriv2(u, v, f2, th2, "par") - (((1 - th3) / cop_pdf(theta, u, v, f1, f2)) *
          BiCopDeriv(u, v, f2, th2, "par"))^2
-    h23 <- BiCopDeriv(u, v, f2, th2) * ((1 / .cop_pdf(theta, u, v, f1, f2)) -
-          ((1 - th3) / .cop_pdf(theta, u, v, f1, f2)^2) *
+    h23 <- BiCopDeriv(u, v, f2, th2) * ((1 / cop_pdf(theta, u, v, f1, f2)) -
+          ((1 - th3) / cop_pdf(theta, u, v, f1, f2)^2) *
           (BiCopPDF(u, v, f1, th1) - BiCopPDF(u, v, f2, th2)))
-    h33 <- -(1 / .cop_pdf(theta, u, v, f1, f2)^2) * (BiCopPDF(u, v, f1, th1) -
+    h33 <- -(1 / cop_pdf(theta, u, v, f1, f2)^2) * (BiCopPDF(u, v, f1, th1) -
          BiCopPDF(u, v, f2, th2))^2
     h11 <- sum(h11); h12 <- sum(h12); h13 <- sum(h13)
     h22 <- sum(h22); h23 <- sum(h23); h33 <- sum(h33)

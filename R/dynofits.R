@@ -422,8 +422,8 @@ MSfit <- function(x, y, family = list(1, 1), initValues, tol = 1e-5) {
     pp <- cop_parm[aa:zz]
     FF[rr, ] <- ms_cop_vpdf(fam, x, y)(pp)
     if (length(fam) == 1) {
-      ktau[[rr]] <- BiCopPar2Tau(fam, pp[1], if (length(pp) > 1) pp[2])
-      taildep[[rr]] <- unlist(BiCopPar2TailDep(fam, pp[1], if (length(pp) > 1) pp[2]))
+      ktau[[rr]] <- BiCopPar2Tau(fam, pp[1], if (length(pp) > 1) pp[2] else 0)
+      taildep[[rr]] <- unlist(BiCopPar2TailDep(fam, pp[1], if (length(pp) > 1) pp[2] else 0))
     } else {
       ktau[[rr]] <- numerical_Ktau(pp, fam[1], fam[2])
       TD1 <- BiCopPar2TailDep(fam[1], pp[1])
@@ -681,7 +681,7 @@ STfit <- function(x, y, family = 1, regimes = 2, initValues = NULL) {
     diff(x)
   }
   
-  # require(Rsolnp)
+  require(Rsolnp)
   if (k == 2) {
     # No inequality bounds
     Fit <- solnp(initValues, stLLH, control = list(trace = 1),

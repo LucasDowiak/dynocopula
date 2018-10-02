@@ -1,0 +1,767 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{threeparttable}
+\usepackage{geometry}
+\usepackage{pdflscape}
+\usepackage{graphicx}
+
+\newcommand{\Lagr}{\mathcal{L}}
+\newcommand{\boldXi}{\hat{\boldsymbol{\xi}}}
+
+\newtheorem{defn}{Definition}
+\newtheorem{thm}{Theorem}
+ 
+\title{A Comparison of Time-Varying Copula-GARCH Models}
+
+\author{Lucas C. Dowiak}
+
+\begin{document}
+ 
+\maketitle{}
+ 
+
+\textbf{LUCAS C. DOWIAK\medskip}
+
+Department of Economics, City University of New York\smallskip, Graduate
+Center,
+
+New York, NY, 10016, \textit{Email: ldowiak@gc.cuny.edu}
+
+\qquad
+
+\begin{quotation}
+\textbf{Abstract:}
+\end{quotation}
+
+\vspace{1pt}
+
+\begin{quotation}
+\textbf{Keywords}: Copulas, financial crisis, foreign exchange, time-varying
+dependence,
+
+\textbf{JEL Classification}: C51, G01, G15, F31
+\end{quotation}
+
+\vspace{1pt}
+
+\section{Introduction}
+
+The field of international finance has a long-running concern regarding the distribution of asset returns. Markowitz (1959) provided the launching pad for modern portfolio theory by using a Gaussian framework to model the returns for a portfolio composed of an arbitrary number of assets. Over the past few decades though, a consensus has conformed on the belief that assuming normality, or joint-normality, of asset returns is not always wise. Empirical evidence strongly supports the fact that returns for certain asset classes frequently exhibit traits that deviate from normality.
+
+\emph{Two famous articles by Fama (1965) and Mandelbrot (1963) present evidence that the tails of the Gaussian distribution are far two narrow to account for the number of observations occurring at least two standard deviations from the mean}. More recently, Longin (1996) abandons the use of elliptical distributions to describe extreme returns altogether. Ang and Chen (2002) and Kroner and Ng (1998) study asymmetric comovements in the returns of certain equity assets. Ang and Chen (2002) document stronger downside risk between a range of portfolios and the aggregate U.S. market than upside risk. Kroner and Ng (1998) find "significant asymmetric effects in both the variances and covariances" for large-firm and small-firm returns.
+
+The assumption of a constant correlation has also been challenged. In a popular article, Longin and Solnik (1995) review the correlation of excess returns on equities for the countries of France, U.S., U.K., Sweden, Japan, Canada, and Germany using monthly data from 1960-1990. Their results suggest a rejection of a constant international conditional correlation. In a similar vein, Ramchand and Susmel (1998) use a markov switching ARCH model and find that the correlation between the U.S. and other foreign markets is significantly higher in times of elevated volatility. Rodriguez (2007) studies financial contagion during the Asian financial crisis (circa 1997) and the Mexican peso devaluation (circa 1994). By combining a markov switching ARCH model with copula-based distributions, Rodriguez documents a change in dependence between a high variance regime and a low variance regime.
+
+In this article, we employ a framework that will allow asset returns to deviate from the normality assumption by distribution and by time-varying dependence. In particular, this article studies the effect the financial crisis of 2007-2008 had on the foreign exchange market. To incorporate a degree of flexibility regarding the distribution of returns, copula theory will be applied to daily exchange rate data for the Euro-Dollar, Yen-Dollar, and Pound-Dollar currency pairs. According to the 2010 Triennial Central Bank Survey conducted by the Bank of International Settlements, these currency pairs account for 51\% of all foreign exchange turnover in 2010. To capture potential breaks in the dependence over time, we estimate and compare three popular mutli-regime models: a markov transition model, a smooth transition model, and a sequential break point model.
+
+Daily data is required since one focus of the article concentrates on estimating the dependence between observations in the extremes of the joint distribution. Weekly or monthly data will lead to a sample size that is too small to populate the tails, leading to imprecise estimates of the dependence and distributional parameters. The source for these series will be the Bank of England, whose database on historical exchange rates includes many of the world's currencies and is easy to access. For now, the time frame will be restricted from January 1, 2005 to December 31, 2009. By narrowing our focus to the years immediately before and immediately after the financial crisis, we are attempting to isolate the financial crisis as the causal factor behind any distributional changes in the foreign exchange market.
+
+The layout for the rest of the paper is as follows. Section 2 discusses all relevant copula theory and important definitions. Section 3 provides the details of the regime change models used in this analysis while section 4 focuses on the estimation of each marginal distributions. Section 5 is a brief paragraph on copula selection. Section 6 summarizes main results and is followed by some concluding remarks.
+
+\section{Copula Theory}
+
+In this section, we briefly discuss all necessary copula theory and definitions that are put to use in this paper. Since our analysis pertains exclusively to bivariate distributions, all theory will be presented in the bivariate case. An accessibly treatment of basic copula theory can be found in Nelsen (2006) while additional topics on multivariate dependence can be found in Joe (1997). For the individual in need of a concise introduction to the topic, the articles by Embrechts, Lindskog, and McNeil (2003) and Genest and Favre (2007) are a great entry point.
+
+\subsection{Sklar's Theorem}
+
+The term 'copula' has already been used various times in the introduction. To start, we provide a formal definition:
+
+\begin{defn}\label{defn:copula}
+A bivariate copula is a function $C$ from $\left[0,1\right]^{2}$ to $\left[0,1\right]$ that satisfies (1) For every $u,w$ in $\left[0,1\right] :C\left(u,0\right) = C\left(0,w\right) = 0;$ (2) For every $u,w$ in $\left[0,1\right] :C\left(u,1\right) = u\ \ $and $\ C\left(1,w\right) = w;$ and (3) For every $u_{1}, u_{2}, w_{1}, w_{2}$ in $\left[0,1\right]$ such that $u_{1} \leq u_{2}$ and $w_{1} \leq w_{2}:C\left(u_{2}, w_{2}\right) - C\left(u_{1}, w_{2}\right) - C\left(u_{2}, w_{1}\right) + C\left(u_{1}, w_{1}\right)$ $\geq 0$.
+\end{defn}
+
+Taken together, properties (1) - (3) imply that a copula is a nondecreasing function in each argument, a quality shared by all distribution functions. It is, in fact, helpful to think of copulas as distribution functions whose domain is restricted to the unit square (or the unit hypercube in higher dimensions). With this in mind, we present Sklar's theorem, the foundation for empirical applications of copulas.
+
+\begin{thm} [Sklar, 1959] \label{thm:skl}
+Let $F_{XY}$ be a joint distribution function with margins $F_{X}$ and $F_{Y}$. Then there exists a copula $C$ such that for all $x,y$ in $\bar{\mathbb{R}}$,
+\begin{equation} \label{eq:sklars}
+F_{XY}\left( x,y\right) =C\left(F_{X}\left(x\right), F_{Y}\left(y\right)\right) = C\left(u,w\right)
+\end{equation}
+
+If $F_{X}$ and $F_{Y}$ are continuous, then $C$ is unique; otherwise, $C$ is uniquely determined on $RanX\times RanY$. Conversely, if $C$ is a copula and $F_{X}$ and $F_{Y}$ are distribution functions, then the function $F_{XY}$ defined by equation~\ref{eq:sklars} is a joint distribution function with margins $F_{X}$ and $F_{Y}$.
+\end{thm}
+
+The copula approach to multivariate distributions first transforms each marginal distribution from the extended real line $\left(\bar{\mathbb{R}}\right)$ to the unit interval through the \textit{probability integral transform} (PIT). First investigated by Rosenblatt (1952), this transform states that if $X$ is a continuous random variable with density $f_{X}$, then the random variable $U$ defined by
+
+\begin{equation} \label{eqn:PIT}
+u=\int_{-\infty}^{x}f_{X}\left(t\right) dt=F_{X}\left(x\right)
+\end{equation}
+
+is identically and independently distributed (iid) uniformly on the unit interval. In the bivariate case, this transformation shifts the domain of analysis from the extended real plane to the unit square. A copula is then chosen to install a dependence structure between the two marginal distributions. Sklar's theorem confirms the existence of a copula $C$ whose value $C\left(u,w\right) = C\left(F_{X}\left(x\right), F_{Y}\left(y\right)\right)$ provides the joint probability $P\left[U < u,~W < w\right] = P\left[X < x,~Y < y\right]$. In application, the copula approach allows us to separate a joint distribution $F_{XY}$ into marginal distributions $F_{X},F_{Y}$ and a dependence function $C$. The dependence between the marginal distributions $F_{X},F_{Y}$ is completely governed by the copula, and just as Sklar's theorem states, we can model this dependence separately.
+
+\subsection{Patton's Extension}
+
+Taking inspiration from by Hansen's (1994) work on time-varying density estimation, Patton (2006) broadens Sklar's original theorem to conditional distributions. This extension paves the way for conditional copulas with time-varying parameters. Consider a bivariate series $\left(X_{t},Y_{t}\right)^{\prime}$ on some information set $\Im_{t-1}$. In the same manner as Theorem~\ref{thm:skl}, we can decompose the conditional distribution of $\left(X_{t},Y_{t}\right)$ given $\Im _{t-1}$ into its marginal distributions and the conditional copula. Given 
+\begin{gather*}
+X_{t}~|~\Im _{t-1}~\sim~F_{X}\left(x|\Im_{t-1}\right), ~~~ Y_{t}~|~\Im_{t-1}~\sim ~ F_{Y}\left(y|\Im_{t-1}\right) \\ \left(X_{t},Y_{t}\right) | \Im _{t-1}~ \sim ~ F_{XY}\left(x,y|\Im_{t-1}\right) 
+\end{gather*}
+Then
+\begin{equation} \label{eqn:patton}
+F_{XY}\left(x,y| \Im_{t-1}\right) = C\left(F_{X}\left(x| \Im_{t-1}\right)
+,F_{Y}\left(y| \Im_{t-1}\right) ~|~ \Im_{t-1}\right)
+\end{equation}
+
+As discussed in Patton (2006), the same information set must be used for each margin and the copula. Conditioning the marginal models and the copula on different information sets will yield a function $\hat{F}_{XY}\left(\cdot|\Im_{t-1}\right)$ that is not the joint distribution of $\left(X,Y\right)|\Im_{t-1}$. In practice, this complication has the potential to offset the most attractive quality of the copula approach: modeling each marginal distribution and the copula separately.
+
+Say our information set consists of two conditioning variables $Z_{1},Z_{2}\in\Im_{t-1}$, and we condition $X$ on $Z_{1}$ and $Y$ on $Z_{2}$. The only way $\hat{F}_{XY}\left(\cdot|\Im_{t-1}\right)$ will be the joint distribution function of $\left(X,Y\right)|\Im_{t-1}$ is the special case when $F_{X}\left(x|Z_{1}\right) = F_{X}\left(x|Z_{1},Z_{2}\right)$ and $F_{Y}\left(y|Z_{2}\right) = F_{Y}\left(y|Z_{1},Z_{2}\right)$. This can occur when $Z_{1}$ is orthogonal to $Y|Z_{2}$ and $Z_{2}$ is orthogonal to $X|Z_{1}$. To provide an example of this special case in the context of exchange rates, define the Euro-Dollar return as $X_{t}$ with a lagged value as its conditioning variable $X_{t-k} = Z_{1}$. Likewise, define the Yen-Dollar return as $Y_{t}$ with a lagged value as its conditioning variable $Y_{t-k} = Z_{2}$. If the lagged Euro-Dollar return $X_{t-k}$ has no predictive power for the conditional Yen-Dollar return $Y_{t}|Y_{t-k}$, and conversely the lagged Yen-Dollar return $Y_{t-k}$ has no predictive power for the conditional Euro-Dollar return $X_{t}|X_{t-k}$, then our orthogonality conditions are met and we can correctly interpret the function $\hat{F}_{XY}\left(\cdot|\Im_{t-1}\right)$ as the joint distribution function of $\left(X,Y\right)|\Im _{t-1}$. These conditions must be evaluated and motivates the regression tests discussed at the end of Section 4.
+
+\subsection{Methods for Constructing Copulas}
+
+There are several methods for constructing copulas. The three most popular methods are used in this study and subsequently discussed.
+
+\subsubsection{The Inversion Method}
+
+The Gaussian and Student-t Copula are created using the inversion method: $C\left(u,w\right) = F_{XY}\left(F_{X}^{-1}\left(u\right),F_{Y}^{-1}\left(w\right)\right)$, where $F_{X}^{-1}$ and $F_{Y}^{-1}$ are quantile functions. A more exact description of the bivariate Student-t copula distribution is written as:
+
+\begin{eqnarray} \label{eq:stdTinv}
+C_{\boldsymbol{t}}\left(u,w;\rho,\nu\right) &=& \boldsymbol{t}_{v}\left(t_{\nu}^{-1}\left(u\right), t_{\nu}^{-1}\left(w\right)\right) \\
+&=& \int_{-\infty}^{t_{\nu}^{-1}\left(u\right)}\int_{-\infty}^{t_{\nu}^{-1}\left(w\right)}q\left(1-\rho\right)^{-\frac{1}{2}}\left[1+\nu^{-1}\left(x^{2}-2\rho xy + y^{2}\right)\right]^{-\left(\nu + 2\right)
+/2}dxdy \notag
+\end{eqnarray}
+
+where $\boldsymbol{t}_{v}$ is the bivariate t-distribution function, $t_{\nu}^{-1}$ is the univariate quantile function, $x = t_{\nu}^{-1}\left(u\right)$, $y = t_{\nu }^{-1}\left(w\right)$, and $q = \Gamma\left(\frac{1}{2}\right)^{-1}\Gamma\left(\frac{\nu +2}{2}\right)\left(\nu\pi\right)^{-1}$. Differentiation of equation~\ref{eq:stdTinv} with respect to $u$ and $w$ produces the Student-t copula density:
+
+\begin{eqnarray}
+c_{\boldsymbol{t}}\left(u,w;\rho,\nu\right) &=& Q\left(1-\rho\right)^{-\frac{1}{2}}\left[1+\nu^{-1}\left(1-\rho\right)^{-1}\left(x^{2}-2\rho xy+y^{2}\right)\right]^{-\left(\nu +2\right)/2} \notag \\
+&& \times~\left[\left(1+\nu^{-1}x^{2}\right)\left(1+\nu^{-1}y^{2}\right)\right]^{\left(v+1\right)/2}
+\end{eqnarray}
+
+where $Q=\Gamma\left(\frac{v}{2}\right)^{-1}\Gamma\left(\frac{\nu +1}{2}\right)^{-2}\Gamma\left(\frac{\nu +2}{2}\right)$. The Gaussian copula is obtained in a similar fashion. If $\boldsymbol{N}_{\rho}$ denotes the standard bivariate normal distribution and $\Phi^{-1}$ denotes the quantile function for the univariate standard normal distribution, the Gaussian copula is summarized by $C_{\boldsymbol{N}}\left(u,w;\rho\right) = \boldsymbol{N}_{\rho}\left(\Phi^{-1}\left(u\right),\Phi^{-1}\left(w\right)\right)$.
+
+\subsubsection{Archimedean Copulas}
+
+The second class we consider are referred to as Archimedean copulas. Families of these copulas are defined by their generator function $\varphi$, which usually contain one or two parameters. These parameters play a fundamental role in specifying the dependence structure between the marginal distributions. Consider the following definitions:
+
+\begin{defn} \label{def:Arch1}
+The generator $\varphi$ of an Archimedean copula is a function from $\left[0,1\right]$ to $\left[0,\infty\right]$ that is continuous, strictly decreasing, convex, and satisfies $\varphi\left(1\right) = 0$.
+\end{defn}
+
+\begin{defn} \label{def:Arch2}
+The pseudo-inverse of $\varphi$ is the function $\varphi^{\left[-1\right]}$ from $\left[0,\infty\right]$ to $\left[0,1\right]$ given by $\varphi^{\left[-1\right]}\left(t\right) = \varphi^{\left[-1\right]}\left(t\right)$ for $t$ in $\left[0,\varphi\left(0\right)\right]$ and $\varphi^{\left[-1\right]}\left(t\right) = 0$ for $t$ in $\left[\varphi\left(0\right),\infty\right]$. If $\varphi\left(0\right) = \infty$, the pseudo-inverse is simply the inverse $\varphi^{-1}\left(t\right)$.
+\end{defn}
+
+Given definition~\ref{def:Arch1} and definition~\ref{def:Arch2}, an Archimedean copula is constructed in the following manner:
+
+\begin{equation} \label{eqn:Archm}
+C\left(u,w\right) = \varphi^{\left[-1\right]}\left(\varphi\left(u\right)+\varphi\left(w\right)\right)
+\end{equation}
+
+Again, when viewed through the context of theorem~\ref{thm:skl}, one can interpret $C\left(u,w\right)$ as a cumulative distribution function. To provide a concrete example, consider the Gumbel copula. The generator function is given by $\varphi\left(t\right) = \left(-\ln t\right)^{\theta}$. Using equation~\ref{eqn:Archm}, it is straight forward to construct the copula that corresponds to this particular generator:
+
+\begin{equation} \label{eqn:Gumbel}
+C_{G}\left(u,w;\theta\right) = \exp\left\{-\left[\left(-\ln u\right)^{\theta}+\left( -\ln w\right)^{\theta }\right]^{\frac{1}{\theta}}\right\}
+\end{equation}
+
+Differentiating equation~\ref{eqn:Gumbel} with respect to $u$ and $w$ yields the copula density:
+
+\begin{eqnarray}
+c_{G}\left(u,w;\theta\right) &=& C_{G}\left(u,w;\theta\right)\left(\ln u\cdot\ln w\right)^{\theta -1}\left(uw\right)^{-1}\left[\left(-\ln u\right)^{\theta}+\left(-\ln w\right)^{\theta}\right]^{\frac{1-2\theta}{\theta}}\times  \notag \\
+&& \left[\theta -1+\left[\left(-\ln u\right)^{\theta}+\left(-\ln w\right)^{\theta}\right]^{\frac{1}{\theta}}\right]
+\end{eqnarray}
+
+\subsubsection{Mixture Copulas} \label{sec:mixtureCopula}
+
+A third method for copula construction exists if one takes an amalgam of copulas and combines them in a certain manner. Just as we can create new distributions by taking a mixture of Gaussians, we can construct mixture copulas. Specifically, if we have a finite collection of $N$ copulas, we can show that the copula $C^{\ast }$ in equation~\ref{eqn:mixture} satisfies definition~\ref{defn:copula}.
+
+\begin{equation} \label{eqn:mixture}
+C^{\ast}\left(u,w;\boldsymbol{\theta}\right) = \sum_{k=1}^{N}\pi_{k}C_{k}\left(u,w;\theta _{k}\right)
+\begin{array}{c}
+\pi _{k}\geq 0; \pi _{1}+\cdots +\pi _{N}=1 \\ 
+\multicolumn{1}{l}{\boldsymbol{\theta} = \left(\theta_{1},...,\theta_{N},\pi_{1},...,\pi_{N}\right)}
+\end{array}
+\end{equation}
+
+The mixture concept can be extended to include a collection of infinite copulas. Suppose we have a copula family governed by a single parameter $C\left(\cdot;\theta\right)$. If we consider the parameter $\theta$ as random variable drawn from a continuous distribution $\theta\sim H$, then integrating over the support of $H$ produces a copula:
+
+\begin{equation}
+C^{\ast}\left( u,w\right) =\int_{\mathbb{R}}C\left(u,w;\theta\right)dH\left(\theta\right)
+\end{equation}
+
+The distribution $H$ is referred to as the 'mixing distribution'. Notice that in the infinite case (2.10), the copula family is consistent while the parameter of that family varies. This is in contrast to the finite mixture case~\ref{eqn:mixture}, where the component copulas $C_{k}$ are free to differ from one another.
+
+
+\subsection{Survival Copulas and Symmetry}
+
+It was mentioned that theorem~\ref{thm:skl} confirms the existence of a copula $C$ whose value $C\left(u,w\right) = C\left(F_{X}\left(x\right), F_{Y}\left(y\right)\right)$ provides the probability $P\left[X < x, Y < y\right] = P\left[U < u, W < w\right]$. At times, the joint probability $P\left[X > x, Y > y\right] = 1-F_{XY}\left(x,y\right)\equiv S_{XY}\left(x,y\right)$ is also of interest. As econometricians, we refer to the function $S_{XY}$ as a survival or duration function. For an arbitrary copula $C$, here is a corresponding survival copula $\hat{C}$ that models the joint survival function:
+
+\begin{eqnarray*}
+S_{XY}\left(x,y\right) &=& P\left[X > x, Y > y\right] \\
+&=& 1-F_{X}\left(x\right) - F_{Y}\left(y\right) + F_{XY}\left(x,y\right) \\
+&=& S_{X}\left(x\right) + S_{Y}\left(y\right) - 1 + C\left(1 - S_{X}\left(x\right), 1 - S_{Y}\left(y\right)\right) \\
+&=& \hat{C}\left(S_{X}\left(x\right), S_{Y}\left(y\right)\right)
+\end{eqnarray*}
+
+The relationship between a copula $C$ and its survival copula $\hat{C}$ is given by:
+
+\begin{equation} \label{eqn:survival}
+\hat{C}\left( u,w\right) =u+w-1+C\left( 1-u,1-v\right)
+\end{equation}
+
+Equation~\ref{eqn:survival} has the effect of rotating a copula 180 degrees along the main diagonal of the unit square. Many papers in the literature discuss the process of producing 'symmetric' copulas, especially in the bivariate case. There is nothing intimidating about this process. It is a special case of the mixture method defined in section (2.3.3). For $N=2$, one can take an arbitrary copula $C$, its corresponding survival copula $\hat{C}$, and apply equal weights so that $C^{\ast}\left(u,w\right) = 0.5\left[ C\left(u,w\right) +\hat{C}\left(u,w\right)\right]$. At times, restricting the weights in mixture copula can aid in identification. If the model is simple enough, this restriction can be jettisoned, and the weights can be estimated along with the parameters of the component copulas.
+
+\subsection{Dependence}
+
+There are many forms of dependence when discussing multivariate distributions. This section outlines two specific forms: rank correlation described by Kendall's tau and 'tail--dependence'. Noticeably, our analysis avoids using Pearson's correlation coefficient $\rho = cov\left(X,Y\right)\left[var\left(X\right)var\left(Y\right)\right]^{-1/2}$, which provides a measure of \textit{linear} association. Although appropriate for elliptical distributions, it is less appropriate for discussing the association of random variables whose joint distribution is non-elliptical, or whose dependence is non-linear. A practical discussion of this issue is covered in Embrechts, McNeil, and Straumman (2002).
+
+\subsubsection{Kendall's $\tau$}
+
+A global measure of association, Kendall's tau is a popular measure of the degree of monotonic dependence between two random variates. Invariant to strictly increasing transformations, Kendall's tau provides a measure of correlation between the ranks of two marginal distributions. This short section begins with the definition of concordant and discordant observations.
+
+\begin{defn}
+For a vector of continuous random variables $\left(X,Y\right)$, let $\left(x_{i},y_{i}\right)$ and $\left(x_{j},y_{j}\right)$ represent two observations. We say $\left(x_{i},y_{i}\right)$ and $\left(x_{j},y_{j}\right)$ are concordant if $\left(x_{i} - x_{j}\right)\left(y_{i}-y_{j}\right) > 0$ and discordant if $\left(x_{i}-x_{j}\right)\left(y_{i} - y_{j}\right) < 0$.
+\end{defn}
+
+The population version of Kendall's tau is defined as the probability of concordance minus the probability of discordance:
+
+\begin{equation}
+\tau = P\left[\left(X_{1} - X_{2}\right)\left(Y_{1} - Y_{2}\right) > 0\right] - P\left[\left(X_{1} - X_{2}\right)\left(Y_{1} - Y_{2}\right) < 0\right]
+\end{equation}
+
+For an arbitrary copula $C$, Nelson (2006, pg 159) demonstrates that Kendall's tau can be obtained by integrating over the unit square in the following manner:
+
+\begin{equation} \label{eqn:Ktau}
+\tau = 4\int\int_{\left[0,1\right]^{2}}C\left(u,w\right)dC\left(u,w\right) - 1 
+\end{equation}
+
+By choosing to represent global dependence through Kendall's tau, we are creating an appropriate standard to compare estimates of dependence produced by different copulas, elliptical or otherwise. Equation (\ref{eqn:Ktau}) is especially helpful when calculating Kendall's tau for mixture copulas, where in most cases, no closed form relationship exists between the parameters of the mixture copula and the measure of correlation. Brute force numerical integration of (\ref{eqn:Ktau}) is a useful fallback in these situations.
+
+\subsubsection{Tail Dependence}
+
+Tail dependence is a localized measure of association and allows us to make probabilistic statements about observations in the upper-right corner and lower-left corner of the unit square. In our present context on exchange rates, upper tail dependence is a statement about the probability of two currency pairs experiencing strong concurrent depreciations against the dollar. Conversely, lower tail dependence is a statement about the probability of two currency pairs experiencing strong concurrent appreciations against the dollar. It is worth pointing out that tail dependence is a property of the copula and not of the marginal distributions. The following definition is due to Joe (1997).
+
+\begin{defn} \label{defn:tail_dep}
+For a copula $C$, if $\lambda^{U}\equiv\lim_{t\nearrow 1}P\left[X > F_{X}^{-1}\left(t\right) | Y > F_{Y}^{-1}\left(t\right)\right] = \lim_{t\nearrow 1}\frac{1-2t+C\left(t,t\right)}{1-t}$ exists, then $C$ has upper tail dependence if $\lambda^{U}$ is in $(0,1]$ and no upper tail dependence if $\lambda^{U}=0$. \\ \\ Likewise, if $\lambda ^{L}\equiv \lim_{t\searrow 0}P\left[X\leq F_{X}^{-1}\left(t\right) | Y\leq F_{Y}^{-1}\left(t\right)\right] =\lim_{t\searrow 0}\frac{C\left(t,t\right)}{t}$ exists, $C$ has lower tail dependence if $\lambda ^{L}$ is in $(0,1]$ and no lower tail dependence if $\lambda^{L} = 0$.
+\end{defn}
+
+When considering a mixture copula $C^{\ast }$ as described in equation (\ref{eqn:mixture}), the tail dependence is the weighted average of the tail dependence values for each component copula: 
+\begin{equation} \label{eqn:mixtaildep}
+\lambda^{\ast, i} = \sum_{k=1}^{N}\pi _{k}\lambda_{k}^{i}
+\begin{array}{c}
+~~~~~~~i = \left\{L,U\right\} 
+\end{array}
+\end{equation}
+
+The weights $\pi_{k}$ in equation (\ref{eqn:mixtaildep}) are the same as the corresponding mixture weights in equation (\ref{eqn:mixture}). This result can be verified by applying l'H\^{o}pital's rule to the limits in definition (\ref{defn:tail_dep}), substituting in $dC^{\ast}$, and simplifying.
+
+ \subsection{Estimation}
+
+Maximum likelihood is the most frequently used procedure for parametric estimation of copula models and is the method we employ here. A joint distribution is described by
+\begin{equation} \label{eqn:copulaJointDistribution}
+F_{XY}\left(x,y\right) = C\left(F_{X}\left(x\right), F_{Y}\left(y\right)\right)
+\end{equation}
+
+Provided that $F_{X}$ and $F_{Y}$ are differentiable while $F_{XY}$ and $C$ are twice differentiable, the density function is found by taking the cross partial derivative of (\ref{eqn:copulaJointDistribution}):
+
+\begin{eqnarray*}
+f_{XY}\left(x,y\right) &\equiv& \frac{\partial^{2}F_{XY}\left(x,y\right)}{\partial x \partial y} \\
+&=& \frac{\partial F_{X}\left(x\right)}{\partial x} \cdot \frac{\partial F_{Y}\left(y\right)}{\partial y} \cdot \frac{\partial^{2}C\left(F_{X}\left(x\right), F_{Y}\left(y\right)\right)}{\partial x\partial y} \\
+&=& f_{X}\left(x\right) \cdot f_{Y}\left(y\right) \cdot c\left(u,w\right)
+\end{eqnarray*}
+
+The log-likelihood value follows immediately.
+
+\begin{eqnarray*}
+\Lagr &=& \sum\nolimits_{t=1}^{T}\log \left[f_{X}\left(x_{t}\right)\right] + \sum\nolimits_{t=1}^{T}\log \left[f_{Y}\left(y_{t}\right)\right]
++ \sum\nolimits_{t=1}^{T}\log \left[c\left(u_{t}, w_{t}\right)\right] \\
+&=& \Lagr_{x} + \Lagr_{y} + \Lagr_{c}
+\end{eqnarray*}
+
+Full information maximum likelihood would require the simultaneous estimation of both the marginal distribution parameters along with the parameters of the copula. Although this approach would provide the most efficient estimates, the large dimensionality of the parameter space makes maximization of the likelihood function particularly difficult. A second, more feasible approach known as the 'inference on margins' (IFM) first estimates the marginal models and then separately estimates the copula model. This method leads to less efficient, but still consistent estimates.
+
+\section{Time-Varying Models}
+
+A brief survey of various time-varying copulas in the literature is provided by Manner and Reznikova (2012). All models are generalized to $k$ different regimes.
+
+\subsection{Sequential Change Point Analysis}
+
+This first method we use to introduce timve-varying dependence is the most simple. Dias and Embrechts (2004, 2009) outline a framework to detect structural breaks in the parameters of a copula over time. We employ that framework here. Consider the sequence of random vectors $\left(U_{t}, W_{t}\right)$ created by the PIT from our marginal models where $U_{t}\equiv F_{X}\left(X_{t}|\Im_{t-1}\right)$ and $W_{t}\equiv F_{Y}\left(y_{t} | \Im_{t-1}\right)$. The dependence at each date can be modeled by a copula $C\left(U_{t}, V_{t};~\boldsymbol{\theta}_{t}\right)$ with parameter vector $\boldsymbol{\theta}_{t}=(\theta_{1,t},...,\theta_{N,t})$. The vector $\theta_{t}$ should contain the weights $\pi _{i,t}$ for any mixture copula described in section (\ref{sec:mixtureCopula}). The idea is to test the null hypothesis of an absence of any structural break in the copula parameters
+
+\begin{equation}
+H_{0}:\boldsymbol{\theta}_{t} = \boldsymbol{\theta}
+\end{equation}
+
+against the alternative hypothesis of a single structural break at unknown time $\tau \in \left[1, T\right]$.
+
+\begin{equation}
+H_{A}:\boldsymbol{\theta}_{t} = \left\{
+\begin{array}{ccc}
+\boldsymbol{\theta}_{1} & \text{if} & 1\leq t \leq \tau \\ 
+\boldsymbol{\theta}_{2} & \text{if} & \tau < t \leq T
+\end{array}
+\right. 
+\end{equation}
+
+Define $L_{0}\left(\theta_{0}\right)$, $L_{1}\left(\theta_{1}\right)$, and $L_{2}\left(\theta_{2}\right)$ as the log-likelihood functions of the copula model estimated on the entire sample, the first $\tau$ observations, and the last $T-\tau$ observations, respectively. The statistic $\Lambda_{\tau}$ for a structural break in the parameter of the copula model takes the form of a generalized likelihood ratio test:
+
+\begin{equation}
+-2\log \left(\Lambda_{\tau}\right) = 2\left[L_{1}\left(\hat{\theta}_{1}\right) + L_{2}\left(\hat{\theta}_{2}\right) - L_{0}\left(\hat{\theta}_{0}\right)\right]
+\end{equation}
+
+Since the break point $\tau$ is not known, ex ante, a sequence of tests will be performed for each date in a subset of the full sample $\left(t_{l},t_{h}\right) \subset \left[1, T\right]$. To avoid the decreasing power of the test as the break point nears the edge of the series, the subset of potential break dates $\left( t_{l},t_{h}\right)$ will exclude a number of dates at the beginning and end of the sample series. A five percent trim is used at both ends. With this setup, the null will be rejected for large values of:
+
+\begin{equation}
+Z_{t}=\max_{t_{l}\leq t\leq t_{h}}\left[ -2\log \left( \Lambda _{t}\right)\right]
+\end{equation}
+
+Inference is based on the asymptotic distribution of $Z_{t}^{1/2}$, which has been derived by Cs\"{o}rg\H{o} and Horv\'{a}th (1997). Due to the slow convergence of $Z_{t}^{1/2}$ to its asymptotic distribution, an approximation is used to improve the rejection regions of the test for small samples. Simulation results in Dias and Embrechts (2004) provided tentative evidence that this approximation provides accurate p-values.
+
+\begin{eqnarray}
+P\left(Z_{t}^{1/2} \geq x\right) &\approx& \frac{x^{p} \exp\left\{-x^{2}/2\right\}}{2^{p/2}\Gamma \left(p/2\right)} \times  \\
+                                 && \left[\log \frac{\left(1-h\right) \left(1-l\right)}{hl} - \frac{p}{x^{2}}\log \frac{\left(1-h\right)\left(1-l\right)}{hl} + \frac{4}{x^{2}} + O \left(\frac{1}{x^{4}}\right)\right]
+\end{eqnarray}
+
+Taking into consideration the possibility of more than one break, the approach described in this section can be iterated on smaller disjoint subsets produced by successful rejections of the null. Say we find an estimate $\hat{\tau}$ of a break date in our full series. We can test for additional breaks in the subsamples $\left[1, \hat{\tau}\right]$ and $\left[\hat{\tau} + 1, T\right]$. This process can continue until the null can no longer be rejected for any subsample.
+
+Once a collection of break dates $\hat{\tau}_{1},\hat{\tau}_{2},...,\hat{\tau}_{k-1}$ has been estimated, Dias and Embrechts (2009) suggest a repartition method identical to Bai (1997). Since the alternative hypothesis of the test is that of a single break, the sequential process to find additional breaks could lead to biased estimates for the location of $\hat{\tau}_{i}:i > 1$. To alleviate these concerns, each break date is reestimated $\hat{\tau}_{i}^{\ast}$ by applying the test to the subsamples $\left[ \hat{\tau}_{i-1}+1\leq t\leq \hat{\tau}_{i+1}\right]$ for $i=1,...,k-1$. Here $\hat{\tau}_{0} = 0$ and $\hat{\tau}_{k} = T$.
+
+The advantages of this approach is its relative simplicity. Many static copula have tractable gradients and hessians. The dimensionality of the parameter space is kept to a minimum as well. The only dynamics, so-to-speak, are the estimated break points. Other regime-varying models in the literature, such as the markov transition and smooth transition models discussed later, usually produce results where the dependence structure of the underlying data may change from day-to-day.
+
+\subsection{Markov Transition}
+
+In a second approach, we introduce a latent state variable $s_{t}$ to govern the dependence of our exchange rate series at time $t$. First brought into the econometrics literature by Hamilton (1989, 1994), we model changes in the state variable by a first-order markov transition matrix. In this setup, the probability of being in some particular state tomorrow $s_{t+1}$ depends solely on what state the variable is in today $s_{t}$. A more concrete description of the process is given by the probability statement $P\left[s_{t + 1} = j~|~s_{t}=i,~s_{t-1} = m,\ldots \right] = P\left[s_{t+1}=j~|~s_{t} = i\right] = p_{ij}$, where we have $p_{i1} + p_{i2} + \cdots + p_{ik}=1$ for all $i = 1,...,k$. The vectors of transition probabilities from one state to another are organized into a single $k\times k$ transition matrix $\mathbf{P}$.
+
+\begin{equation}
+\mathbf{P}=\left[ 
+\begin{array}{cccc}
+p_{11} & p_{21} & \cdots & p_{k1} \\ 
+p_{12} & p_{22} & \cdots & p_{k2} \\ 
+\vdots & \vdots & \ddots & \vdots \\ 
+p_{1k} & p_{2k} & \cdots & p_{kk}
+\end{array}
+\right]
+\end{equation}
+
+For each of the $k$ possible states, a copula is used to model the dependence for that state. These copula densities are stacked into a $k\times 1$ vector and indexed by time:
+
+\begin{equation}
+\boldsymbol{\eta}_{t} = \left[ 
+\begin{array}{c}
+\eta _{t,1} \\ 
+\vdots \\ 
+\eta _{t,k}
+\end{array}
+\right] = \left[
+\begin{array}{c}
+c_{1}\left(F_{X}\left(x_{t} | \Im_{t-1}\right), F_{Y}\left(y_{t} | \Im_{t-1}\right) ;\mathbf{\theta}_{1}\right) \\ 
+\vdots \\ 
+c_{k}\left(F_{X}\left(x_{t} | \Im_{t-1}\right), F_{Y}\left(y_{t} | \Im_{t-1}\right) ;\mathbf{\theta }_{k}\right)
+\end{array}
+\right]
+\end{equation}
+
+Since we can not know for sure which state the process is in at any given date, inference must be made using all the information available at that time. At each date, we assign a probability that the dependence governing the exchange rate returns comes from a state $P\left[s_{t}=j~|~x_{t},x_{t-1},...,y_{t},y_{t-1},...,\mathbf{\theta}_{1},...,\mathbf{\theta}_{k}\right]$. These conditional probabilities are collected into another $k\times 1$ vector denoted $\boldXi_{t|t}$. Given a set of initial probabilities $\boldXi_{1|0}$, optimal inferences are found by iterating on the following equations:
+
+\begin{eqnarray}
+\boldXi_{t|t} &=& \frac{\boldXi_{t|t-1}\odot\boldsymbol{\eta}_{t}}{\mathbf{1}^{\top}\left(\boldXi_{t|t-1}\odot \boldsymbol{\eta}_{t}\right)} \\
+\boldXi_{t+1|t} &=& \mathbf{P} \boldXi_{t|t}
+\end{eqnarray}
+
+where the operator $\odot$ is the hadamard product denoting element-by-element multiplication and $\mathbf{1}$ is a column of ones of length $k$. Conveniently, the log-likelihood value can be calculated as a side product to this algorithm, with the value equaling
+
+\begin{equation}
+\Lagr_{c} = \sum_{t=1}^{T}\log \left[\mathbf{1}^{\top}\left(\boldXi_{t|t-1} \odot \boldsymbol{\eta}_{t}\right)\right] 
+\end{equation}
+
+What's more, we can use these conditional probabilities to gain an even better gauge of the latent state variable. Starting with $\boldXi_{T|T}$, we can iterate backwards from $T$ to $1$ to calculate the smoothed probabilities $\boldXi_{t|T}$ by iterating on:
+
+\begin{equation}
+\boldXi_{t|T} = \boldXi_{t|t} \odot \left[\mathbf{P}^{\top}\left(\boldXi_{t+1|T}\left(\div\right)\boldXi_{t+1|t}\right)\right]
+\end{equation}
+
+The operator $\left(\div\right)$ denotes element-by-element division. Changes in dependence through time will be captured by the different copula parameters governing each state.
+
+\subsection{Smooth Transition}
+
+The third, and final, approach to time-varying dependence this study implements is a version of the smooth-transition copula-GARCH (STCG) model. We employ a single copula but allow the parameters of the copula to evolve over time. More specifically, for any given copula $C\left(\cdot | \mathbf{\theta}_{t}\right)$, we allow the possibility for each parameter $\theta
+_{i}$ to undergo multiple transitions.
+
+\begin{equation} \label{eqn:smoothTrans}
+\theta_{i,t} = \theta_{i,1} + \sum_{m=1}^{k-1}\left(\theta_{i,m+1} - \theta_{i,m}\right) G_{m}\left(s_{t}; c_{i,m},\gamma_{i,m}\right)
+\end{equation}
+
+In general, $G_{m}\left(\cdot\right)$ is a bounded function with respect to the continuous transition variable $s_{t}$. In this study, $s_{t}$ will be constructed as a linear time trend $s_{t}=\frac{t}{T}$ and $G_{m}\left(\cdot\right)$ takes the form of the logistic function:
+
+\begin{equation} \label{eqn:smoothTransLogit}
+G\left(s_{t}; c, \gamma\right) = \left(1+\exp\left\{ -\gamma \left(
+s_{t}-c\right) \right\}\right)^{-1}~~~~~~~\gamma > 0
+\end{equation}
+
+Other specifications for $G\left( \cdot \right) $ can be found in van Dijk and Frances (1999)\ and \"{O}cal and Osborn (2000). The parameters $\boldsymbol{\gamma}_{i} = \left(\gamma_{i,1},...,\gamma_{i,k-1}\right)$ control the pace of each transition while the members of vector $\mathbf{c}_{i} = \left(c_{i,1},...,c_{i,k-1}\right)$ locate the inflection points of each transition.
+
+It is difficult to overstate how nonlinear a copula model becomes when subject to the full generality of specifications (\ref{eqn:smoothTrans}) and (\ref{eqn:smoothTransLogit}). To aid in identification, some restrictions are usually imposed. In our case, we restrict the location variables of each transition to be identical across copula parameters: $c_{i,m}=c_{j,m}$ for all $i,j$ and each $m$. In addition, we also hold the weights $\pi_{i}$ for mixture copulas constant.
+
+\section{Marginal Distributions}
+
+As stated earlier, the copula approach enables us to model the marginal distributions and dependence structure separately. In this section, we summarize how each univariate margin is modeled and validated. For any particular exchange rate, define the return as $X_{t} = \log \left(S_{t}\right) - \log\left(S_{t-1}\right)$, where $S_{t}$ is the spot price at time $t$. All exchange rates are denoted in foreign currency units per US dollar. Like many other financial assets, exchange rates are subject to volatility clustering, skewness, and leptokurtosis. To manage these properties, each return series $\left\{X_{t}\right\}_{t=1}^{T}$ is modeled using a GARCH specification with a Student-t distribution or a skewed Student-t distribution. The aim is to specify a parsimonious model that produces residuals whose PIT have an i.i.d uniform distribution. At its most general, the marginal distributions have the following time-varying specification:
+
+\begin{equation} \label{eqn:marginalModel}
+X_{i,t} = \mu_{i}\left(Z_{t - 1}; \phi_{i}\right) + \varepsilon_{i,t}
+\end{equation}
+
+\begin{equation}
+\varepsilon_{i,t}~|~\sigma_{i}\left(Z_{t - 1}; \phi_{i}\right) \sim T_{i}
+\end{equation}
+
+where $\sigma_{i}\left(Z_{t - 1}; \phi_{i}\right)$ is the conditional variance, $\mu_{i}\left(Z_{t - 1}; \phi_{i}\right)$ is the conditional mean, $Z_{t - 1} \in \Im_{t-1}$, and $T_{i}$ is either the t-distribution or a skewed t-distribution. To produce a skewed t-distribution, we follow Fernandez and Steel (1998). For a unimodal and symmetric density $f\left(x\right)$ that is decreasing in $\left\vert x\right\vert$, a skew parameter $\xi$ can force asymmetry upon $f\left(x\right)$, generating a new distribution $p\left(x|\xi\right)$ where
+
+\begin{equation}
+p\left(x|\xi \right) = \frac{2}{\xi + \frac{1}{\xi}} \left[f\left(x\xi\right) \mathbf{I}_{\left\{x < 0\right\}} + f\left(x\xi^{-1}\right) \mathbf{I}_{\left\{x \geq 0\right\}}\right]
+\end{equation}
+
+Of the seven exchange rates studied here, four required a skewed t-distribution. We now take the conditional mean and the conditional variance in turn. 
+
+\subsection{Conditional Variance}
+
+For the conditional variance, two different specifications need to be mentioned. The first is the standard GARCH(m,k) model,which has the following form:
+
+\begin{equation} \label{eqn:GARCH}
+\sigma_{t}^{2} = \omega + \sum_{i = 1}^{m}\alpha_{i} \varepsilon_{t - i}^{2} + \sum_{j = 1}^{k}\beta_{j} \sigma_{t - j}^{2}
+\end{equation}
+
+A separate approach proposed by Glousten et. al (1993) adds a bit of flexibility to the GARCH model specified in equation (\ref{eqn:GARCH}) by allowing asymmetrical responses to shocks\footnote{By shocks, we are referring to the error term in equation (\ref{eqn:marginalModel})} of opposing signs. 
+
+\begin{equation}
+\sigma_{t}^{2} = \omega + \sum_{i = 1}^{m}\left(\alpha_{i} + \gamma_{i}\mathbf{I}_{\left\{\varepsilon < 0 \right\}}\right) \varepsilon_{t - i}^{2} + \sum_{j = 1}^{k}\beta_{j}\sigma_{t- j}^{2}
+\end{equation}
+
+Here, $\mathbf{I}_{\left\{ \cdot \right\}}$ is the indicator function with value one if the statement in the brackets is true and zero otherwise. This second model allows for asymmetric responses to past shocks $\varepsilon_{t-i}$. If the lagged shock is positive $\left(\varepsilon_{t-i}>0\right)$, the coefficient has the value $\alpha_{i}$. If the lagged shock is negative $\left(\varepsilon_{t-i} < 0 \right)$, the coefficient has the value $\alpha_{i} + \gamma_{i}$.
+
+\subsection{Conditional Mean}
+
+Regarding the conditional mean of the return process, a simple constant term is usually all that is needed. If any additional versatility is required, an autoregressive model with the following form is used.
+
+\begin{equation} \label{eqn:AR}
+\mu_{t} = c ~+~ \sum_{i = 1}^{p} \rho_{i} X_{t - i}
+\end{equation}
+
+Five of the seven exchange rates under review need only a constant term while the Euro needs the first autoregressive term and no constant. For the New Zealand Dollar, no autoregressive component or constant is required. Table 1 provides a summary of the marginal models used for each exchange rate.
+
+\subsection{Model Validation}
+
+To confirm that we have well specified models, a series of diagnostic checks are performed on the PIT of the standardized residuals defined in equation (\ref{eqn:PIT}). These tests are divided into two categories. The first category directly tests the PIT of the standardized residuals to see if they are iid uniform random variates on the support $\left(0,1\right)$. The Kolmogorov-Smirnov (KS) test checks the variates for the uniform distribution assumption while lagrange multiplier (LM) tests check the independence assumption. As Berkowitz (2001) points out, the KS and LM tests do not provide a joint test of the iid assumption. Instead, each test is carried out in isolation.
+
+With equation (\ref{eqn:PIT}) in mind, Berkowitz (2001) notes that if $\Phi^{-1}$ is the standard normal quantile function, a well specified model will produce variates $z_{t} = \Phi^{-1}\left[\int_{-\infty}^{x} f_{X}\left(t\right) dt \right]$ that have a standard normal distribution. This insight opens the door for a wide range of distributional checks for normality that are already established in the literature. These standard distributional checks form the second category of tests. We include a common likelihood ratio (LR) test to check for normality of the mean and variance. A Jarque-Bera test is also used to check if the skew and kurtosis of the residuals deviate from normality. A second KS test is applied to the variates $z_{t}$, this time testing for normality. Since a part of this analysis examines extreme comovements between exchange rate pairs,  
+
+
+Table 2 lists the p-values for each test and currency pair. None of the p-values reject the null of an independently distributed uniform distribution at five percent level, although with a value of 0.065, the second moment LM test for the Yen-Dollar model just barely squeaks by.
+
+
+Our approach is to start with a simple GARCH(1,1) model with no autoregressive component in the conditional mean equation. If our tests indicate that the model is well specified, we stop there. If not, we continue to add additional parameters or try different functional forms until an acceptable fit is obtained. The next two tables summarize the marginal models of the individual exchanges rate under review in this paper. The first table provides an overview of the functional forms while the second provides the estimated paramater values.
+
+\vspace{10mm}
+
+%\newgeometry{margin = 2cm}
+\begin{landscape}
+
+\begin{table}
+\caption{Marginal Models}
+\begin{threeparttable}
+	\begin{tabular}[l]{l c c | c c c c c c | c c}
+\hline \hline
+& \multicolumn{2}{c}{Conditional Mean$^{1}$} & \multicolumn{6}{c}{Conditional Variance$^{1}$} & \multicolumn{2}{c}{Conditional Dist.$^{2}$} \\
+& const. & rho$_{1}$ & omega & alpha$_{1}$ & gamma$_{1}$ & alpha$_{2}$ & gamma$_{2}$ & beta & nu & xi \\
+\hline
+Euro  & -- &  0.001 & 0.002 & 0.000 & -0.061 & 0.052 & 0.040 & 0.955 & 8.345 & -- \\
+      & -- & (0.03) &(0.00) &(0.01) & (0.00) &(0.01) &(0.02) &(0.00) &(1.84) & -- \\
+Pound & -0.007 & -- & 0.002 & 0.041 & -- & -- & -- & 0.955 & 9.721 & -- \\
+      & (0.02) & -- &(0.00) &(0.01) & -- & -- & -- &(0.00) &(2.12) & -- \\
+S. Franc & -0.018 & -- & 0.003 & 0.000 & 0.043 & 0.035 & -0.040 & 0.957 & 9.432 & 0.895 \\
+		 & (0.02) & -- &(0.00) &(0.04) &(0.06) &(0.04) & (0.05) &(0.00) &(2.33) &(0.03) \\
+Yen & 0.006 & -- & 0.003 & 0.037 & -- & -- & -- & 0.957 & 7.664 & 0.877 \\
+    &(0.02) & -- &(0.00) &(0.01) & -- & -- & -- &(0.00) &(1.37) & (0.30) \\
+Won & -0.011 & -- & 0.006 & 0.165 & -- & -- & -- & 0.834 & 5.056 & -- \\
+    & (0.01) & -- &(0.00) &(0.04) & -- & -- & -- &(0.05) &(0.71) & -- \\
+Aust. D. & -0.016 & -- & 0.004 & 0.057 & -- & -- & -- & 0.939 & 8.244 & 1.227 \\
+         & (0.02) & -- &(0.00) &(0.02) & -- & -- & -- &(0.01) &(1.84) &(0.05) \\
+NewZ. D. & -- & -- & 0.004 & 0.052 & -- & -- & -- & 0.961 & 8.136 & 1.179 \\
+         & -- & -- &(0.00) &(0.01) & -- & -- & -- &(0.00) &(1.46) &(0.05) \\
+\hline \hline
+	\end{tabular}
+	\begin{tablenotes}
+		\item[1]{\footnotesize Marginal Models: The Euro is modelled as an AR(1) - gjrGARCH(2,1) process while the Swiss Franc is modelled as a gjrGARCH(2,1) process. The Pound, Yen, Won, Australian Dollar, and New Zealand Dollar are modelled as a GARCH(1,1) process.}
+		\item[2]{\footnotesize Conditional Distributions: The Euro, Pound, and Won have a standard t distribution. The Swiss Franc, Yen, Australian Dollar and New Zealand Dollar are modelled with a skewed t distribution.}
+	\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\end{landscape}
+%\restoregeometry
+
+\vspace{10mm}
+
+\begin{table}
+\caption{Marginal Distribution Diagnostics}
+\begin{threeparttable}
+	\begin{tabular}[c]{l c c c c c c c}
+\hline \hline
+\noalign{\smallskip}
+    & \multicolumn{7}{c}{Uniform Distribution Tests} \\ \cline{2-8}
+\noalign{\smallskip}
+              & Euro  & Pound & S. Franc & Yen   & Won   & Aust. D. & NewZ D. \\
+K-S           & 0.192 & 0.550 & 0.850 	 & 0.679 & 0.193 & 0.930    & 0.682 \\
+First Moment  & 0.476 & 0.562 & 0.730 	 & 0.317 & 0.645 & 0.815    & 0.979 \\
+Second Moment & 0.065 & 0.331 & 0.010 	 & 0.149 & 0.601 & 0.227    & 0.302 \\
+Third Moment  & 0.697 & 0.647 & 0.486 	 & 0.504 & 0.431 & 0.956    & 0.904 \\
+Fourth Moment & 0.367 & 0.817 & 0.088 	 & 0.106 & 0.761 & 0.231    & 0.107 \\
+\noalign{\smallskip}
+    & \multicolumn{7}{c}{Std. Normal Distribution Tests} \\ \cline{2-8}
+\noalign{\smallskip}
+                 & Euro  & Pound & S. Franc & Yen   & Won   & Aust. D. & NewZ D. \\
+K-S  		     & 0.192 & 0.550 & 0.850    & 0.679 & 0.193 & 0.930    & 0.682 \\
+Jarque-Bera      & 0.922 & 0.656 & 0.995    & 0.570 & 0.458 & 0.947    & 0.947 \\
+Berkowitz LR     & 0.733 & 0.571 & 0.856    & 0.640 & 0.807 & 0.991    & 0.979 \\
+Anderson-Darling & 0.180 & 0.270 & 0.693    & 0.601 & 0.153 & 0.942    & 0.435 \\
+Hong and Li  & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+\hline \hline
+	\end{tabular}
+	\begin{tablenotes}
+	\item[]{\footnotesize Goodness-of-fit tests are conducted on the standardized residuals of the marginal models. All figures in the table are p-values. The Kolmogorov-Smirnov (KS) tests checks for a uniform distribution for the standardized residuals with the unit interval as its support. The moment LM tests check the PIT for serial independence. The tests take the form of the regression $\left(u_{t} - \bar{u}\right)^{m} = \sum_{k=1}^{20}\gamma_{k}\left(u_{t-k} - \bar{u}\right)^{m} + \epsilon_{t}$ for $m = 1,...,4$. Under the null of independence, the test statistic $\left(T - 20\right) R^{2}$ for each regression is distributed as $\chi^{2}\left(20\right)$. The likelihood ratio (LR) test checks for joint normality of the mean and variance. The Jarque-Bera (JB) test checks for joint normality of the skew and kurtosis. For all tests, the null hypothesis is a well specified model.}
+	\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+
+\begin{table}
+\caption{T-Copula Dependence Measures}
+\begin{threeparttable}
+	\begin{tabular}[c]{l c r r r | r r r | r r r}
+\hline \hline
+\noalign{\smallskip}
+Currency & Regime & \multicolumn{3}{c}{Regime Switching} & \multicolumn{3}{c}{Smooth Trans.} & \multicolumn{3}{c}{Seq. Break} \\
+\noalign{\smallskip}
+\hline
+\noalign{\smallskip}
+ & & $\tau$ & LTD & UTD & $\tau$ & LTD & UTD & $\tau$ & LTD & UTD \\
+ \noalign{\smallskip}
+\hline
+\noalign{\smallskip}
+Euro-Pound & 1 & 0.62  & 0.53  & 0.53  & 0.62  & 0.54  & 0.54  & 0.63  & 0.54  & 0.54  \\
+		   & 2 & 0.43  & 0.12  & 0.12  & 0.42  & 0.11  & 0.11  & 0.43  & 0.12  & 0.12  \\
+\noalign{\smallskip} \noalign{\smallskip}
+Euro-SWFranc & 1 & 0.82  & 0.63  & 0.63  & 0.83  & 0.18  & 0.18  & 0.82  & 0.55  & 0.55  \\
+		     & 2 & 0.61  & 0.36  & 0.36  & 0.59  & 0.41  & 0.41  & 0.70  & 0.40  & 0.40  \\
+		     & 3 & --- & --- & --- & 0.81 & 0.71  & 0.71  & 0.60  & 0.33  & 0.33  \\
+		     & 4 & --- & --- & --- & ---  & ---  & ---  & 0.81  & 0.71  & 0.71  \\
+\noalign{\smallskip} \noalign{\smallskip}
+Euro-Yen & 1 & 0.46 & 0.00 & 0.00 & 0.46 & 0.00 & 0.00  & 0.46  & 0.00  & 0.00  \\
+		 & 2 & 0.26 & 0.08 & 0.08 & 0.11 & 0.09 & 0.09  & 0.11  & 0.09  & 0.09  \\
+		 & 3 & -0.22 & 0.00 & 0.00 & ---  & ---  & ---  & ---  & ---  & ---  \\
+\noalign{\smallskip} \noalign{\smallskip}
+Euro-Won & 1 & 0.16 & 0.00 & 0.00 & 0.16  & 0.00  & 0.00  & 0.16  & 0.00  & 0.00  \\
+\noalign{\smallskip} \noalign{\smallskip}
+Euro-AustD & 1 & 0.46 & 0.14 & 0.14 & 0.46  & 0.14  & 0.14  & 0.46  & 0.14  & 0.14  \\
+\noalign{\smallskip} \noalign{\smallskip}
+Euro-NZD & 1 & 0.30 & 0.09 & 0.09 & 0.53  & 0.00 & 0.00  & 0.53  & 0.09  & 0.09  \\
+		 & 2 & 0.50 & 0.00 & 0.00 & 0.29  & 0.10 & 0.10  & 0.29  & 0.09  & 0.09  \\
+		 & 3 & --- & --- & --- & 0.49  & 0.00  & 0.00  & 0.48  & 0.00  & 0.00  \\
+\noalign{\smallskip}
+\hline
+\noalign{\smallskip}
+Pound-SWFranc & 1 & 0.63 & 0.46 & 0.46 & 0.63  & 0.46  & 0.46  & 0.63  & 0.46  & 0.46  \\
+		      & 2 & 0.30 & 0.05 & 0.05 & 0.30  & 0.04  & 0.04  & 0.30  & 0.04  & 0.04  \\
+\noalign{\smallskip} \noalign{\smallskip}
+Pound-Yen & 1 & 0.45 & 0.00 & 0.00 & 0.45  & 0.00  & 0.00  & 0.44  & 0.00  & 0.00  \\
+		  & 2 & 0.30 & 0.08 & 0.08 & -0.03  & 0.04  & 0.04  & -0.03  & 0.04  & 0.04  \\
+		  & 3 & -0.28 & 0.00 & 0.00 & ---  & ---  & ---  & ---  & ---  & ---  \\
+\noalign{\smallskip} \noalign{\smallskip}
+Pound-Won & 1 & 0.16 & 0.00 & 0.00 & 0.16  & 0.00  & 0.00  & 0.16  & 0.00  & 0.00  \\
+\noalign{\smallskip} \noalign{\smallskip}
+Pound-AustD & 1 & 0.46 & 0.14 & 0.14 & 0.43  & 0.03  & 0.03  & 0.62  & 0.31  & 0.31  \\
+            & 2 & --- & --- & --- & ---  & ---  & ---  & 0.42  & 0.02  & 0.02  \\
+\noalign{\smallskip} \noalign{\smallskip}
+Pound-NZD & 1 & 0.30 & 0.09 & 0.09 & 0.59  & 0.00  & 0.00  & 0.59  & 0.02  & 0.02  \\
+		  & 2 & 0.50 & 0.00 & 0.00 & 0.36  & 0.00  & 0.00  & 0.31  & 0.00  & 0.00  \\
+		  & 3 & --- & --- & --- & ---  & ---  & ---  & 0.44  & 0.00  & 0.00  \\
+\hline \hline
+	\end{tabular}
+\end{threeparttable}
+\end{table}
+
+
+\begin{table}
+\caption{T-Copula Dependence Measures Continued...}
+\begin{threeparttable}
+	\begin{tabular}[c]{l c r r r | r r r | r r r}
+\hline \hline
+\noalign{\smallskip}
+Currency & Regime & \multicolumn{3}{c}{Regime Switching} & \multicolumn{3}{c}{Smooth Trans.} & \multicolumn{3}{c}{Seq. Break} \\
+\noalign{\smallskip}
+\hline
+\noalign{\smallskip}
+ & & $\tau$ & LTD & UTD & $\tau$ & LTD & UTD & $\tau$ & LTD & UTD \\
+ \hline
+\noalign{\smallskip}
+SWFranc-Yen & 1 & 0.60 & 0.04 & 0.04 & 0.44  & 0.08  & 0.08  & 0.44  & 0.08  & 0.08  \\
+		    & 2 & 0.36 & 0.00 & 0.00 & 0.15  & 0.03  & 0.03  & 0.15  & 0.03  & 0.03  \\
+		    & 3 & 0.15 & 0.03 & 0.03 & ---  & ---  & ---  & ---  & ---  & ---  \\
+\noalign{\smallskip} \noalign{\smallskip}
+SWFranc-Won & 1 & 0.11 & 0.00 & 0.00 & 0.35  & 0.13  & 0.13  & 0.12  & 0.00  & 0.00  \\
+\noalign{\smallskip} \noalign{\smallskip}
+SWFranc-AustD & 1 & 0.46 & 0.13 & 0.13 & 0.46  & 0.17  & 0.17  & 0.47  & 0.17  & 0.17  \\
+			  & 2 & 0.17 & 0.01 & 0.01 & 0.11  & 0.01  & 0.01  & 0.15  & 0.00  & 0.00  \\
+			  & 3 & --- & --- & --- & 0.66  & 0.39  & 0.39  & 0.37  & 0.12  & 0.12  \\
+\noalign{\smallskip} \noalign{\smallskip}
+SWFranc-NZD & 1 & 0.46 & 0.07 & 0.07 & 0.57  & 0.11  & 0.11  & 0.51  & 0.11  & 0.11  \\
+		    & 2 & 0.18 & 0.03 & 0.03 & 0.11  & 0.02  & 0.02  & 0.19  & 0.03  & 0.03  \\
+		    & 3 & --- & --- & --- & 0.45  & 0.08  & 0.08  & 0.39  & 0.07  & 0.07  \\
+\noalign{\smallskip}
+\hline
+\noalign{\smallskip} \noalign{\smallskip}
+Yen-Won & 1 & 0.23 & 0.00 & 0.00 & 0.23  & 0.00  & 0.00  & 0.23  & 0.00  & 0.00  \\
+		& 2 & -0.09 & 0.00 & 0.00 & -0.09  & 0.00  & 0.00  & -0.09  & 0.00  & 0.00  \\
+\noalign{\smallskip} \noalign{\smallskip}
+Yen-AustD & 1 & 0.51 & 0.00 & 0.00 & 0.41  & 0.08  & 0.08  & 0.51  & 0.01  & 0.01  \\
+		  & 2 & -0.10 & 0.05 & 0.05 & -0.10  & 0.08  & 0.08  & 0.15  & 0.00  & 0.00  \\
+		  & 3 & --- & --- & --- & ---  & ---  & ---  & 0.51  & 0.08  & 0.08  \\
+		  & 4 & --- & --- & --- & ---  & ---  & ---  & -0.09  & 0.07  & 0.07  \\
+\noalign{\smallskip} \noalign{\smallskip}
+Yen-NZD & 1 & 0.51 & 0.00 & 0.00 & 0.57  & 0.11  & 0.11  & 0.52  & 0.01  & 0.01  \\
+	    & 2 & -0.12 & 0.02 & 0.02 & -0.10  & 0.06  & 0.06  & 0.16  & 0.00  & 0.00  \\
+	    & 3 & --- & --- & --- & ---  & ---  & ---  & -0.17  & 0.06  & 0.06  \\
+	    & 4 & --- & --- & --- & ---  & ---  & ---  & 0.03  & 0.00  & 0.00  \\
+\noalign{\smallskip}
+\hline
+\noalign{\smallskip} \noalign{\smallskip}
+Won-AustD & 1 & 0.23 & 0.01 & 0.01 & 0.24  & 0.01  & 0.01  & 0.20  & 0.02  & 0.02  \\
+          & 2 & --- & --- & --- & ---  & ---  & ---  & 0.32  & 0.01  & 0.01  \\
+\noalign{\smallskip} \noalign{\smallskip}
+Won-NZD & 1 & 0.16 & 0.00 & 0.00 & 0.20  & 0.00  & 0.00  & 0.20  & 0.00  & 0.00  \\
+	    & 2 & 0.60 & 0.00 & 0.00 & ---  & ---  & ---  & ---  & ---  & ---  \\
+\noalign{\smallskip}
+\hline
+\noalign{\smallskip} \noalign{\smallskip}
+AustD-NZD & 1 & 0.42 & 0.10 & 0.10 & NaN x 4 & ---  & ---  & 0.69  & 0.39  & 0.39  \\
+	      & 2 & 0.68 & 0.40 & 0.40 & ---  & ---  & ---  & 0.48  & 0.08  & 0.08  \\
+	      & 3 & --- & --- & --- & ---  & ---  & ---  & 0.03  & 0.00  & 0.00  \\
+\hline \hline
+	\end{tabular}
+\end{threeparttable}
+\end{table}
+
+
+
+
+
+
+\begin{table}
+\caption{Mix-Copula Dependence Measures}
+\begin{threeparttable}
+	\begin{tabular}[c]{l c r r r | r r r | r r r}
+\hline \hline
+\noalign{\smallskip}
+Currency & Regime & \multicolumn{3}{c}{Regime Switching} & \multicolumn{3}{c}{Smooth Trans.} & \multicolumn{3}{c}{Seq. Break} \\
+\noalign{\smallskip}
+\hline
+\noalign{\smallskip}
+ & & $\tau$ & LTD & UTD & $\tau$ & LTD & UTD & $\tau$ & LTD & UTD \\
+ \noalign{\smallskip}
+\hline
+\noalign{\smallskip}
+Euro-Pound & 1 & 0.63  & 0.52  & 0.19  & 0.63  & 0.51  & 0.20  & 0.64  & 0.19  & 0.19  \\
+		   & 2 & 0.43  & 0.39  & 0.12  & 0.41  & 0.38  & 0.12  & 0.43  & 0.15  & 0.12  \\
+\noalign{\smallskip} \noalign{\smallskip}
+Euro-SWFranc & 1 & 0.81  & 0.49  & 0.38  & 0.82  & 0.54  & 0.33  & 0.82  & 0.42  & 0.42  \\
+		     & 2 & 0.61  & 0.49  & 0.21  & 0.60  & 0.41  & 0.27  & 0.61  & 0.19  & 0.20  \\
+		     & 3 & ---  & ---  & ---  & 0.81  & 0.52  & 0.34  & 0.81  & 0.26  & 0.27  \\
+\noalign{\smallskip} \noalign{\smallskip}
+Euro-Yen & 1 & 0.44  & 0.14  & 0.39  & 0.45  & 0.15  & 0.38  & 0.45  & 0.38  & 0.40  \\
+		 & 2 & 0.09  & 0.10  & 0.02  & 0.12  & 0.12  & 0.03  & 0.12  & 0.01  & 0.07  \\
+		 & 3 & ---  & ---  & ---  & ---  & ---  & ---  & ---  & ---  & ---  \\
+\noalign{\smallskip} \noalign{\smallskip}
+Euro-Won & 1 & 0.16  & 0.13  & 0.04  & 0.16  & 0.13  & 0.04  & 0.16  & 0.13  & 0.02  \\
+\noalign{\smallskip} \noalign{\smallskip}
+Euro-AustD & 1 & 0.46  & 0.28  & 0.26  & 0.46  & 0.28  & 0.26  & 0.46  & 0.29  & 0.26  \\
+\noalign{\smallskip} \noalign{\smallskip}
+Euro-NZD & 1 & 0.30  & 0.11  & 0.26  & 0.39  & 0.21  & 0.26  & 0.48  & 0.23  & 0.22  \\
+		 & 2 & 0.49  & 0.32  & 0.26  & ---  & ---  & ---  & ---  & ---  & ---  \\
+		 & 3 & ---  & ---  & ---  & ---  & ---  & ---  & ---  & ---  & ---  \\
+\noalign{\smallskip}
+\hline
+\noalign{\smallskip}
+Pound-SWFranc & 1 & 0.63  & 0.47  & 0.24  & 0.63  & 0.50  & 0.21  & 0.63  & 0.25  & 0.25  \\
+		      & 2 & 0.30  & 0.32  & 0.06  & 0.30  & 0.30  & 0.08  & 0.30  & 0.08  & 0.06  \\
+\noalign{\smallskip} \noalign{\smallskip}
+Pound-Yen & 1 & ---  & ---  & ---  & 0.44  & 0.23  & 0.30  & 0.44  & 0.32  & 0.30  \\
+		  & 2 & ---  & ---  & ---  & 0.02  & 0.02  & 0.00  & 0.02  & 0.00  & 0.00  \\
+		  & 3 & ---  & ---  & ---  & ---  & ---  & ---  & ---  & ---  & ---  \\
+\noalign{\smallskip} \noalign{\smallskip}
+Pound-Won & 1 & 0.15  & 0.09  & 0.06  & 0.15  & 0.09  & 0.06  & 0.15  & 0.09  & 0.03  \\
+\noalign{\smallskip} \noalign{\smallskip}
+Pound-AustD & 1 & 0.44  & 0.25  & 0.29  & 0.42  & 0.26  & 0.24  & 0.63  & 0.34  & 0.35  \\
+            & 2 & 0.24  & 0.27  & 0.03  & ---  & ---  & ---  & 0.41  & 0.22  & 0.24  \\
+\noalign{\smallskip} \noalign{\smallskip}
+Pound-NZD & 1 & 0.56  & 0.49  & 0.16  & 0.57  & 0.36  & 0.29  & 0.58  & 0.16  & 0.15  \\
+		  & 2 & 0.35  & 0.19  & 0.24  & 0.35  & 0.21  & 0.22  & 0.35  & 0.22  & 0.24  \\
+\hline \hline
+	\end{tabular}
+\end{threeparttable}
+\end{table}
+
+
+
+
+
+
+\begin{table}
+\caption{Mix-Copula Dependence Measures Continued...}
+\begin{threeparttable}
+	\begin{tabular}[c]{l c r r r | r r r | r r r}
+\hline \hline
+\noalign{\smallskip}
+Currency & Regime & \multicolumn{3}{c}{Regime Switching} & \multicolumn{3}{c}{Smooth Trans.} & \multicolumn{3}{c}{Seq. Break} \\
+\noalign{\smallskip}
+\hline
+\noalign{\smallskip}
+ & & $\tau$ & LTD & UTD & $\tau$ & LTD & UTD & $\tau$ & LTD & UTD \\
+ \hline
+\noalign{\smallskip}
+\noalign{\smallskip} \noalign{\smallskip}
+SWFranc-Yen & 1 & ---  & ---  & ---  & 0.43  & 0.23  & 0.29  & 0.43  & 0.28  & 0.28  \\
+		    & 2 & ---  & ---  & ---  & 0.15  & 0.09  & 0.11  & 0.15  & 0.18  & 0.12  \\
+		    & 3 & ---  & ---  & ---  & ---  & ---  & ---  & ---  & ---  & ---  \\
+\noalign{\smallskip} \noalign{\smallskip}
+SWFranc-Won & 1 & 0.11  & 0.11  & 0.04  & 0.11  & 0.11  & 0.04  & 0.11  & 0.01  & 0.04  \\
+\noalign{\smallskip} \noalign{\smallskip}
+SWFranc-AustD & 1 & 0.45  & 0.29  & 0.25  & 0.47  & 0.35  & 0.21  & 0.47  & 0.33  & 0.26  \\
+			  & 2 & 0.17  & 0.16  & 0.06  & 0.28  & 0.17  & 0.18  & 0.14  & 0.03  & 0.12  \\
+			  & 3 & ---  & ---  & ---  & ---  & ---  & ---  & 0.36  & 0.10  & 0.13  \\
+\noalign{\smallskip} \noalign{\smallskip}
+SWFranc-NZD & 1 & 0.45  & 0.27  & 0.26  & 0.50  & 0.24  & 0.21  & 0.50  & 0.35  & 0.27  \\
+		    & 2 & 0.18  & 0.14  & 0.09  & 0.39  & 0.16  & 0.15  & 0.18  & 0.53  & 0.12  \\
+		    & 3 & ---  & ---  & ---  & ---  & ---  & ---  & 0.38  & 0.11  & 0.14  \\
+\noalign{\smallskip}
+\hline
+\noalign{\smallskip} \noalign{\smallskip}
+Yen-Won & 1 & ---  & ---  & ---  & NA  & NA  & NA  & 0.22  & 0.21  & 0.39  \\
+		& 2 & ---  & ---  & ---  & ---  & ---  & ---  & 0.00  & 0.00  & 0.00  \\
+\noalign{\smallskip} \noalign{\smallskip}
+Yen-AustD & 1 & ---  & ---  & ---  & NA  & NA  & NA  & 0.50  & 0.20  & 0.21  \\
+		  & 2 & ---  & ---  & ---  & ---  & ---  & ---  & 0.15  & 0.13  & 0.19  \\
+		  & 3 & ---  & ---  & ---  & ---  & ---  & ---  & 0.51  & 0.00  & 0.00  \\
+		  & 4 & ---  & ---  & ---  & ---  & ---  & ---  & 0.01  & 0.00  & 0.00  \\
+\noalign{\smallskip} \noalign{\smallskip}
+Yen-NZD & 1 & ---  & ---  & ---  & NA  & NA  & NA  & 0.51  & 0.22  & 0.22  \\
+	    & 2 & ---  & ---  & ---  & ---  & ---  & ---  & 0.03  & 0.77  & 0.03  \\
+\noalign{\smallskip}
+\hline
+\noalign{\smallskip} \noalign{\smallskip}
+Won-AustD & 1 & 0.23  & 0.10  & 0.18  & 0.22  & 0.10  & 0.18  & 0.23  & 0.10  & 0.15  \\
+\noalign{\smallskip} \noalign{\smallskip}
+Won-NZD & 1 & 0.19  & 0.11  & 0.12  & 0.19  & 0.11  & 0.12  & 0.19  & 0.11  & 0.06  \\
+\noalign{\smallskip}
+\hline
+\noalign{\smallskip} \noalign{\smallskip}
+AustD-NZD & 1 & 0.49  & 0.26  & 0.31  & 0.78  & 0.40  & 0.44  & 0.65  & 0.47  & 0.44  \\
+	      & 2 & 0.68  & 0.37  & 0.39  & 0.06  & 0.08  & 0.00  & 0.45  & 0.29  & 0.25  \\
+	      & 3 & ---  & ---  & ---  & 0.66  & 0.35  & 0.38  & 0.64  & 0.36  & 0.34  \\
+\hline \hline
+	\end{tabular}
+\end{threeparttable}
+\end{table}
+
+
+
+\end{document}

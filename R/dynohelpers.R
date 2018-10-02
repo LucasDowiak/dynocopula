@@ -115,10 +115,16 @@ cop_static <- function(u, v, fam1, fam2 = NULL) {
 
   stopifnot(length(u) == length(v))
   isNullFam2 <- is.null(fam2)
+  
+  unpack_ <- function(fit)
+  {
+    return(list(par=fit[["par"]], par2=fit[["par2"]]))
+  }
+  
   # Non-mixture Copula
   if (isNullFam2) {
-    Fit <- BiCopEst(u, v, fam1, max.df = 50)[-1]
-    Lc <- log(BiCopPDF(u, v, fam1, Fit$par, par2 = if (length(Fit) == 2L) Fit$par2))
+    Fit <- unpack_(BiCopEst(u, v, fam1, max.df = 50))
+    Lc <- log(BiCopPDF(u, v, fam1, Fit$par, par2 = if (length(Fit) == 2L) Fit$par2 else 0))
     theta <- unlist(Fit)
     names(theta) <- if (fam1 < 3) {c("mu", "nu")} else {c("th1", "th2")}
     LL <- sum(Lc)
@@ -259,8 +265,8 @@ starting_guess <- function(u, v, fam, k) {
 dependence_measures <- function(pars, fam1, fam2 = NULL) {
   
   if (is.null(fam2)) {
-    tdep <- unlist(BiCopPar2TailDep(fam1, pars[[1]], if (length(pars) > 1) pars[[2]]))
-    ktau <- BiCopPar2Tau(fam1, pars[[1]], if (length(pars) > 1) pars[[2]])
+    tdep <- unlist(BiCopPar2TailDep(fam1, pars[[1]], if (length(pars) > 1) pars[[2]] else 0))
+    ktau <- BiCopPar2Tau(fam1, pars[[1]], if (length(pars) > 1) pars[[2]] else 0)
     
   } else if (length(pars) == 3) {
     convex_weights <- function(x, y, z)  x * z + y * (1 - z)
@@ -373,7 +379,7 @@ ms_cop_vpdf <- function(fam, x, y) {
   ff2 <- if (length(fam) > 1) fam[[2]]
   if (ff1 %in% c(1, 2) && length(fam) == 1) {
     return(function(pp) BiCopPDF(u1 = x, u2 = y, family = ff1, par = pp[[1]],
-                                 par2 = if (length(pp) == 2) pp[[2]]))
+                                 par2 = if (length(pp) == 2) pp[[2]] else 0))
   } else {
     return(function(pp) cop_pdf(theta = pp, u = x, v = y, fam1 = ff1, fam2 = ff2))
   }
@@ -1186,7 +1192,7 @@ cop_gradcontr <- function(u, v, theta, f1, f2) {
   
   if (f1 == 1) {
     rho <- theta[1]
-    g1 <- (1 / BiCopPDF(u, v, f1, rho)) * BiCopDeriv(u, v, f1, rho, "par")
+    g1 <- (1 / BiCopPDF(u, v, f1, rho)) * BiCopDeriv(u, v, f1, rho, deriv="par")
     return(matrix(g1, ncol = 1))
   } else if (f1 == 2) {
     rho <- theta[1]; dof <- theta[2]
@@ -1231,7 +1237,7 @@ cop_hessian <- function(u, v, theta, f1, f2) {
   
   if (f1 == 1) {
     rho <- theta[1]
-    h11 <- (1 / BiCopPDF(u, v, f1, rho)) * BiCopDeriv2(u, v, f1, rho, "par") - 
+    h11 <- (1 / BiCopPDF(u, v, f1, rho)) * BiCopDeriv2(u, v, f1, rho, deriv="par") - 
       (1 / BiCopPDF(u, v, f1, rho)^2) * BiCopDeriv(u, v, f1, rho)^2
     return(matrix(sum(h11)))
   } else if (f1 == 2) {

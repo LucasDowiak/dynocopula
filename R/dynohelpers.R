@@ -1039,7 +1039,7 @@ aprx <- function(x, np, N) {
 # 
 
 BreakAnalysis <- function(u, v, series, fam1, fam2 = NULL, date_names = NULL,
-                          parallel = FALSE, ncores, cluster) {
+                          parallel = FALSE, cluster) {
 
   stopifnot(!any(missing(u), missing(v), missing(series), missing(fam1)))
   N <- length(series)
@@ -1050,8 +1050,8 @@ BreakAnalysis <- function(u, v, series, fam1, fam2 = NULL, date_names = NULL,
   p <- switch(as.character(fam1), "1" = 1, "2" = 2, 3)
   uu <- u[series]
   vv <- v[series]
-  low <- ifelse(N < 40, 2, floor(N * 0.05))
-  high <- ifelse(N < 40, N - 2, ceiling(N * 0.95))
+  low <- ifelse(N < 140, 7, floor(N * 0.05))
+  high <- ifelse(N < 140, N - 7, ceiling(N * 0.95))
   Full <- cop_static(uu, vv, fam1, fam2)
   if (parallel && !missing(cluster) & !is.null(cluster)) {
     lamK <- parallel::parSapply(cluster, low:high, FUN = BreakPointTestStatistic,
@@ -1105,9 +1105,9 @@ autoBPtest <- function(x, y, f1, f2 = NULL, parallel = FALSE, date_names = NULL,
   output <- list()
   force(date_names)
   BPtest <- function(srs) {
-    bptest <- BreakAnalysis(x, y, srs, f1, f2, date_names, parallel, ncores, cluster)
+    bptest <- BreakAnalysis(x, y, srs, f1, f2, date_names, parallel, cluster)
     if (bptest[['p-value']] < 0.05 && bptest[['p-value']] > 0.00 &&
-          bptest[['N-Size']] > 15) {
+          bptest[['N-Size']] > 20) {
       output[[length(output) + 1]] <<- bptest
       t <- bptest[[1]] # break point
       BPtest(srs = min(srs):t)
@@ -1159,7 +1159,7 @@ repartitionBP <- function(bpResultList, u, v, f1, f2, parallel = F, date_names,
   # Implement repartition method and pass results to 'output'
   for(jj in 1:(length(idx) - 2)) {
     t <- idx[jj]; tt <- idx[jj + 2]
-    res <- BreakAnalysis(u, v, t:tt, f1, f2, t:tt, date_names, parallel, cluster)
+    res <- BreakAnalysis(u, v, t:tt, f1, f2, date_names, parallel, cluster)
     output[[length(output) + 1]] <- res
   }
   output

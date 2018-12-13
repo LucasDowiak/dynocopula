@@ -362,8 +362,7 @@ MSfit <- function(x, y, family = list(1, 1), initValues, tol = 1e-5) {
   }
   
   # Given copula type, yield the number of copula parameters per state
-  nc <- vapply(family, function(x) switch(as.character(x[1]), '1' = 1, '2' = 2, 3),
-               numeric(1))
+  nc <- vapply(family, ms_no_pars, numeric(1))
   # Number of regimes equals number of elements in 'family' list
   nr <- length(family)
     

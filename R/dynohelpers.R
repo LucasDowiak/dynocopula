@@ -341,16 +341,19 @@ st_boundary <- function(fam, k) {
 # @param k Number of regimes
 #
 
-ms_boundary <- function(fam, k) {
+ms_boundary <- function(fam) {
   
   S <- 1e-2
   if (length(fam) == 1) {
     if (fam == 1)
       return(list(UB = 1 - S, LB = -1 + S))
-    else if (fam == 2)
+    if (fam == 2)
       return(list(UB = c(1 - S, 100), LB = c(-1, 2) + S))
-  }
-  else if (length(fam) == 2) {
+    if (fam %in% c(3, 13))
+      return(list(UB = 30, LB = S))
+    if (fam %in% c(4, 14))
+      return(list(UB = 30, LB = 1 + S))
+  } else if (length(fam) == 2) {
     l1 <- switch(as.character(fam[[1]]), "3" = 0, "4" = 1, "13" = 0, "14" = 1)
     l2 <- switch(as.character(fam[[2]]), "3" = 0, "4" = 1, "13" = 0, "14" = 1)
     return(list(UB = c(30, 30, 1 - S), LB = c(l1 + S, l2 + S, S)))
@@ -377,7 +380,7 @@ ms_boundary <- function(fam, k) {
 ms_cop_vpdf <- function(fam, x, y) {
   ff1 <- fam[[1]]
   ff2 <- if (length(fam) > 1) fam[[2]]
-  if (ff1 %in% c(1, 2) && length(fam) == 1) {
+  if (length(fam) == 1) {
     return(function(pp) BiCopPDF(u1 = x, u2 = y, family = ff1, par = pp[[1]],
                                  par2 = if (length(pp) == 2) pp[[2]] else 0))
   } else {
@@ -435,6 +438,8 @@ ms_pnames <- function(x) {
       return("mu")
     } else if (x == 2) {
       return(c("mu", "nu"))
+    } else {
+      return("th")
     }
   } else if (length(x) == 2) {
     return(c("th1", "th2", "wt")) 
@@ -535,8 +540,7 @@ smooth_inf <- function(P, Xi_t_t, Xi_t1_t) {
 copula_optim <- function(parm, x, y, family) {
   
   # Basic constants
-  nc <- vapply(family, function(x) switch(as.character(x[1]), "1" = 1, "2" = 2, 3),
-               numeric(1))
+  nc <-  vapply(family, ms_no_pars, numeric(1))
   nr <- length(family)
   nx <- length(x)
   ncnr <- sum(nc)
@@ -599,8 +603,7 @@ copula_optim <- function(parm, x, y, family) {
 markov_optim <- function(parm, x, y, family) {
   
   # Basic constants
-  nc <- vapply(family, function(x) switch(as.character(x[1]), "1" = 1, "2" = 2, 3),
-               numeric(1))
+  nc <- vapply(family, ms_no_pars, numeric(1))
   nr <- length(family)
   nx <- length(x)
   ncnr <- sum(nc)

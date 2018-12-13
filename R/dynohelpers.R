@@ -390,6 +390,35 @@ ms_cop_vpdf <- function(fam, x, y) {
 
 
 
+# For the markov switching model, calculate the total number of copula
+# parameters
+#
+# @param z A list of integers
+#
+ms_no_pars <- function(z)
+{
+  if (length(z) == 1) {
+    return(ms_cop_pars(z))
+  } else {
+    np <- sum(unlist(lapply(z, ms_cop_pars))) + 1
+    return(np)
+  }
+}
+
+# For the markov switching model, calculate the number of copula parameters
+# in a single regime
+#
+# @param z An integer
+ms_cop_pars <- function(z)
+{
+  dtftmp <- data.frame(
+    cop=  c(1, 2, 3, 4, 13, 14),
+    bpars=c(1, 2, 1, 1, 1,  1)
+  )
+  return(dtftmp[dtftmp$cop == z, "bpars"])
+}
+
+
 # For the smooth transition model, create function factory that returns a
 # copula density function conditioning on given copula paramaters
 # 

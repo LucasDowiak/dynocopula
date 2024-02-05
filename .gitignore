@@ -42,3 +42,4 @@ Thumbs.db
 article/*
 !article/*.tex
 !article/*.bib
+!article/*.pdf

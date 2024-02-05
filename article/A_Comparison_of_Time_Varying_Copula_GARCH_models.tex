@@ -329,7 +329,7 @@ The advantages of this approach is its relative simplicity. Many static copula h
 
 \subsection{Markov Transition}
 
-In a second approach, we introduce a latent state variable $s_{t}$ to govern the dependence of our exchange rate series at time $t$. First brought into the econometrics literature by Hamilton_1989 and Hamilton_1994, we model changes in the state variable by a first-order markov transition matrix. In this setup, the probability of being in some particular state tomorrow $s_{t+1}$ depends solely on what state the variable is in today $s_{t}$. A more concrete description of the process is given by the probability statement $P\left[s_{t + 1} = j~|~s_{t}=i,~s_{t-1} = m,\ldots \right] = P\left[s_{t+1}=j~|~s_{t} = i\right] = p_{ij}$, where we have $p_{i1} + p_{i2} + \cdots + p_{ik}=1$ for all $i = 1,...,k$. The vectors of transition probabilities from one state to another are organized into a single $k\times k$ transition matrix $\mathbf{P}$.
+In a second approach, we introduce a latent state variable $s_{t}$ to govern the dependence of our exchange rate series at time $t$. First brought into the econometrics literature by \cite{Hamilton_1989} and \cite{Hamilton_1994}, we model changes in the state variable by a first-order markov transition matrix. In this setup, the probability of being in some particular state tomorrow $s_{t+1}$ depends solely on what state the variable is in today $s_{t}$. A more concrete description of the process is given by the probability statement $P\left[s_{t + 1} = j~|~s_{t}=i,~s_{t-1} = m,\ldots \right] = P\left[s_{t+1}=j~|~s_{t} = i\right] = p_{ij}$, where we have $p_{i1} + p_{i2} + \cdots + p_{ik}=1$ for all $i = 1,...,k$. The vectors of transition probabilities from one state to another are organized into a single $k\times k$ transition matrix $\mathbf{P}$.
 
 \begin{equation}
 \mathbf{P}=\left[ 
@@ -395,9 +395,7 @@ In general, $G_{m}\left(\cdot\right)$ is a bounded function with respect to the 
 	G\left(s_{t}; c, \gamma\right) = \left(1+\exp\left\{ -\gamma \left(s_{t}-c\right) \right\}\right)^{-1}~~~~~~~\gamma > 0
 \end{equation}
 
-Other specifications for $G\left( \cdot \right) $ can be found in \cite{Dijk_and_Frances_1999} and \cite{Ocal_and_Osborn_2000} \"{O}cal and Osborn (2000). The parameters $\boldsymbol{\gamma}_{i} = \left(\gamma_{i,1},...,\gamma_{i,k-1}\right)$ control the pace of each transition while the members of vector $\mathbf{c}_{i} = \left(c_{i,1},...,c_{i,k-1}\right)$ locate the inflection points of each transition.
-
-It is difficult to overstate how nonlinear a copula model becomes when subject to the full generality of specifications (\ref{eqn:smoothTrans}) and (\ref{eqn:smoothTransLogit}). To aid in identification, some restrictions are usually imposed. In our case, we restrict the location variables of each transition to be identical across copula parameters: $c_{i,m}=c_{j,m}$ for all $i,j$ and each $m$. In addition, we also hold the weights $\pi_{i}$ for mixture copulas constant.
+Other specifications for $G\left( \cdot \right) $ can be found in \cite{Dijk_and_Frances_1999} and \cite{Ocal_and_Osborn_2000}. The parameters $\boldsymbol{\gamma}_{i} = \left(\gamma_{i,1},...,\gamma_{i,k-1}\right)$ control the pace of each transition while the members of vector $\mathbf{c}_{i} = \left(c_{i,1},...,c_{i,k-1}\right)$ locate the inflection points of each transition. It is difficult to overstate how nonlinear a copula model becomes when subject to the full generality of specifications (\ref{eqn:smoothTrans}) and (\ref{eqn:smoothTransLogit}). To aid in identification, some restrictions are usually imposed. In our case, we restrict the location variables of each transition to be identical across copula parameters: $c_{i,m}=c_{j,m}$ for all $i,j$ and each $m$. In addition, we also hold the weights $\pi_{i}$ for mixture copulas constant.
 
 \section{Marginal Distributions}
 
@@ -411,7 +409,7 @@ As stated earlier, the copula approach enables us to model the marginal distribu
 	\varepsilon_{i,t}~|~\sigma_{i}\left(Z_{t - 1}; \phi_{i}\right) \sim T_{i}
 \end{equation}
 
-where $\sigma_{i}\left(Z_{t - 1}; \phi_{i}\right)$ is the conditional variance, $\mu_{i}\left(Z_{t - 1}; \phi_{i}\right)$ is the conditional mean, $Z_{t - 1} \in \Im_{t-1}$, and $T_{i}$ is either the t-distribution or a skewed t-distribution. To produce a skewed t-distribution, we follow Fernandez and Steel (1998). For a unimodal and symmetric density $f\left(x\right)$ that is decreasing in $\left\vert x\right\vert$, a skew parameter $\xi$ can force asymmetry upon $f\left(x\right)$, generating a new distribution $p\left(x|\xi\right)$ where
+where $\sigma_{i}\left(Z_{t - 1}; \phi_{i}\right)$ is the conditional variance, $\mu_{i}\left(Z_{t - 1}; \phi_{i}\right)$ is the conditional mean, $Z_{t - 1} \in \Im_{t-1}$, and $T_{i}$ is either the t-distribution or a skewed t-distribution. To produce a skewed t-distribution, we follow \cite{Fernandez_and_Steel_1998}. For a unimodal and symmetric density $f\left(x\right)$ that is decreasing in $\left\vert x\right\vert$, a skew parameter $\xi$ can force asymmetry upon $f\left(x\right)$, generating a new distribution $p\left(x|\xi\right)$ where
 
 \begin{equation}
 	p\left(x|\xi \right) = \frac{2}{\xi + \frac{1}{\xi}} \left[f\left(x\xi\right) \mathbf{I}_{\left\{x < 0\right\}} + f\left(x\xi^{-1}\right) \mathbf{I}_{\left\{x \geq 0\right\}}\right]
@@ -427,7 +425,7 @@ For the conditional variance, two different specifications need to be mentioned.
 	\sigma_{t}^{2} = \omega + \sum_{i = 1}^{m}\alpha_{i} \varepsilon_{t - i}^{2} + \sum_{j = 1}^{k}\beta_{j} \sigma_{t - j}^{2}
 \end{equation}
 
-A separate approach proposed by Glousten et. al (1993) adds a bit of flexibility to the GARCH model specified in equation (\ref{eqn:GARCH}) by allowing asymmetrical responses to shocks\footnote{By shocks, we are referring to the error term in equation (\ref{eqn:marginalModel})} of opposing signs. 
+A separate approach proposed by \cite{GJR_1993} adds a bit of flexibility to the GARCH model specified in equation (\ref{eqn:GARCH}) by allowing asymmetrical responses to shocks\footnote{By shocks, we are referring to the error term in equation (\ref{eqn:marginalModel})} of opposing signs. 
 
 \begin{equation}
 	\sigma_{t}^{2} = \omega + \sum_{i = 1}^{m}\left(\alpha_{i} + \gamma_{i}\mathbf{I}_{\left\{\varepsilon < 0 \right\}}\right) \varepsilon_{t - i}^{2} + \sum_{j = 1}^{k}\beta_{j}\sigma_{t- j}^{2}
@@ -447,10 +445,9 @@ Five of the seven exchange rates under review need only a constant term while th
 
 \subsection{Model Validation}
 
-To confirm that we have well specified models, a series of diagnostic checks are performed on the PIT of the standardized residuals defined in equation (\ref{eqn:PIT}). These tests are divided into two categories. The first category directly tests the PIT of the standardized residuals to see if they are iid uniform random variates on the support $\left(0,1\right)$. The Kolmogorov-Smirnov (KS) test checks the variates for the uniform distribution assumption while lagrange multiplier (LM) tests check the independence assumption. As Berkowitz (2001) points out, the KS and LM tests do not provide a joint test of the iid assumption. Instead, each test is carried out in isolation.
+To confirm that we have well specified models, a series of diagnostic checks are performed on the PIT of the standardized residuals defined in equation (\ref{eqn:PIT}). These tests are divided into two categories. The first category directly tests the PIT of the standardized residuals to see if they are iid uniform random variates on the support $\left(0,1\right)$. The Kolmogorov-Smirnov (KS) test checks the variates for the uniform distribution assumption while lagrange multiplier (LM) tests check the independence assumption. As \cite{Berkowitz_2001} points out, the KS and LM tests do not provide a joint test of the iid assumption. Instead, each test is carried out in isolation.
 
-With equation (\ref{eqn:PIT}) in mind, Berkowitz (2001) notes that if $\Phi^{-1}$ is the standard normal quantile function, a well specified model will produce variates $z_{t} = \Phi^{-1}\left[\int_{-\infty}^{x} f_{X}\left(t\right) dt \right]$ that have a standard normal distribution. This insight opens the door for a wide range of distributional checks for normality that are already established in the literature. These standard distributional checks form the second category of tests. We include a common likelihood ratio (LR) test to check for normality of the mean and variance. A Jarque-Bera test is also used to check if the skew and kurtosis of the residuals deviate from normality. A second KS test is applied to the variates $z_{t}$, this time testing for normality. Since a part of this analysis examines extreme comovements between exchange rate pairs,  
-
+With equation (\ref{eqn:PIT}) in mind, \cite{Berkowitz_2001} notes that if $\Phi^{-1}$ is the standard normal quantile function, a well specified model will produce variates $z_{t} = \Phi^{-1}\left[\int_{-\infty}^{x} f_{X}\left(t\right) dt \right]$ that have a standard normal distribution. This insight opens the door for a wide range of distributional checks for normality that are already established in the literature. These standard distributional checks form the second category of tests. We include a common likelihood ratio (LR) test to check for normality of the mean and variance. A Jarque-Bera test is also used to check if the skew and kurtosis of the residuals deviate from normality. A second KS test is applied to the variates $z_{t}$, this time testing for normality.
 
 Table 2 lists the p-values for each test and currency pair. None of the p-values reject the null of an independently distributed uniform distribution at five percent level, although with a value of 0.065, the second moment LM test for the Yen-Dollar model just barely squeaks by.
 

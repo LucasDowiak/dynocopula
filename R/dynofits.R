@@ -82,10 +82,11 @@ BPfit <- function(x, y, fam1, fam2 = NULL, parallel = FALSE, date_names = NULL,
   
   xnme <- deparse(substitute(x))
   ynme <- deparse(substitute(y))
+  N <- length(x)
   stopifnot(!missing(x),
             !missing(y),
             !is.null(fam1),
-            length(y) == length(x))
+            length(y) == N)
   
   if (!fam1 %in% c(1, 2, 3, 4, 13, 14)) {
     stop("Copula family 1 outside scope of analysis")
@@ -94,15 +95,13 @@ BPfit <- function(x, y, fam1, fam2 = NULL, parallel = FALSE, date_names = NULL,
     if (!fam2 %in% c(3, 4, 13, 14))
       stop("Copula family 2 outside scope of analysis") 
   }
-  n <- length(x)
-  
+
   # here is the place to set up the parallelization stuff
   clus <- NULL
-  ncores <- 1L
   if (parallel) {
     dtc <- max(parallel::detectCores(logical = T), parallel::detectCores(logical = F))
     if (missing(ncores)) {
-      ncores <- dtc
+      ncores <- floor(dtc / 2)
     } else if (ncores > dtc) {
       warning(sprintf("The number of cores has been re-assigned to %d", dtc))
       ncores <- dtc
@@ -115,7 +114,7 @@ BPfit <- function(x, y, fam1, fam2 = NULL, parallel = FALSE, date_names = NULL,
         "BiCopPar2Tau"), environment())
   }
   closure <- autoBPtest(x, y, fam1, fam2, parallel, date_names, clus)
-  closure$BPtest(1:n)
+  closure$BPtest(1:N)
   repart <- if (length(closure$value()) <= 1) {
     closure$value()
   } else {
@@ -126,7 +125,7 @@ BPfit <- function(x, y, fam1, fam2 = NULL, parallel = FALSE, date_names = NULL,
     rm(clus)
   }
   bps <- vapply(repart, `[[`, numeric(1), 'index')
-  idx <- sort(c(0, bps, 1264))
+  idx <- sort(c(0, bps, N))
   nn <- length(bps) + 1
   output <- list()
   for (ii in 1:nn) {
@@ -231,7 +230,7 @@ plot.seqBreakPoint <- function(obj) {
   layout(matrix(c(1, 1, 2, 3), 2, 2, byrow = TRUE),
          widths = c(1, 1), heights = c(2, 3))
   # Top Graph
-  plot(rep(ktau, diff(idx)[idx2]),
+  plot(rep(ktau, diff(idx)[idx2] + 1),
        type = "l", col = "tomato",
        ylim = range(ktau) + c(-0.15, 0.15),
        ylab = "",
@@ -241,7 +240,7 @@ plot.seqBreakPoint <- function(obj) {
   abline(h = 0, lty = 2)
   grid(col = "grey65")
   # Bottom Left
-  plot(rep(taudif, diff(idx)[idx2]), type = "l", col = "blue",
+  plot(rep(taudif, diff(idx)[idx2] + 1), type = "l", col = "blue",
        ylim = range(taudif) + c(-0.05, 0.05),
        xlab = "", ylab = "",
        main = paste("family:", paste(obj[[1]]$family, collapse = ", ")))
@@ -249,7 +248,7 @@ plot.seqBreakPoint <- function(obj) {
   abline(h = 0, lty = 2)
   grid(col = "grey65")
   # Bottom Right
-  plot(rep(tdep["upper", ], diff(idx)[idx2]), type = "l", col = "olivedrab4",
+  plot(rep(tdep["upper", ], diff(idx)[idx2] + 1), type = "l", col = "olivedrab4",
        ylim = range(tdep["upper", ]) + c(-0.025, 0.025),
        xlab = "", ylab = "")
   legend("topright", "UTD", bty = "n")

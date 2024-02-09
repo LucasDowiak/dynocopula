@@ -1008,8 +1008,12 @@ BreakPointLL <- function(u, v, t, fam1, fam2) {
 # 
 
 BreakPointTestStatistic <- function(t, u, v, fam1, fam2, Full) {
-  Break <- BreakPointLL(u, v, t, fam1, fam2)
-  2 * (Break$LLpre + Break$LLpost - Full$log.likelihood)
+  Break <- try(BreakPointLL(u, v, t, fam1, fam2))
+  if (inherits(Break, "try-error")) {
+    return(NA_real_)
+  } else {
+    return(2 * (Break$LLpre + Break$LLpost - Full$log.likelihood))
+  }
 }
 
 
@@ -1139,7 +1143,8 @@ autoBPtest <- function(x, y, f1, f2 = NULL, parallel = FALSE, date_names = NULL,
   BPtest <- function(srs) {
     bptest <- BreakAnalysis(x, y, srs, f1, f2, date_names, parallel, cluster)
     if (bptest[['p-value']] < 0.05 && bptest[['p-value']] > 0.00 &&
-          bptest[['N-Size']] > 20) {
+          (bptest[['N-Size']] - bptest[['index']]) > 20 &&
+          bptest[['index']] > 20) {
       output[[length(output) + 1]] <<- bptest
       t <- bptest[[1]] # break point
       BPtest(srs = min(srs):t)

@@ -179,8 +179,8 @@ numerical_Ktau <- function(theta, fam1, fam2) {
     u <- U[1]; v <- U[2]
     cop_cdf(pars, u, v, fam1, fam2) * cop_pdf(pars, u, v, fam1, fam2)
   }
-  4 * adaptIntegrate(Q, lowerLimit = c(0,0), upperLimit = c(1,1),
-                     pars = theta)$integral - 1
+  4 * cubature::adaptIntegrate(Q, lowerLimit = c(0,0), upperLimit = c(1,1),
+                               pars = theta)$integral - 1
 }
 
 

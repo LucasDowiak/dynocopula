@@ -55,7 +55,7 @@ fetch_union <- function(x, y, Dt)
 }
 
 
-# 2H
+# 2H T-cop
 dt_names <- dtfU[year(DATE) %in% unlist(year_list[3:4])][["DATE"]]
 for (pair in combn(fxnames2, 2, simplify=FALSE)) {
   print(sprintf("Pair %s-%s started at %s", pair[1], pair[2], Sys.time()))
@@ -65,7 +65,24 @@ for (pair in combn(fxnames2, 2, simplify=FALSE)) {
   saveRDS(aa, file=sprintf("data/dynocop_objects/%s_%s_tcop_00_18.RDS", pair[1], pair[2]))
 }
 
+# 2H T-cop
+dt_names <- dtfU[year(DATE) %in% unlist(year_list[3:4])][["DATE"]]
+for (pair in combn(fxnames2, 2, simplify=FALSE)) {
+  print(sprintf("Pair %s-%s started at %s", pair[1], pair[2], Sys.time()))
+  aa <- BPfit(dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[1]]],
+              dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[2]]], 
+              date_names=as.character(dt_names), fam1=3, fam2=13, parallel = T, ncores = 6)
+  saveRDS(aa, file=sprintf("data/dynocop_objects/%s_%s_clayton_00_18.RDS", pair[1], pair[2]))
+}
 
+dt_names <- dtfU[year(DATE) %in% unlist(year_list[3:4])][["DATE"]]
+for (pair in combn(fxnames2, 2, simplify=FALSE)) {
+  print(sprintf("Pair %s-%s started at %s", pair[1], pair[2], Sys.time()))
+  aa <- BPfit(dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[1]]],
+              dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[2]]], 
+              date_names=as.character(dt_names), fam1=4, fam2=14, parallel = T, ncores = 6)
+  saveRDS(aa, file=sprintf("data/dynocop_objects/%s_%s_gumbel_00_18.RDS", pair[1], pair[2]))
+}
 
 for (fx1 in fxnames) {
 

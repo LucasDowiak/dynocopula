@@ -143,14 +143,20 @@ for (yrs in names(year_list)[3:4]) {
 # -------------------------------------
 
 files_ <- list.files("./data/model_objects/")
-collect <- vector("list", length(files_)); names(collect) <- files_
+collect_u <- vector("list", length(files_)); names(collect_u) <- files_
+collect_e <- collect_u
 for (f_ in files_) {
   tst <- readRDS(paste(c("./data/model_objects", f_), collapse = "/"))
   curr <- regmatches(f_, regexpr("[a-zA-Z]+", f_))
-  collect[[f_]] <- data.table(DATE=tst$Dates, currency=curr, u=as.numeric(rugarch::pit(tst$mod)))
+  collect_u[[f_]] <- data.table(DATE=tst$Dates, currency=curr, u=as.numeric(rugarch::pit(tst$mod)))
+  
+  decade <- regmatches(f_, regexpr("[0-9]{2}", f_))
+  MT <- verify_marginal_test(marginal_tests(tst$model), alpha = "0.05")
+  MT[, `:=`(currency=curr, group=decade)]
+  collect_e[[f_]] <- MT
 }
-
-
+dtfU <- dcast(rbindlist(collect_u), DATE ~ currency, value.var="u")
+dtfEval <- rbindlist(collect_e)
 
 
 

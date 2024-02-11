@@ -1,12 +1,31 @@
-setwd("~/dynocopula/")
+setwd("~/Git/dynocopula/")
 library(VineCopula)
 library(data.table)
 source("R/dynofits.R")
 source("R/dynohelpers.R")
-source("R/marginal_models2.R")
+
 
 
 # DTU is the data.frame that contains the iid uniform marginals
+files_ <- list.files("./data/model_objects/")
+collect_u <- vector("list", length(files_)); names(collect_u) <- files_
+collect_e <- collect_u
+for (f_ in files_) {
+  tst <- readRDS(paste(c("./data/model_objects", f_), collapse = "/"))
+  curr <- regmatches(f_, regexpr("[a-zA-Z]+", f_))
+  collect_u[[f_]] <- data.table(DATE=tst$Dates, currency=curr, u=as.numeric(rugarch::pit(tst$mod)))
+  
+  decade <- regmatches(f_, regexpr("[0-9]{2}", f_))
+  MT <- verify_marginal_test(marginal_tests(tst$model), alpha = "0.05")
+  MT[, `:=`(currency=curr, group=decade)]
+  collect_e[[f_]] <- MT
+}
+dtfU <- dcast(rbindlist(collect_u), DATE ~ currency, value.var="u")
+dtfEval <- rbindlist(collect_e)
+
+
+BPfit(dtfU[DATE %in% year_list[[4]], yen], dtfU[DATE %in% year_list[[4]], sterling],)
+
 DTU_hist <- DTU
 DTU <- DTU_hist
 DTU <- data.table(DTU)
@@ -14,10 +33,10 @@ DTU[, index := 1:.N]
 
 
 
+
 # currencies
-fxnames <- c("austd", "deutsch", "euro", "ffranc", "newz",
-             "sterling", "swfranc", "won", "yen")
-fxnames <- fxnames[-1]
+fxnames1 <- c("austd", "deutsch", "sterling", "yen")
+fxnames2 <- c("austd", "euro", "sterling", "yen")
 
 fetch_union <- function(x, y, Dt)
 {
@@ -34,6 +53,18 @@ fetch_union <- function(x, y, Dt)
                 date_range=Dt[bool, range(DATE)]))
   }
 }
+
+
+# 2H
+dt_names <- dtfU[year(DATE) %in% unlist(year_list[3:4])][["DATE"]]
+for (pair in combn(fxnames2, 2, simplify=FALSE)) {
+  print(sprintf("Pair %s-%s started at %s", pair[1], pair[2], Sys.time()))
+  aa <- BPfit(dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[1]]],
+              dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[2]]], 
+              date_names=as.character(dt_names), fam1=2, parallel = T, ncores = 4)
+  saveRDS(aa, file=sprintf("data/dynocop_objects/%s_%s_tcop_00_18.RDS", pair[1], pair[2]))
+}
+
 
 
 for (fx1 in fxnames) {

@@ -11,7 +11,7 @@ jarque_bera <- function(x, k=1)
 }
 
 # Weighted Ljung-Box tests for correct ARMA specification
-lm_test <- function(x, moment=1, df)
+weighted_ljung_box_test <- function(x, moment=1, df)
 {
   pvalues <- rugarch:::.weightedBoxTest(x, p=moment, df=df)[, "p-value"]
   out <- matrix(pvalues, dimnames=list(names(pvalues), sprintf("moment=%d", moment)))
@@ -40,10 +40,11 @@ extract_ugarchfit_dist <- function(obj)
 {
   if (!inherits(obj, "uGARCHfit"))
     stop("Object must inherit from uGARCHfit model from rugarch package.")
+  model_coefs <- rugarch::coef(obj)
   dentype <- obj@model$modeldesc$distribution
-  shape <- coef(obj)[grep("shape", names(coef(obj)))]
-  skew <- coef(obj)[grep("skew", names(coef(obj)))]
-  lambda <- coef(obj)[grep("lambda", names(coef(obj)))]
+  shape <- model_coefs[grep("shape", names(model_coefs))]
+  skew <- model_coefs[grep("skew", names(model_coefs))]
+  lambda <- model_coefs[grep("lambda", names(model_coefs))]
   return(list(dentype=dentype, shape=shape, skew=skew, lambda=lambda))
 }
 
@@ -94,18 +95,14 @@ marginal_tests <- function(obj, PRINT=FALSE, PLOT=FALSE)
 
   ####### Specification Tests
   ## Weighted LM tests of the standard residuals
-  lm_matrix <- do.call(cbind, lapply(1:2, function(x) lm_test(z, x, df=armadf)))
-  # lm_results <- lapply(1:4, function(x) lm_test(u, x, nlags=lm_lags))
-  # lm_matrix <- matrix(unlist(lm_results),
-  #                     dimnames=list(paste0("lm moment ", 1:4, ":"), "p-Value"))
-  # hl_test <- HLTest(u, lags = lm_lags, conf.level = hl_cl)  # Hong and Li Non-Parametric Density Test (2005, RFS) (rugarch package)
-  
+  lm_matrix <- do.call(cbind, lapply(1:2, function(x) weighted_ljung_box_test(z, x, df=armadf)))
+
   # Normality Tests
   "add cramer von mises?"
-  gofm <- gof(obj, groups=2:5 * 10) # Distribution Check
   nybl <- nyblom(obj) # Parameter Stability
   sgnb <- signbias(obj) # Test for Asymmetric Impact of Errors
   
+  gofm <- gof(obj, groups=2:5 * 10) # Distribution Check
   # ks_test <- ks.test(u, punif)     # Kolmogorov-Smirnov test (stats package)
   # sw_test <- shapiro.test(as.numeric(qnorm(u))) # Shapiro Test for Normality (stats package)
   # jb_test <- jarque_bera(as.numeric(qnorm(u)), length(coef(obj)))  # Jarque-Bera test for joint normality of Skew and Kurtosis

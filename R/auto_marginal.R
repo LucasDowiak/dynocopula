@@ -92,6 +92,7 @@ auto_fit <- function(x, max_arch=2, max_garch=2, ignore_nyblom=FALSE)
 {
   "ar ma sar sma period i si"
   aa <- forecast::auto.arima(x, max.p=10, allowmean=TRUE, allowdrift=FALSE)
+  intercept_bool <- "intercept" %in% names(coef(aa))
   spec <- aa$arma
   arma <- spec[1:2]
   if (spec[3] > 0)
@@ -123,7 +124,7 @@ auto_fit <- function(x, max_arch=2, max_garch=2, ignore_nyblom=FALSE)
           print(nn)
           spec_mod <- ugarchspec(
             variance.model = list(model=mod, garchOrder=c(a,g)),
-            mean.model = list(armaOrder=arma, include.mean=TRUE),
+            mean.model = list(armaOrder=arma, include.mean=intercept_bool),
             distribution.model = d
           )
           

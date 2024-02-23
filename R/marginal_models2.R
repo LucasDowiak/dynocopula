@@ -23,12 +23,8 @@ names(DT) <- toupper(names(DT))
 # turn spot rates into returns log(X_t) - log(X_t-1)
 fxreturns <- lapply(DT[, -1], function(x) c(NA_real_, diff(log(x))))
 names(fxreturns) <- tolower(names(fxreturns))
-DT <- cbind(DT, as.data.frame(fxreturns))
+DT <- as.data.table(cbind(DT, as.data.frame(fxreturns)))
 rm(fxreturns)
-
-DT <- as.data.table(DT)
-DT <- DT[DT >= "1980-01-01", ]
-DTU <- DT[, "DATE"]
 
 # All Currencies
 yr80s <- 1980:1989
@@ -44,7 +40,7 @@ fxnames <- DT[1:10, names(.SD), .SDcols=which(names(DT) == tolower(names(DT)))]
 for (yrs in names(year_list)) {
   x <- DT[year(DATE) %in% year_list[[yrs]],  sterling]
   dts <- DT[year(DATE) %in% year_list[[yrs]], DATE]
-  mod <- auto_fit(x)
+  mod <- auto_fit(x, max_arch=3, max_garch=3, ignore_nyblom=TRUE)
   mod[["Dates"]] <- dts
   saveRDS(mod, file=sprintf("data/model_objects/sterling_%s.RDS", yrs))
 }
@@ -52,7 +48,7 @@ for (yrs in names(year_list)) {
 for (yrs in names(year_list)) {
   x <- DT[year(DATE) %in% year_list[[yrs]],  austd]
   dts <- DT[year(DATE) %in% year_list[[yrs]], DATE]
-  mod <- auto_fit(x)
+  mod <- auto_fit(x,  max_arch=3, max_garch=3, ignore_nyblom=TRUE)
   mod[["Dates"]] <- dts
   saveRDS(mod, file=sprintf("data/model_objects/austd_%s.RDS", yrs))
 }
@@ -76,7 +72,7 @@ for (yrs in names(year_list)) {
 for (yrs in names(year_list)) {
   x <- DT[year(DATE) %in% year_list[[yrs]],  yen]
   dts <- DT[year(DATE) %in% year_list[[yrs]], DATE]
-  mod <- auto_fit(x)
+  mod <- auto_fit(x,  max_arch=3, max_garch=3, ignore_nyblom=TRUE)
   mod[["Dates"]] <- dts
   saveRDS(mod, file=sprintf("data/model_objects/yen_%s.RDS", yrs))
 }
@@ -89,13 +85,6 @@ for (yrs in names(year_list)) {
   saveRDS(mod, file=sprintf("data/model_objects/swfranc_%s.RDS", yrs))
 }
 
-for (yrs in names(year_list)) {
-  x <- DT[year(DATE) %in% year_list[[yrs]],  yen]
-  dts <- DT[year(DATE) %in% year_list[[yrs]], DATE]
-  mod <- auto_fit(x)
-  mod[["Dates"]] <- dts
-  saveRDS(mod, file=sprintf("data/model_objects/yen_%s.RDS", yrs))
-}
 # -------------------------------------
 
 
@@ -105,7 +94,7 @@ for (yrs in names(year_list)) {
 for (yrs in names(year_list)[1:2]) {
   x <- DT[year(DATE) %in% year_list[[yrs]],  deutsch]
   dts <- DT[year(DATE) %in% year_list[[yrs]], DATE]
-  mod <- auto_fit(x)
+  mod <- auto_fit(x,  max_arch=3, max_garch=3, ignore_nyblom=TRUE)
   mod[["Dates"]] <- dts
   saveRDS(mod, file=sprintf("data/model_objects/deutsch_%s.RDS", yrs))
 }
@@ -127,7 +116,7 @@ for (yrs in names(year_list)[1:2]) {
 for (yrs in names(year_list)[3:4]) {
   x <- DT[year(DATE) %in% year_list[[yrs]],  euro]
   dts <- DT[year(DATE) %in% year_list[[yrs]], DATE]
-  mod <- auto_fit(x)
+  mod <- auto_fit(x,  max_arch=3, max_garch=3, ignore_nyblom=TRUE)
   mod[["Dates"]] <- dts
   saveRDS(mod, file=sprintf("data/model_objects/euro_%s.RDS", yrs))
 }

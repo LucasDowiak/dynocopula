@@ -18,7 +18,7 @@ for (f_ in files_) {
   collect_u[[f_]] <- data.table(DATE=tst$Dates, currency=curr, u=as.numeric(rugarch::pit(tst$model)))
   
   decade <- regmatches(f_, regexpr("[0-9]{2}", f_))
-  MT <- verify_marginal_test(marginal_tests(tst$model), alpha = "0.05")
+  MT <- verify_marginal_test(marginal_tests(tst$model), alpha = "0.05", ignore_nyblom=TRUE)
   MT[, `:=`(currency=curr, group=decade)]
   collect_e[[f_]] <- MT
 }
@@ -27,19 +27,21 @@ dtfEval <- rbindlist(collect_e)
 
 
 # currencies
-fxnames1 <- c("austd", "deutsch", "sterling", "yen")
-fxnames2 <- c("austd", "euro", "sterling", "yen")
+fxnames1 <- c("deutsch", "sterling", "yen")
+fxnames2 <- c("euro", "sterling", "yen")
 
 year_list <- list(1980:1989, 1990:1999, 2000:2009, 2010:2018)
 # Break Point Optimization
 # ------------------------------------------------------------------------------
 # 2H T-cop
 dt_names <- dtfU[year(DATE) %in% unlist(year_list[3:4])][["DATE"]]
-for (pair in combn(fxnames2, 2, simplify=FALSE)) {
+for (pair in combn(fxnames2, 2, simplify=FALSE)[1:2]) {
   print(sprintf("Pair %s-%s started at %s", pair[1], pair[2], Sys.time()))
-  aa <- BPfit(dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[1]]],
-              dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[2]]], 
-              date_names=as.character(dt_names), fam1=2, parallel = T, ncores = 4)
+  aa <- try(BPfit(dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[1]]],
+                  dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[2]]], 
+                  date_names=as.character(dt_names), fam1=2, parallel = TRUE, ncores = 6))
+  if (inherits(aa, "try-error"))
+    next
   saveRDS(aa, file=sprintf("data/dynocop_objects/%s_%s_tcop_00_18.RDS", pair[1], pair[2]))
 }
 
@@ -47,9 +49,11 @@ for (pair in combn(fxnames2, 2, simplify=FALSE)) {
 dt_names <- dtfU[year(DATE) %in% unlist(year_list[3:4])][["DATE"]]
 for (pair in combn(fxnames2, 2, simplify=FALSE)) {
   print(sprintf("Pair %s-%s started at %s", pair[1], pair[2], Sys.time()))
-  aa <- BPfit(dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[1]]],
+  aa <- try(BPfit(dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[1]]],
               dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[2]]], 
-              date_names=as.character(dt_names), fam1=3, fam2=13, parallel = T, ncores = 6)
+              date_names=as.character(dt_names), fam1=3, fam2=13, parallel = T, ncores = 6))
+  if (inherits(aa, "try-error"))
+    next
   saveRDS(aa, file=sprintf("data/dynocop_objects/%s_%s_clayton_00_18.RDS", pair[1], pair[2]))
 }
 
@@ -57,9 +61,11 @@ for (pair in combn(fxnames2, 2, simplify=FALSE)) {
 dt_names <- dtfU[year(DATE) %in% unlist(year_list[3:4])][["DATE"]]
 for (pair in combn(fxnames2, 2, simplify=FALSE)) {
   print(sprintf("Pair %s-%s started at %s", pair[1], pair[2], Sys.time()))
-  aa <- BPfit(dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[1]]],
+  aa <- try(BPfit(dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[1]]],
               dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[2]]], 
-              date_names=as.character(dt_names), fam1=4, fam2=14, parallel = T, ncores = 6)
+              date_names=as.character(dt_names), fam1=4, fam2=14, parallel = T, ncores = 6))
+  if (inherits(aa, "try-error"))
+    next
   saveRDS(aa, file=sprintf("data/dynocop_objects/%s_%s_gumbel_00_18.RDS", pair[1], pair[2]))
 }
 

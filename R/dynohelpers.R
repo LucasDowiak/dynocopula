@@ -19,8 +19,6 @@
 #
 # @importFrom VineCopula BiCopPDF
 #
- 
-
 cop_pdf <- function(theta, u, v, fam1, fam2) {
   th1 = theta[1]; th2 = theta[2]; th3 = theta[3]
   stopifnot(th3 >= 0 && th3 <= 1)
@@ -51,7 +49,6 @@ cop_pdf <- function(theta, u, v, fam1, fam2) {
 #
 # @importFrom VineCopula BiCopCDF
 #
-
 cop_cdf <- function(theta, u, v, fam1, fam2) {
   th1 = theta[1]; th2 = theta[2]; th3 = theta[3]
   stopifnot(th3 >= 0 && th3 <= 1,
@@ -81,7 +78,6 @@ cop_cdf <- function(theta, u, v, fam1, fam2) {
 #  
 # @return The negative log-likelhood value
 #    
-
 cop_llh <- function(theta, u, v, fam1, fam2) {
 
   -sum(log(cop_pdf(theta, u, v, fam1, fam2)))
@@ -110,7 +106,6 @@ cop_llh <- function(theta, u, v, fam1, fam2) {
 #' @importFrom VineCopula BiCopPDF
 #' @export
 #' 
-
 cop_static <- function(u, v, fam1, fam2 = NULL) {
 
   stopifnot(length(u) == length(v))
@@ -135,8 +130,14 @@ cop_static <- function(u, v, fam1, fam2 = NULL) {
     LB[1] <- switch(as.character(fam1), "3" = S, "4" = 1 + S, "13" = S, "14" = 1 + S)
     LB[2] <- switch(as.character(fam2), "3" = S, "4" = 1 + S, "13" = S, "14" = 1 + S)
     LB[3] <- S
+    
+    UB <- vector("integer", 3)
+    UB[1] <- switch(as.character(fam1), "3" = 28, "4" = 17, "13" = 28, "14" = 17)
+    UB[2] <- switch(as.character(fam2), "3" = 28, "4" = 17, "13" = 28, "14" = 17)
+    UB[3] <- 1 - S
+    
     Fit <- optim(c(1.5, 1.5, 0.5), cop_llh, u = u, v = v, fam1 = fam1, fam2 = fam2,
-                 method = "L-BFGS-B", lower = LB, upper = c(30, 30, 1 - S))
+                 method = "L-BFGS-B", lower = LB, upper = UB)
     # Return Log-like as max value
     LL <- -Fit$value
     theta <- Fit$par
@@ -172,7 +173,6 @@ cop_static <- function(u, v, fam1, fam2 = NULL) {
 # 
 # @importFrom cubature adaptIntegrate
 # 
-
 numerical_Ktau <- function(theta, fam1, fam2) {
   
   Q <- function(U, pars) {
@@ -206,7 +206,6 @@ numerical_Ktau <- function(theta, fam1, fam2) {
 #'
 #' @export
 #' 
-
 starting_guess <- function(u, v, fam, k) {
   
   N <- length(u)
@@ -261,7 +260,6 @@ starting_guess <- function(u, v, fam, k) {
 #' 
 #' @export
 #' 
-
 dependence_measures <- function(pars, fam1, fam2 = NULL) {
   
   if (is.null(fam2)) {
@@ -296,7 +294,6 @@ dependence_measures <- function(pars, fam1, fam2 = NULL) {
 # 
 # @param k Number of regimes
 #
-
 st_boundary <- function(fam, k) {
   
   S <- 1e-3
@@ -340,7 +337,6 @@ st_boundary <- function(fam, k) {
 # 
 # @param k Number of regimes
 #
-
 ms_boundary <- function(fam) {
   
   S <- 1e-2
@@ -376,7 +372,6 @@ ms_boundary <- function(fam) {
 #
 # @importFrom VineCopula BiCopPDF
 #
-
 ms_cop_vpdf <- function(fam, x, y) {
   ff1 <- fam[[1]]
   ff2 <- if (length(fam) > 1) fam[[2]]
@@ -431,7 +426,6 @@ ms_cop_pars <- function(z)
 # 
 # @return A density function for a copula for arbitrary parameter(s)
 # 
-
 st_cop_vpdf <- function(family, x, y) {
   
   stopifnot(is.numeric(family), is.numeric(x), is.numeric(y))
@@ -459,7 +453,6 @@ st_cop_vpdf <- function(family, x, y) {
 # 
 # @return A vector of parameter names
 # 
-
 ms_pnames <- function(x) {
   
   if (length(x) == 1) {
@@ -494,7 +487,6 @@ ms_pnames <- function(x) {
 #
 # @references Hamilton (1994) pg ___, eq [22.4.5] and [22.4.5]
 #
-
 markov_llh <- function(P, FF, F_0) {
   
   stopifnot(nrow(P) == nrow(FF), nrow(P) == nrow(F_0))
@@ -529,7 +521,6 @@ markov_llh <- function(P, FF, F_0) {
 # 
 # @references Hamilton (1994) pg ___ eq [22.4.14]
 # 
-
 smooth_inf <- function(P, Xi_t_t, Xi_t1_t) {
   
   nc <- ncol(Xi_t_t); nr <- nrow(Xi_t_t)
@@ -565,7 +556,6 @@ smooth_inf <- function(P, Xi_t_t, Xi_t1_t) {
 #   \item{EMstep}{Good to know for further development}
 #   }
 #
-
 copula_optim <- function(parm, x, y, family) {
   
   # Basic constants
@@ -628,7 +618,6 @@ copula_optim <- function(parm, x, y, family) {
 #   \item{EMstep}{Good to know for further development}
 #   }
 #
-
 markov_optim <- function(parm, x, y, family) {
   
   # Basic constants
@@ -683,7 +672,6 @@ markov_optim <- function(parm, x, y, family) {
 #
 # @return The sum of the negalitve log-likelhood
 # 
-
 smooth_llh <- function(x, y, M, family) {
   stopifnot(is.matrix(M))
   if (length(family) == 1) {
@@ -716,7 +704,6 @@ smooth_llh <- function(x, y, M, family) {
 #
 # @return A vector with the smooth transition values for a copula parameter
 #
-
 smooth_parm <- function(parm, St, g, c, gsd) {
   stopifnot(length(parm) == length(g) + 1,
             length(g) == length(c))
@@ -753,7 +740,6 @@ smooth_parm <- function(parm, St, g, c, gsd) {
 #   the copula model. For a mixture copula, the (single) weight parameter is
 #   included as an attribute.
 #
-
 transform_parm <- function(parm, family, k, St, gsd) {
   # gsd <- sd(St)
   if (length(family) == 1) {
@@ -797,7 +783,6 @@ transform_parm <- function(parm, family, k, St, gsd) {
 # 
 # @return A vector the same length as \code{u} of density values
 # 
-
 clayton_pdf <- function(u, v, alpha){
   
   (1 + alpha) * u^-(alpha + 1) * v^-(alpha + 1) *
@@ -816,7 +801,6 @@ clayton_pdf <- function(u, v, alpha){
 # 
 # @return A vector the same length as \code{u} of density values
 #
-
 Sclayton_pdf <- function(u, v, alpha){
   
   clayton_pdf(1 - u, 1 - v, alpha)
@@ -834,7 +818,6 @@ Sclayton_pdf <- function(u, v, alpha){
 # 
 # @return A vector the same length as \code{u} of density values
 #
-
 frank_pdf <- function(u, v, delta) {
   
   (delta * exp(-delta * (u + v)) * (1 - exp(-delta))) /
@@ -871,7 +854,6 @@ Sfrank_pdf <- function(u, v, delta) {
 # 
 # @return A vector the same length as \code{u} of density values
 #
-
 gumbel_pdf <- function(u, v, gamma) {
   
   g1 <- (1 / u) * (1 / v) * (-log(u))^(gamma - 1) * (-log(v))^(gamma - 1) *
@@ -893,7 +875,6 @@ gumbel_pdf <- function(u, v, gamma) {
 # 
 # @return A vector the same length as \code{u} of density values
 #
-
 Sgumbel_pdf <- function(u, v, gamma) {
   
   gumbel_pdf(1 - u, 1 - v, gamma = gamma)
@@ -911,7 +892,6 @@ Sgumbel_pdf <- function(u, v, gamma) {
 # 
 # @return A vector the same length as \code{u} of density values
 #
-
 gaussian_pdf <- function(u, v, rho){
   
   stopifnot(abs(rho) <= 1)
@@ -934,7 +914,6 @@ gaussian_pdf <- function(u, v, rho){
 # 
 # @return A vector the same length as \code{u} of density values
 #
-
 tcop_pdf <- function(u, v, rho, nu){
 
   stopifnot(abs(rho) <= 1, nu > 2)
@@ -969,7 +948,6 @@ tcop_pdf <- function(u, v, rho, nu){
 #   \item Post-regime copula parameters
 #   }          
 # 
-
 BreakPointLL <- function(u, v, t, fam1, fam2) {
   
   TT <- length(u)
@@ -1006,7 +984,6 @@ BreakPointLL <- function(u, v, t, fam1, fam2) {
 #
 # @return The test statistic for the generalized likelihood ratio test        
 # 
-
 BreakPointTestStatistic <- function(t, u, v, fam1, fam2, Full) {
   Break <- try(BreakPointLL(u, v, t, fam1, fam2))
   if (inherits(Break, "try-error")) {
@@ -1028,7 +1005,6 @@ BreakPointTestStatistic <- function(t, u, v, fam1, fam2, Full) {
 # 
 # @return A p-value
 # 
-
 aprx <- function(x, np, N) {
   lh <- log(N)^(3/2) / N
   ((x^np * exp(-(x^2 / 2))) / (sqrt(2^np) * gamma(np / 2))) *
@@ -1073,7 +1049,6 @@ aprx <- function(x, np, N) {
 #     searched for a breakpoint}
 #   }
 # 
-
 BreakAnalysis <- function(u, v, series, fam1, fam2 = NULL, date_names = NULL,
                           parallel = FALSE, cluster) {
 
@@ -1135,7 +1110,6 @@ BreakAnalysis <- function(u, v, series, fam1, fam2 = NULL, date_names = NULL,
 # @param cluster If run in parallel, cluster is passed from a call to
 #   \code{\link{BPfit}}
 # 
-
 autoBPtest <- function(x, y, f1, f2 = NULL, parallel = FALSE, date_names = NULL,
                        cluster = NULL) {
   output <- list()
@@ -1183,7 +1157,6 @@ autoBPtest <- function(x, y, f1, f2 = NULL, parallel = FALSE, date_names = NULL,
 # 
 # @reference Repartition method from Bai (1997) and Dias & Embrechts (2009)
 # 
-
 repartitionBP <- function(bpResultList, u, v, f1, f2, parallel = F, date_names,
                           cluster = NULL) {
   bpList <- bpResultList
@@ -1224,24 +1197,32 @@ repartitionBP <- function(bpResultList, u, v, f1, f2, parallel = F, date_names,
 # @importFrom VineCopula BiCopPDF
 # @importFrom VineCopula BiCopDeriv
 # 
-
 cop_gradcontr <- function(u, v, theta, f1, f2) {
   
   if (f1 == 1) {
     rho <- theta[1]
-    g1 <- (1 / BiCopPDF(u, v, f1, rho)) * BiCopDeriv(u, v, f1, rho, deriv="par")
+    C1 <- BiCopPDF(u, v, family=f1, par=rho)
+    D1 <- BiCopDeriv(u, v, f1, rho, deriv="par")
+    g1 <- D1 / C1
     return(matrix(g1, ncol = 1))
   } else if (f1 == 2) {
     rho <- theta[1]; dof <- theta[2]
-    g1 <- (1 / BiCopPDF(u, v, f1, rho, dof)) * BiCopDeriv(u, v, f1, rho, dof, "par")
-    g2 <- (1 / BiCopPDF(u, v, f1, rho, dof)) * BiCopDeriv(u, v, f1, rho, dof, "par2")
+    C1 <- BiCopPDF(u, v, f1, rho, dof)
+    D1 <- BiCopDeriv(u, v, family=f1, par=rho, par2=dof, deriv="par")
+    D2 <- BiCopDeriv(u, v, family=f1, par=rho, par2=dof, deriv="par2")
+    g1 <- D1 / C1
+    g2 <- D2 / C1
     return(matrix(c(g1, g2), ncol  = 2))
   } else {
     th1 <- theta[1]; th2 <- theta[2]; th3 <- theta[3]
-    g1 <- (th3 / cop_pdf(theta, u, v, f1, f2)) * BiCopDeriv(u, v, f1, th1, "par")
-    g2 <- ((1 - th3) / cop_pdf(theta, u, v, f1, f2)) * BiCopDeriv(u, v, f2, th2, "par")
-    g3 <- (1 / cop_pdf(theta, u, v, f1, f2)) * (BiCopPDF(u, v, f1, th1) -
-         BiCopPDF(u, v, f2, th2))
+    C1 <- BiCopPDF(u, v, family=f1, par=th1)
+    C2 <- BiCopPDF(u, v, family=f2, par=th2)
+    contr <- cop_pdf(theta, u, v, fam1=f1, fam2=f2)
+    D1 <- BiCopDeriv(u, v, family=f1, par=th1, deriv="par")
+    D2 <- BiCopDeriv(u, v, family=f2, par=th2, deriv="par")
+    g1 <- (th3 / contr) * D1
+    g2 <- ((1 - th3) / contr) * D2
+    g3 <- (1 / contr) * (C1 - C2)
     return(matrix(c(g1, g2, g3), ncol = 3))
   }
 }
@@ -1269,43 +1250,50 @@ cop_gradcontr <- function(u, v, theta, f1, f2) {
 # @importFrom VineCopula BiCopDeriv
 # @importFrom VineCopula BiCopDeriv2
 # 
-
 cop_hessian <- function(u, v, theta, f1, f2) {
   
   if (f1 == 1) {
     rho <- theta[1]
-    h11 <- (1 / BiCopPDF(u, v, f1, rho)) * BiCopDeriv2(u, v, f1, rho, deriv="par") - 
-      (1 / BiCopPDF(u, v, f1, rho)^2) * BiCopDeriv(u, v, f1, rho)^2
+    C1 <- BiCopPDF(u, v, f1, rho)
+    D1 <- BiCopDeriv(u, v, family=f1, par=rho, deriv="par")
+    D11 <- BiCopDeriv2(u, v, family=f1, par=rho, deriv="par")
+    h11 <- -(D1 / C1)**2 + (D11 / C1)
+#   (1 / C1) * (D11 - (D1**2 / C1))
     return(matrix(sum(h11)))
   } else if (f1 == 2) {
     rho <- theta[1]; dof <- theta[2]
-    h11 <- (1 / BiCopPDF(u, v, f1, rho, dof)) * BiCopDeriv2(u, v, f1, rho, dof, "par") - 
-      (1 / BiCopPDF(u, v, f1, rho, dof)^2) * BiCopDeriv(u, v, f1, rho, dof, "par")^2
-    h12 <- (1 / BiCopPDF(u, v, f1, rho, dof)) * BiCopDeriv2(u, v, f1, rho, dof, "par1par2") - 
-      (1 / BiCopPDF(u, v, f1, rho, dof)^2) * BiCopDeriv(u, v, f1, rho, dof, "par") *
-      BiCopDeriv(u, v, f1, rho, dof, "par2")
-    h22 <- (1 / BiCopPDF(u, v, f1, rho, dof)) * BiCopDeriv2(u, v, f1, rho, dof, "par2") - 
-      (1 / BiCopPDF(u, v, f1, rho, dof)^2) * BiCopDeriv(u, v, f1, rho, dof, "par2")^2
+    C1 <- BiCopPDF(u, v, family=f1, par=rho, par2=dof)
+    D1 <- BiCopDeriv(u, v, family=f1, par=rho, par2=dof, deriv="par")
+    D2 <- BiCopDeriv(u, v, family=f1, par=rho, par2=dof, deriv="par2")
+    D11 <- BiCopDeriv2(u, v, family=f1, par=rho, par2=dof, deriv="par")
+    D22 <- BiCopDeriv2(u, v, family=f1, par=rho, par2=dof, deriv="par2")
+    D12 <- BiCopDeriv2(u, v, family=f1, par=rho, par2=dof, deriv="par1par2")
+    h11 <- -(D1 / C1)**2 + (D11 / C1)        #    (1 / C1) * (D11 - (D1**2 / C1))
+    h22 <- -(D2 / C1)**2 + (D22 / C1)        #    (1 / C1) * (D22 - (D2**2 / C1))
+    h12 <  -((D1 * D2) / C1**2) + (D12 / C1) #  - (1 / C1) * (D12 - (D1 * D2) / C1)
     h11 <- sum(h11); h12 <- sum(h12); h22 <- sum(h22)
     H <- matrix(c(h11, h12, h12, h22), nrow = 2)
     return(H)
   } else {
     th1 <- theta[1]; th2 <- theta[2]; th3 <- theta[3]
-    h11 <- (th3 / cop_pdf(theta, u, v, f1, f2)) * BiCopDeriv2(u, v, f1, th1, "par") - 
-      ((th3 / cop_pdf(theta, u, v, f1, f2)) * BiCopDeriv(u, v, f1, th1, "par"))^2
-    h12 <- -(1 / cop_pdf(theta, u, v, f1, f2)^2) * th3 * (1 - th3) * 
-      BiCopDeriv(u, v, f1, th1, "par") * BiCopDeriv(u, v, f2, th2, "par")
-    h13 <- BiCopDeriv(u, v, f1, th1) * ((1 / cop_pdf(theta, u, v, f1, f2)) -
-          (th3 / cop_pdf(theta, u, v, f1, f2)^2) *
-          (BiCopPDF(u, v, f1, th1) - BiCopPDF(u, v, f2, th2)))
-    h22 <- ((1 - th3) / cop_pdf(theta, u, v, f1, f2)) *
-      BiCopDeriv2(u, v, f2, th2, "par") - (((1 - th3) / cop_pdf(theta, u, v, f1, f2)) *
-         BiCopDeriv(u, v, f2, th2, "par"))^2
-    h23 <- BiCopDeriv(u, v, f2, th2) * ((1 / cop_pdf(theta, u, v, f1, f2)) -
-          ((1 - th3) / cop_pdf(theta, u, v, f1, f2)^2) *
-          (BiCopPDF(u, v, f1, th1) - BiCopPDF(u, v, f2, th2)))
-    h33 <- -(1 / cop_pdf(theta, u, v, f1, f2)^2) * (BiCopPDF(u, v, f1, th1) -
-         BiCopPDF(u, v, f2, th2))^2
+    C1 <- BiCopPDF(u, v, family=f1, par=th1)
+    C2 <- BiCopPDF(u, v, family=f1, par=th2)
+    D1 <- BiCopDeriv(u, v, family=f1, par=th1, deriv="par")
+    D2 <- BiCopDeriv(u, v, family=f2, par=th2, deriv="par")
+    D11 <- BiCopDeriv2(u, v, family=f1, par=th1, deriv="par")
+    D22 <- BiCopDeriv2(u, v, family=f2, par=th2, deriv="par")
+    # D12 <- BiCopDeriv2(u, v, family=f1)
+    contr <- cop_pdf(theta, u, v, fam1=f1, fam2=f2)
+    
+    h11 <- -((th3 * D1) / contr)**2 + (th3 / contr) * D11
+    h12 <- -(1 / contr**2) * th3 * (1 - th3) * D1 * D2
+    h13 <- -(D1 / contr) * ((th3 / contr) * (C1 - C2) - 1)
+    
+    h22 <- -(((1 - th3) * D2) / contr)**2 + (1 - th3) * (1 / contr) * D22
+    h23 <- -(D2 / contr) * (1 + ((1 - th3) / contr) * (C1 - C2))
+    
+    h33 <- -((C1 - C2) / contr)**2
+    
     h11 <- sum(h11); h12 <- sum(h12); h13 <- sum(h13)
     h22 <- sum(h22); h23 <- sum(h23); h33 <- sum(h33)
     H <- matrix(c(h11, h12, h13, h12, h22, h23, h13, h23, h33), nrow = 3)

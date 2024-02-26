@@ -1,5 +1,6 @@
 setwd("~/Git/dynocopula/")
 library(VineCopula)
+library(cubature)
 library(data.table)
 library(rugarch)
 source("R/dynofits.R")
@@ -68,13 +69,39 @@ for (pair in combn(fxnames2, 2, simplify=FALSE)) {
 # Markov Switching
 # ------------------------------------------------------------------------------
 dt_names <- dtfU[year(DATE) %in% unlist(year_list[3:4])][["DATE"]]
-for (pair in combn(fxnames2, 2, simplify=FALSE)) {
-  print(sprintf("Pair %s-%s started at %s", pair[1], pair[2], Sys.time()))
-  aa <- MSfit(dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[1]]],
-              dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[2]]], 
-              date_names=as.character(dt_names), fam1=4, fam2=14, parallel = T, ncores = 6)
-  saveRDS(aa, file=sprintf("data/dynocop_objects/MSfit_%s_%s_gumbel_00_18.RDS", pair[1], pair[2]))
+states <- 2:4
+for (s in states) {
+  for (pair in combn(fxnames2, 2, simplify=FALSE)) {
+    print(sprintf("Pair: %s-%s Regimes: %d started at %s", pair[1], pair[2], s, Sys.time()))
+    aa <- MSfit(dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[1]]],
+                dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[2]]], 
+                family=as.list(rep(2, s)), tol=1e-4)
+    saveRDS(aa, file=sprintf("data/dynocop_objects/MSfit_%s_%s_tcop_00_18_s%d.RDS", pair[1], pair[2], s))
+  }
 }
+
+states <- 2:4
+for (s in states) {
+  for (pair in combn(fxnames2, 2, simplify=FALSE)) {
+    print(sprintf("Pair: %s-%s Regimes: %d started at %s", pair[1], pair[2], s, Sys.time()))
+    aa <- MSfit(dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[1]]],
+                dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[2]]], 
+                family=split(rep(c(3, 13), s), floor((1:(2*s) / 2) - 0.5)), tol=1e-4)
+    saveRDS(aa, file=sprintf("data/dynocop_objects/MSfit_%s_%s_clayton_00_18_s%d.RDS", pair[1], pair[2], s))
+  }
+}
+
+states <- 2:4
+for (s in states) {
+  for (pair in combn(fxnames2, 2, simplify=FALSE)) {
+    print(sprintf("Pair: %s-%s Regimes: %d started at %s", pair[1], pair[2], s, Sys.time()))
+    aa <- MSfit(dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[1]]],
+                dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[2]]], 
+                family=split(rep(c(4, 14), s), floor((1:(2*s) / 2) - 0.5)), tol=1e-4)
+    saveRDS(aa, file=sprintf("data/dynocop_objects/MSfit_%s_%s_gumbel_00_18_s%d.RDS", pair[1], pair[2], s))
+  }
+}
+
 
 
 aa <- MSfit(dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[1]]],

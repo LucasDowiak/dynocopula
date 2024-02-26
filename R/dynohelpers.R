@@ -592,7 +592,7 @@ copula_optim <- function(parm, x, y, family) {
   out <- optim(cop_parm, rsLLH, method = "L-BFGS-B", hessian = TRUE,
                lower = unlist(lapply(bound, `[[`, "LB")),
                upper = unlist(lapply(bound, `[[`, "UB")))
-  print(out)
+  # print(out)
   par <- c(out$par, trns_parm, init_parm)
   return(list(par = par, solver = out, EMstep = "copula"))
 }
@@ -651,7 +651,7 @@ markov_optim <- function(parm, x, y, family) {
   }
   # Fit regime copula paramaters given transition probabilities 
   out <- optim(trns_parm, rsLLH, method = "BFGS", hessian = TRUE)
-  print(out)
+  # print(out)
   par <- c(cop_parm, out$par)
   return(list(par = par, solver = out, EMstep = "markov"))
 }
@@ -1090,7 +1090,7 @@ BreakAnalysis <- function(u, v, series, fam1, fam2 = NULL, date_names = NULL,
 
 
 
-# For the sequential breakpoint model, a closure that recursively searchs for
+# For the sequential breakpoint model, a closure that recursively searches for
 # all statistically significant breakpoints.
 # 
 # @param u A vector of uniform marginal values.

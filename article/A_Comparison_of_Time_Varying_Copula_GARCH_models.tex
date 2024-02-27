@@ -11,6 +11,8 @@
 
 \newcommand{\Lagr}{\mathcal{L}}
 \newcommand{\boldXi}{\hat{\boldsymbol{\xi}}}
+\newcommand{\checkplus}[0]{\checkmark +}
+
 
 \newtheorem{defn}{Definition}
 \newtheorem{thm}{Theorem}
@@ -456,290 +458,75 @@ Our approach is to start with a simple GARCH(1,1) model with no autoregressive c
 
 \vspace{10mm}
 
-\begin{table}
-	\caption{Marginal Models - Jan, 1980 to Dec, 1989}
-	\begin{threeparttable}
-		\begin{tabular}[l]{l c c c c c c c c}
-	    \hline
-	& \multicolumn{3}{c}{Conditional Mean}  & \multicolumn{3}{c}{Conditional Variance}  & \multicolumn{2}{c}{Distribution} \\
-			            & Const.     & AR & MA & Model & ARCH & GARCH & Distribution & Skewed     \\
-	\hline
-	    Euro            & --         & -- & -- & --    & --   & --    & --           & --         \\
-		Deutschemark    & \checkmark & 1  & 1  & gjr   & 3    & 1     & t-distr      & x          \\
-		French Franc    & \checkmark & 2  & 1  & gjr   & 2    & 1     & t-distr      & x          \\
-		Swiss Franc     & \checkmark & 1  & 0  & std   & 3    & 1     & t-distr      & x          \\
-		Sterling        & \checkmark & 1  & 0  & std   & 1    & 1     & t-distr      & \checkmark \\
-		New Z. D.       & \checkmark & 5  & 0  & gjr   & 3    & 1     & t-distr      & \checkmark \\
-		Aust D.         & \checkmark & 3  & 1  & std   & 1    & 1     & t-distr      & \checkmark \\
-		Yen             & \checkmark & 5  & 0  & std   & 1    & 1     & t-distr      & \checkmark \\
-		Won             & --         & -- & -- & --    & --   & --    & --           & --         \\
-		Singapore D.    & --         & -- & -- & --    & --   & --    & --           & --         \\
-	\hline
-		\end{tabular}
-		\begin{tablenotes}
-			\item[1]{\footnotesize This is a footnote.}
-		\end{tablenotes}
-	\end{threeparttable}
-\end{table}
-
-\newcommand{\checkplus}[0]{\checkmark +}
-
-\begin{table}
-	\caption{Marginal Tests - Jan, 1980 to Dec, 1989}
-	\begin{threeparttable}
-		\begin{tabular}[l]{l l l l l l l l l l l l l}
-	    \hline
-	& \multicolumn{5}{c}{Uniform}  & \multicolumn{7}{c}{Standard Normal} \\
-			            & LM1        & LM2        & LM3        & LM4        & KS         & HL1        & HL2        & HL3        & HL4        & HLJ        & JB         & WS \\
-	\hline
-	    Euro            & --  & --  & --  & --  & -- & --  & --  & --  & --  & --  & -- & -- \\
-		Deutschemark    & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus \\
-		French Franc    & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus \\
-		Swiss Franc     & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & x          & \checkplus & \checkplus \\
-		Sterling        & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus \\
-		New Z. D.       &  &  &  &  &  &  &  & \\
-		Aust D.         & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & x          & x          & \checkplus & \checkplus & \checkplus \\
-		Yen             & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & x          & \checkplus & \checkplus \\
-		Won             & --  & --  & --  & --  & -- & --  & --  & --  & --  & --  & -- & -- \\
-		Singapore D.    & --  & --  & --  & --  & -- & --  & --  & --  & --  & --  & -- & -- \\
-	\hline
-		\end{tabular}
-		\begin{tablenotes}
-			\item[1]{\footnotesize This is a footnote.}
-		\end{tablenotes}
-	\end{threeparttable}
-\end{table}
-
 
 
 \begin{table}
-	\caption{Marginal Models - Jan, 1990 to Dec, 1999}
-	\begin{threeparttable}
-		\begin{tabular}[l]{l c c c c c c c c}
-	    \hline
-	& \multicolumn{3}{c}{Conditional Mean}  & \multicolumn{3}{c}{Conditional Variance}  & \multicolumn{2}{c}{Distribution} \\
-			            & Const.     & AR & MA & Model & ARCH & GARCH & Distribution & Skewed     \\
-	\hline
-	    Euro            & --         & -- & -- & --    & --   & --    & --           & --         \\
-		Deutschemark    & \checkmark & 1  & 1  & gjr   & 3    & 1     & t-dist       & x          \\
-		French Franc    & \checkmark & 0  & 0  & std   & 5    & 1     & t-dist       & x          \\
-		Swiss Franc     & \checkmark & 0  & 1  & std   & 1    & 1     & t-dist       & \checkmark \\
-		Sterling        & \checkmark & 1  & 0  & std   & 1    & 1     & t-dist       & x          \\
-		New Z. D.       & \checkmark & 5  & 0  & gjr   & 5    & 1     & t-dist       & \checkmark \\
-		Aust D.         & \checkmark & 0  & 0  & std   & 1    & 1     & t-dist       & \checkmark \\
-		Yen             & \checkmark & 0  & 0  & std   & 1    & 1     & t-dist       & \checkmark \\
-		Won             & --         & -- & -- & --    & --   & --    & --           & --         \\
-		Singapore D.    & --         & -- & -- & --    & --   & --    & --           & --         \\
-	\hline
-		\end{tabular}
-		\begin{tablenotes}
-			\item[1]{\footnotesize This is a footnote.}
-		\end{tablenotes}
-	\end{threeparttable}
-\end{table}
-
-
-
-\begin{table}
-	\caption{Marginal Tests - Jan, 1990 to Dec, 1999}
-	\begin{threeparttable}
-		\begin{tabular}[l]{l l l l l l l l l l l l l}
-	    \hline
-	& \multicolumn{5}{c}{Uniform}  & \multicolumn{7}{c}{Standard Normal} \\
-			            & LM1        & LM2        & LM3        & LM4        & KS         & HL1        & HL2        & HL3        & HL4        & HLJ        & JB         & WS \\
-	\hline
-	    Euro            & --  & --  & --  & --  & -- & --  & --  & --  & --  & --  & -- & -- \\
-		Deutschemark    & \checkplus & \checkmark & \checkplus & \checkmark & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus \\
-		French Franc    & \checkplus & \checkmark & \checkplus & x          & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus \\
-		Swiss Franc     & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus \\
-		Sterling        & \checkplus & \checkplus & \checkmark & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus \\
-		New Z. D.       & \checkplus & \checkmark & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & x          & x          & \checkplus & \checkplus & \checkplus \\
-		Aust D.         & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus \\
-		Yen             & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus \\
-		Won             & --  & --  & --  & --  & -- & --  & --  & --  & --  & --  & -- & -- \\
-		Singapore D.    & --  & --  & --  & --  & -- & --  & --  & --  & --  & --  & -- & -- \\
-	\hline
-		\end{tabular}
-		\begin{tablenotes}
-			\item[1]{\footnotesize This is a footnote.}
-		\end{tablenotes}
-	\end{threeparttable}
-\end{table}
-
-
-
-\begin{table}
-	\caption{Marginal Models - Jan, 2000 to Dec, 2009}
-	\begin{threeparttable}
-		\begin{tabular}[l]{l c c c c c c c c}
-	    \hline
-	& \multicolumn{3}{c}{Conditional Mean}  & \multicolumn{3}{c}{Conditional Variance}  & \multicolumn{2}{c}{Distribution} \\
-			            & Const.     & AR & MA & Model & ARCH & GARCH & Distribution & Skewed     \\
-	\hline
-	    Euro            & \checkmark & 0  & 0  & std   & 5    & 1     & t-dist       & \checkmark \\
-		Deutschemark    & \checkmark & 1  & 5  & std   & 1    & 1     & ged          & \checkmark \\
-		French Franc    & \checkmark & 1  & 0  & gjr   & 3    & 1     & t-dist       & \checkmark \\
-		Swiss Franc     & \checkmark & 1  & 0  & std   & 1    & 1     & t-dist       & \checkmark \\
-		Sterling        & \checkmark & 1  & 0  & std   & 1    & 1     & ged          & x          \\
-		New Z. D.       & x          & 5  & 0  & gjr   & 5    & 1     & t-dist       & \checkmark \\
-		Aust D.         & \checkmark & 0  & 0  & std   & 1    & 1     & t-dist       & \checkmark \\
-		Yen             & \checkmark & 0  & 0  & std   & 3    & 1     & t-dist       & \checkmark \\
-		Won             & \checkmark & 0  & 0  & std   & 1    & 1     & t-dist       & x          \\
-		Singapore D.    & \checkmark & 5  & 1  & std   & 1    & 1     & t-dist       & \checkmark \\
-	\hline
-		\end{tabular}
-		\begin{tablenotes}
-			\item[1]{\footnotesize This is a footnote.}
-		\end{tablenotes}
-	\end{threeparttable}
-\end{table}
-
-
-
-\begin{table}
-	\caption{Marginal Tests - Jan, 2000 to Dec, 2009}
-	\begin{threeparttable}
-		\begin{tabular}[l]{l l l l l l l l l l l l l}
-	    \hline
-	& \multicolumn{5}{c}{Uniform}  & \multicolumn{7}{c}{Standard Normal} \\
-			            & LM1        & LM2        & LM3        & LM4        & KS         & HL1        & HL2        & HL3        & HL4        & HLJ        & JB         & WS \\
-	\hline
-	    Euro            & \checkplus & x          & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus \\
-		Deutschemark    & \checkplus & x          & \checkplus & x          & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus \\
-		French Franc    & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus \\
-		Swiss Franc     & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus \\
-		Sterling        & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus \\
-		New Z. D.       & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & x          & \checkplus & x          \\
-		Aust D.         & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus \\
-		Yen             & \checkplus & x          & \checkplus & \checkmark & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus \\
-		Won             & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus \\
-		Singapore D.    & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus \\
-	\hline
-		\end{tabular}
-		\begin{tablenotes}
-			\item[1]{\footnotesize This is a footnote.}
-		\end{tablenotes}
-	\end{threeparttable}
-\end{table}
-
-
-
-\begin{table}
-	\caption{Marginal Models - Jan, 2010 to Dec, 2018}
-	\begin{threeparttable}
-		\begin{tabular}[l]{l c c c c c c c c}
-	    \hline
-	& \multicolumn{3}{c}{Conditional Mean}  & \multicolumn{3}{c}{Conditional Variance}  & \multicolumn{2}{c}{Distribution} \\
-			            & Const.     & AR & MA & model & ARCH & GARCH & Distribution & Skewed     \\
-	\hline
-	    Euro            & \checkmark & 0  & 0  & std   & 1    & 1     & t-dist       & x          \\
-		Deutschemark    & --         & -- & -- & --    & --   & --    & --           & --         \\
-		French Franc    & --         & -- & -- & --    & --   & --    & --           & --         \\
-		Swiss Franc     & \checkmark & 0  & 0  & std   & 1    & 1     & t-dist       & \checkmark \\
-		Sterling        & \checkmark & 1  & 0  & std   & 1    & 1     & t-dist       & x          \\
-		New Z. D.       & \checkmark & 0  & 1  & std   & 1    & 1     & t-dist       & \checkmark \\
-		Aust D.         & \checkmark & 0  & 0  & std   & 1    & 1     & t-dist       & \checkmark \\
-		Yen             & \checkmark & 0  & 0  & std   & 1    & 1     & t-dist       & x          \\
-		Won             & \checkmark & 0  & 0  & gjr   & 1    & 1     & t-dist       & \checkmark \\
-		Singapore D.    & \checkmark & 0  & 0  & std   & 1    & 1     & t-dist       & \checkmark \\
-	\hline
-		\end{tabular}
-		\begin{tablenotes}
-			\item[1]{\footnotesize This is a footnote.}
-		\end{tablenotes}
-	\end{threeparttable}
-\end{table}
-
-
-
-\begin{table}
-	\caption{Marginal Tests - Jan, 2010 to Dec, 2018}
-	\begin{threeparttable}
-		\begin{tabular}[l]{l l l l l l l l l l l l l}
-	    \hline
-	& \multicolumn{5}{c}{Uniform}  & \multicolumn{7}{c}{Standard Normal} \\
-			            & LM1        & LM2        & LM3        & LM4        & KS         & HL1        & HL2        & HL3        & HL4        & HLJ        & JB         & WS \\
-	\hline
-	    Euro            & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus \\
-		Deutschemark    & --  & --  & --  & --  & -- & --  & --  & --  & --  & --  & -- & -- \\
-		French Franc    & --  & --  & --  & --  & -- & --  & --  & --  & --  & --  & -- & -- \\
-		Swiss Franc     & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & x          & \checkplus & \checkplus \\
-		Sterling        & \checkmark & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus \\
-		New Z. D.       & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus \\
-		Aust D.         & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus \\
-		Yen             & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus \\
-		Won             & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus \\
-		Singapore D.    & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus & \checkplus \\
-	\hline
-		\end{tabular}
-		\begin{tablenotes}
-			\item[1]{\footnotesize This is a footnote.}
-		\end{tablenotes}
-	\end{threeparttable}
-\end{table}
-
-%\newgeometry{margin = 2cm}
-\begin{landscape}
-
-\begin{table}
-\caption{Marginal Models}
-\begin{threeparttable}
-	\begin{tabular}[l]{l c c | c c c c c c | c c}
-\hline \hline
-& \multicolumn{2}{c}{Conditional Mean$^{1}$} & \multicolumn{6}{c}{Conditional Variance$^{1}$} & \multicolumn{2}{c}{Conditional Dist.$^{2}$} \\
-         & const. & rho$_{1}$ & omega  & alpha$_{1}$ & gamma$_{1}$ & alpha$_{2}$ & gamma$_{2}$ & beta   & nu     & xi     \\
-\hline
-Euro     & --     &  0.001    & 0.002  & 0.000       & -0.061      & 0.052       & 0.040       & 0.955  & 8.345  & --     \\
-         & --     & (0.03)    & (0.00) & (0.01)      & (0.00)      & (0.01)      & (0.02)      & (0.00) & (1.84) & --     \\
-Pound    & -0.007 & --        & 0.002  & 0.041       & --          & --          & --          & 0.955  & 9.721  & --     \\
-         & (0.02) & --        & (0.00) & (0.01)      & --          & --          & --          & (0.00) & (2.12) & --     \\
-S. Franc & -0.018 & --        & 0.003  & 0.000       & 0.043       & 0.035       & -0.040      & 0.957  & 9.432  & 0.895  \\
-		 & (0.02) & --        & (0.00) & (0.04)      & (0.06)      & (0.04)      & (0.05)      & (0.00) & (2.33) & (0.03) \\
-Yen      & 0.006  & --        & 0.003  & 0.037       & --          & --          & --          & 0.957  & 7.664  & 0.877  \\
-         & (0.02) & --        & (0.00) & (0.01)      & --          & --          & --          & (0.00) & (1.37) & (0.30) \\
-Won      & -0.011 & --        & 0.006  & 0.165       & --          & --          & --          & 0.834  & 5.056  & --     \\
-         & (0.01) & --        & (0.00) & (0.04)      & --          & --          & --          & (0.05) & (0.71) & --     \\
-Aust. D. & -0.016 & --        & 0.004  & 0.057       & --          & --          & --          & 0.939  & 8.244  & 1.227  \\
-         & (0.02) & --        & (0.00) & (0.02)      & --          & --          & --          & (0.01) & (1.84) & (0.05) \\
-NewZ. D. & --     & --        & 0.004  & 0.052       & --          & --          & --          & 0.961  & 8.136  & 1.179  \\
-         & --     & --        & (0.00) & (0.01)      & --          & --          & --          & (0.00) & (1.46) & (0.05) \\
-\hline \hline
+	\fontsize{10pt}{10pt}\selectfont
+	\begin{tabular}{l l l l l | l l l l}
+				   & \multicolumn{4}{c}{2000-2009} & \multicolumn{4}{c}{2010-2018} \\
+				   & Euro & Pound & Yen & Aust D. & Euro & Pound & Yen & Aust D. \\
+			\midrule
+        	mu     &     --        &  0.000        &     --        &  0.000$^{*}$  &     --        &  0.000        &    --        &  0.000        \\
+        	       &     --        &  0.000        &     --        &  0.000        &     --        &  0.000        &    --        &  0.000        \\
+            ar1    & -0.005        &  0.271        &     --        & -1.100$^{**}$ &     --        &     --        &    --        & -0.002        \\
+                   &  0.018        &  0.759        &     --        &  0.093        &     --        &     --        &    --        &  0.022        \\
+        	ar2    &     --        &     --        &     --        & -0.974$^{**}$ &     --        &     --        &    --        &     --        \\
+        		   &     --        &     --        &     --        &  0.007        &     --        &     --        &    --        &     --        \\
+        	ma1    &     --        & -0.255        &     --        &  1.101$^{**}$ &     --        &  0.007        &    --        &     --        \\
+        		   &     --        &  0.761        &     --        &  0.070        &     --        &  0.021        &    --        &     --        \\
+        	ma2    &     --        &     --        &     --        &  0.975$^{**}$ &     --        & -0.041$^{+}$  &    --        &     --        \\
+        		   &     --        &     --        &     --        &  0.000        &     --        &  0.023        &    --        &     --        \\
+        	ma3    &     --        &     --        &     --        & -0.010$^{**}$ &     --        &     --        &    --        &     --        \\
+        		   &     --        &     --        &     --        &  0.001        &     --        &     --        &    --        &     --        \\
+        	omega  &  0.000        &  0.000        &  0.000        &  0.000        &  0.000        &  0.000        & 0.000        &  0.000        \\
+        		   &  0.000        &  0.000        &  0.000        &  0.000        &  0.000        &  0.000        & 0.000        &  0.000        \\
+        	alpha1 &  0.001        &  0.040        &  0.033        &  0.055        &  0.028        &  0.035        & 0.039        &  0.045        \\
+        		   &  0.000$^{**}$ &  0.139        &  0.188        &  0.034        &  0.072        &  0.083        & 0.077        &  0.049        \\ 
+        	gamma1 & -0.065        &     --        &     --        & -0.025$^{+}$  &     --        &     --        &    --        &     --        \\
+        		   &  0.006$^{**}$ &     --        &     --        &  0.014        &     --        &     --        &    --        &     --        \\
+        	alpha2 &  0.043        &     --        &     --        &     --        &     --        &     --        &    --        &     --        \\
+        		   &  0.006$^{**}$ &     --        &     --        &     --        &     --        &     --        &    --        &     --        \\
+        	gamma2 &  0.061        &     --        &     --        &     --        &     --        &     --        &    --        &     --        \\
+        		   &  0.012$^{**}$ &     --        &     --        &     --        &     --        &     --        &    --        &     --        \\
+        	beta1  &  0.952        &  0.954        &  0.956        &  0.947$^{**}$ &  0.970        &  0.311        & 0.953$^{**}$ &  0.949$^{**}$ \\
+        		   &  0.000$^{**}$ &  0.131$^{**}$ &  0.185$^{**}$ &  0.036        &  0.066$^{**}$ &  2.936        & 0.064        &  0.047        \\
+        	beta2  &     --        &     --        &     --        &     --        &     --        &  0.416        &    --        &     --        \\
+        		   &     --        &     --        &     --        &     --        &     --        &  3.444        &    --        &     --        \\
+        	beta3  &     --        &     --        &     --        &     --        &     --        &  0.119        &    --        &     --        \\
+        		   &     --        &     --        &     --        &     --        &     --        &  5.696        &    --        &     --        \\
+        	eta11  &     --        &     --        &     --        &     --        &     --        &  0.996$^{**}$ &    --        &     --        \\
+        		   &     --        &     --        &     --        &     --        &     --        &  0.000        &    --        &     --        \\
+        	eta21  &     --        &     --        &     --        &     --        &     --        &  0.027$^{**}$ &    --        &     --        \\
+        		   &     --        &     --        &     --        &     --        &     --        &  0.036        &    --        &     --        \\
+        	shape  &  9.386        &  9.483        &  6.961        &  6.580$^{**}$ &  8.443        &  8.208        & 4.814        &  9.668        \\
+        		   &  6.044        & 23.658        & 24.250        &  1.397        & 15.802        &  1.718        & 3.525        &  4.306        \\
+        	skew   &     --        &     --        &     --        &     --        &     --        &     --        &    --        &     --        \\
+        		   &     --        &     --        &     --        &     --        &     --        &     --        &    --        &     --        \\
+			\midrule
 	\end{tabular}
+	\caption{Marginal ARIMA-GARCH Summary}
 	\begin{tablenotes}
-		\item[1]{\footnotesize Marginal Models: The Euro is modelled as an AR(1) - gjrGARCH(2,1) process while the Swiss Franc is modelled as a gjrGARCH(2,1) process. The Pound, Yen, Won, Australian Dollar, and New Zealand Dollar are modelled as a GARCH(1,1) process.}
-		\item[2]{\footnotesize Conditional Distributions: The Euro, Pound, and Won have a standard t distribution. The Swiss Franc, Yen, Australian Dollar and New Zealand Dollar are modelled with a skewed t distribution.}
+		\item{\footnotesize yada yada yada}
+		\item{\footnotesize \textbf{Signif. Codes:} 0 '**' 0.01 '*' 0.05 '+' 0.1 ' ' 1}
+		\item{\footnotesize $^{1}$Standard errors are Newey-West estimates and significant values are } 
 	\end{tablenotes}
-\end{threeparttable}
+	\label{tbl:correlation_to_log_dtw_regression}
 \end{table}
 
-\end{landscape}
-%\restoregeometry
 
-\vspace{10mm}
 
 \begin{table}
 \caption{Marginal Distribution Diagnostics}
 \begin{threeparttable}
-	\begin{tabular}[c]{l c c c c c c c}
+	\begin{tabular}[c]{l c c c c c c c c}
 \hline \hline
-\noalign{\smallskip}
-    & \multicolumn{7}{c}{Uniform Distribution Tests} \\ \cline{2-8}
-\noalign{\smallskip}
-              & Euro  & Pound & S. Franc & Yen   & Won   & Aust. D. & NewZ D. \\
-K-S           & 0.192 & 0.550 & 0.850 	 & 0.679 & 0.193 & 0.930    & 0.682 \\
-First Moment  & 0.476 & 0.562 & 0.730 	 & 0.317 & 0.645 & 0.815    & 0.979 \\
-Second Moment & 0.065 & 0.331 & 0.010 	 & 0.149 & 0.601 & 0.227    & 0.302 \\
-Third Moment  & 0.697 & 0.647 & 0.486 	 & 0.504 & 0.431 & 0.956    & 0.904 \\
-Fourth Moment & 0.367 & 0.817 & 0.088 	 & 0.106 & 0.761 & 0.231    & 0.107 \\
-\noalign{\smallskip}
-    & \multicolumn{7}{c}{Std. Normal Distribution Tests} \\ \cline{2-8}
-\noalign{\smallskip}
-                 & Euro  & Pound & S. Franc & Yen   & Won   & Aust. D. & NewZ D. \\
-K-S  		     & 0.192 & 0.550 & 0.850    & 0.679 & 0.193 & 0.930    & 0.682 \\
-Jarque-Bera      & 0.922 & 0.656 & 0.995    & 0.570 & 0.458 & 0.947    & 0.947 \\
-Berkowitz LR     & 0.733 & 0.571 & 0.856    & 0.640 & 0.807 & 0.991    & 0.979 \\
-Anderson-Darling & 0.180 & 0.270 & 0.693    & 0.601 & 0.153 & 0.942    & 0.435 \\
-Hong and Li  & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark \\
+	& \multicolumn{2-5}{c}{2000 - 2009} & \multicolumn{6-9}{c}{2010 - 2018} \\ \cline{2-9}
+                 & Euro  & Pound  & Yen   & Aust D. & Euro  & Pound  & Yen   & Aust D. \\
+K-S              &  \\
+Jarque-Bera      &  \\
+Berkowitz LR     &  \\
+Anderson-Darling &  \\
+Hong and Li      & \checkplus & \checkmark &  x & \\
 \hline \hline
 	\end{tabular}
 	\begin{tablenotes}
@@ -750,242 +537,33 @@ Hong and Li  & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & 
 
 
 \begin{table}
-\caption{T-Copula Dependence Measures}
-\begin{threeparttable}
-	\begin{tabular}[c]{l c r r r | r r r | r r r}
-\hline \hline
-\noalign{\smallskip}
-Currency & Regime & \multicolumn{3}{c}{Regime Switching} & \multicolumn{3}{c}{Smooth Trans.} & \multicolumn{3}{c}{Seq. Break} \\
-\noalign{\smallskip}
-\hline
-\noalign{\smallskip}
- & & $\tau$ & LTD & UTD & $\tau$ & LTD & UTD & $\tau$ & LTD & UTD \\
- \noalign{\smallskip}
-\hline
-\noalign{\smallskip}
-Euro-Pound & 1 & 0.62  & 0.53  & 0.53  & 0.62  & 0.54  & 0.54  & 0.63  & 0.54  & 0.54  \\
-		   & 2 & 0.43  & 0.12  & 0.12  & 0.42  & 0.11  & 0.11  & 0.43  & 0.12  & 0.12  \\
-\noalign{\smallskip} \noalign{\smallskip}
-Euro-SWFranc & 1 & 0.82  & 0.63  & 0.63  & 0.83  & 0.18  & 0.18  & 0.82  & 0.55  & 0.55  \\
-		     & 2 & 0.61  & 0.36  & 0.36  & 0.59  & 0.41  & 0.41  & 0.70  & 0.40  & 0.40  \\
-		     & 3 & --- & --- & --- & 0.81 & 0.71  & 0.71  & 0.60  & 0.33  & 0.33  \\
-		     & 4 & --- & --- & --- & ---  & ---  & ---  & 0.81  & 0.71  & 0.71  \\
-\noalign{\smallskip} \noalign{\smallskip}
-Euro-Yen & 1 & 0.46 & 0.00 & 0.00 & 0.46 & 0.00 & 0.00  & 0.46  & 0.00  & 0.00  \\
-		 & 2 & 0.26 & 0.08 & 0.08 & 0.11 & 0.09 & 0.09  & 0.11  & 0.09  & 0.09  \\
-		 & 3 & -0.22 & 0.00 & 0.00 & ---  & ---  & ---  & ---  & ---  & ---  \\
-\noalign{\smallskip} \noalign{\smallskip}
-Euro-Won & 1 & 0.16 & 0.00 & 0.00 & 0.16  & 0.00  & 0.00  & 0.16  & 0.00  & 0.00  \\
-\noalign{\smallskip} \noalign{\smallskip}
-Euro-AustD & 1 & 0.46 & 0.14 & 0.14 & 0.46  & 0.14  & 0.14  & 0.46  & 0.14  & 0.14  \\
-\noalign{\smallskip} \noalign{\smallskip}
-Euro-NZD & 1 & 0.30 & 0.09 & 0.09 & 0.53  & 0.00 & 0.00  & 0.53  & 0.09  & 0.09  \\
-		 & 2 & 0.50 & 0.00 & 0.00 & 0.29  & 0.10 & 0.10  & 0.29  & 0.09  & 0.09  \\
-		 & 3 & --- & --- & --- & 0.49  & 0.00  & 0.00  & 0.48  & 0.00  & 0.00  \\
-\noalign{\smallskip}
-\hline
-\noalign{\smallskip}
-Pound-SWFranc & 1 & 0.63 & 0.46 & 0.46 & 0.63  & 0.46  & 0.46  & 0.63  & 0.46  & 0.46  \\
-		      & 2 & 0.30 & 0.05 & 0.05 & 0.30  & 0.04  & 0.04  & 0.30  & 0.04  & 0.04  \\
-\noalign{\smallskip} \noalign{\smallskip}
-Pound-Yen & 1 & 0.45 & 0.00 & 0.00 & 0.45  & 0.00  & 0.00  & 0.44  & 0.00  & 0.00  \\
-		  & 2 & 0.30 & 0.08 & 0.08 & -0.03  & 0.04  & 0.04  & -0.03  & 0.04  & 0.04  \\
-		  & 3 & -0.28 & 0.00 & 0.00 & ---  & ---  & ---  & ---  & ---  & ---  \\
-\noalign{\smallskip} \noalign{\smallskip}
-Pound-Won & 1 & 0.16 & 0.00 & 0.00 & 0.16  & 0.00  & 0.00  & 0.16  & 0.00  & 0.00  \\
-\noalign{\smallskip} \noalign{\smallskip}
-Pound-AustD & 1 & 0.46 & 0.14 & 0.14 & 0.43  & 0.03  & 0.03  & 0.62  & 0.31  & 0.31  \\
-            & 2 & --- & --- & --- & ---  & ---  & ---  & 0.42  & 0.02  & 0.02  \\
-\noalign{\smallskip} \noalign{\smallskip}
-Pound-NZD & 1 & 0.30 & 0.09 & 0.09 & 0.59  & 0.00  & 0.00  & 0.59  & 0.02  & 0.02  \\
-		  & 2 & 0.50 & 0.00 & 0.00 & 0.36  & 0.00  & 0.00  & 0.31  & 0.00  & 0.00  \\
-		  & 3 & --- & --- & --- & ---  & ---  & ---  & 0.44  & 0.00  & 0.00  \\
-\hline \hline
-	\end{tabular}
-\end{threeparttable}
+\begin{tabular}[c]{l c r r r | r r r | r r r}
+	\midrule
+	Currency & Regime & \multicolumn{3}{c}{Regime Switching} & \multicolumn{3}{c}{Smooth Trans.} & \multicolumn{3}{c}{Seq. Break} \\
+	\midrule
+				&   & $\tau$ & LTD & UTD & $\tau$ & LTD & UTD & $\tau$ & LTD & UTD \\
+	\midrule
+	Euro-Pound  & 1 &     -- &  -- &  -- &     -- &  -- &  -- &     -- &  -- &  -- \\
+				& 2 &     -- &  -- &  -- &     -- &  -- &  -- &     -- &  -- &  -- \\
+	Euro-Yen    & 1 &     -- &  -- &  -- &     -- &  -- &  -- &     -- &  -- &  -- \\
+				& 2 &     -- &  -- &  -- &     -- &  -- &  -- &     -- &  -- &  -- \\
+				& 3 &     -- &  -- &  -- &     -- &  -- &  -- &     -- &  -- &  -- \\
+				& 4 &     -- &  -- &  -- &     -- &  -- &  -- &     -- &  -- &  -- \\
+	Euro-AustD  & 1 &     -- &  -- &  -- &     -- &  -- &  -- &     -- &  -- &  -- \\
+				& 2 &     -- &  -- &  -- &     -- &  -- &  -- &     -- &  -- &  -- \\
+				& 3 &     -- &  -- &  -- &     -- &  -- &  -- &     -- &  -- &  -- \\
+	Pound-Yen   & 1 &     -- &  -- &  -- &     -- &  -- &  -- &     -- &  -- &  -- \\
+	Pound-AustD & 1 &     -- &  -- &  -- &     -- &  -- &  -- &     -- &  -- &  -- \\
+	Yen-AustD   & 1 &     -- &  -- &  -- &     -- &  -- &  -- &     -- &  -- &  -- \\
+				& 2 &     -- &  -- &  -- &     -- &  -- &  -- &     -- &  -- &  -- \\
+				& 3 &     -- &  -- &  -- &     -- &  -- &  -- &     -- &  -- &  -- \\
+\end{tabular}
+\caption{Estimated Regimes: 2000 - 2018}
+\begin{tablenotes}
+	\item{\footnotesize This table summarizes the changes of tail dependency and Kendall's $\tau$ as estimated from the Markov Switching, Smooth Transition, and Sequential Breakpoint models.}
+\end{tablenotes}
 \end{table}
 
-
-\begin{table}
-\caption{T-Copula Dependence Measures Continued...}
-\begin{threeparttable}
-	\begin{tabular}[c]{l c r r r | r r r | r r r}
-\hline \hline
-\noalign{\smallskip}
-Currency & Regime & \multicolumn{3}{c}{Regime Switching} & \multicolumn{3}{c}{Smooth Trans.} & \multicolumn{3}{c}{Seq. Break} \\
-\noalign{\smallskip}
-\hline
-\noalign{\smallskip}
- & & $\tau$ & LTD & UTD & $\tau$ & LTD & UTD & $\tau$ & LTD & UTD \\
- \hline
-\noalign{\smallskip}
-SWFranc-Yen & 1 & 0.60 & 0.04 & 0.04 & 0.44  & 0.08  & 0.08  & 0.44  & 0.08  & 0.08  \\
-		    & 2 & 0.36 & 0.00 & 0.00 & 0.15  & 0.03  & 0.03  & 0.15  & 0.03  & 0.03  \\
-		    & 3 & 0.15 & 0.03 & 0.03 & ---  & ---  & ---  & ---  & ---  & ---  \\
-\noalign{\smallskip} \noalign{\smallskip}
-SWFranc-Won & 1 & 0.11 & 0.00 & 0.00 & 0.35  & 0.13  & 0.13  & 0.12  & 0.00  & 0.00  \\
-\noalign{\smallskip} \noalign{\smallskip}
-SWFranc-AustD & 1 & 0.46 & 0.13 & 0.13 & 0.46  & 0.17  & 0.17  & 0.47  & 0.17  & 0.17  \\
-			  & 2 & 0.17 & 0.01 & 0.01 & 0.11  & 0.01  & 0.01  & 0.15  & 0.00  & 0.00  \\
-			  & 3 & --- & --- & --- & 0.66  & 0.39  & 0.39  & 0.37  & 0.12  & 0.12  \\
-\noalign{\smallskip} \noalign{\smallskip}
-SWFranc-NZD & 1 & 0.46 & 0.07 & 0.07 & 0.57  & 0.11  & 0.11  & 0.51  & 0.11  & 0.11  \\
-		    & 2 & 0.18 & 0.03 & 0.03 & 0.11  & 0.02  & 0.02  & 0.19  & 0.03  & 0.03  \\
-		    & 3 & --- & --- & --- & 0.45  & 0.08  & 0.08  & 0.39  & 0.07  & 0.07  \\
-\noalign{\smallskip}
-\hline
-\noalign{\smallskip} \noalign{\smallskip}
-Yen-Won & 1 & 0.23 & 0.00 & 0.00 & 0.23  & 0.00  & 0.00  & 0.23  & 0.00  & 0.00  \\
-		& 2 & -0.09 & 0.00 & 0.00 & -0.09  & 0.00  & 0.00  & -0.09  & 0.00  & 0.00  \\
-\noalign{\smallskip} \noalign{\smallskip}
-Yen-AustD & 1 & 0.51 & 0.00 & 0.00 & 0.41  & 0.08  & 0.08  & 0.51  & 0.01  & 0.01  \\
-		  & 2 & -0.10 & 0.05 & 0.05 & -0.10  & 0.08  & 0.08  & 0.15  & 0.00  & 0.00  \\
-		  & 3 & --- & --- & --- & ---  & ---  & ---  & 0.51  & 0.08  & 0.08  \\
-		  & 4 & --- & --- & --- & ---  & ---  & ---  & -0.09  & 0.07  & 0.07  \\
-\noalign{\smallskip} \noalign{\smallskip}
-Yen-NZD & 1 & 0.51 & 0.00 & 0.00 & 0.57  & 0.11  & 0.11  & 0.52  & 0.01  & 0.01  \\
-	    & 2 & -0.12 & 0.02 & 0.02 & -0.10  & 0.06  & 0.06  & 0.16  & 0.00  & 0.00  \\
-	    & 3 & --- & --- & --- & ---  & ---  & ---  & -0.17  & 0.06  & 0.06  \\
-	    & 4 & --- & --- & --- & ---  & ---  & ---  & 0.03  & 0.00  & 0.00  \\
-\noalign{\smallskip}
-\hline
-\noalign{\smallskip} \noalign{\smallskip}
-Won-AustD & 1 & 0.23 & 0.01 & 0.01 & 0.24  & 0.01  & 0.01  & 0.20  & 0.02  & 0.02  \\
-          & 2 & --- & --- & --- & ---  & ---  & ---  & 0.32  & 0.01  & 0.01  \\
-\noalign{\smallskip} \noalign{\smallskip}
-Won-NZD & 1 & 0.16 & 0.00 & 0.00 & 0.20  & 0.00  & 0.00  & 0.20  & 0.00  & 0.00  \\
-	    & 2 & 0.60 & 0.00 & 0.00 & ---  & ---  & ---  & ---  & ---  & ---  \\
-\noalign{\smallskip}
-\hline
-\noalign{\smallskip} \noalign{\smallskip}
-AustD-NZD & 1 & 0.42 & 0.10 & 0.10 & NaN x 4 & ---  & ---  & 0.69  & 0.39  & 0.39  \\
-	      & 2 & 0.68 & 0.40 & 0.40 & ---  & ---  & ---  & 0.48  & 0.08  & 0.08  \\
-	      & 3 & --- & --- & --- & ---  & ---  & ---  & 0.03  & 0.00  & 0.00  \\
-\hline \hline
-	\end{tabular}
-\end{threeparttable}
-\end{table}
-
-
-
-
-
-
-\begin{table}
-\caption{Mix-Copula Dependence Measures}
-\begin{threeparttable}
-	\begin{tabular}[c]{l c r r r | r r r | r r r}
-\hline \hline
-\noalign{\smallskip}
-Currency & Regime & \multicolumn{3}{c}{Regime Switching} & \multicolumn{3}{c}{Smooth Trans.} & \multicolumn{3}{c}{Seq. Break} \\
-\noalign{\smallskip}
-\hline
-\noalign{\smallskip}
- & & $\tau$ & LTD & UTD & $\tau$ & LTD & UTD & $\tau$ & LTD & UTD \\
- \noalign{\smallskip}
-\hline
-\noalign{\smallskip}
-Euro-Pound & 1 & 0.63  & 0.52  & 0.19  & 0.63  & 0.51  & 0.20  & 0.64  & 0.19  & 0.19  \\
-		   & 2 & 0.43  & 0.39  & 0.12  & 0.41  & 0.38  & 0.12  & 0.43  & 0.15  & 0.12  \\
-\noalign{\smallskip} \noalign{\smallskip}
-Euro-SWFranc & 1 & 0.81  & 0.49  & 0.38  & 0.82  & 0.54  & 0.33  & 0.82  & 0.42  & 0.42  \\
-		     & 2 & 0.61  & 0.49  & 0.21  & 0.60  & 0.41  & 0.27  & 0.61  & 0.19  & 0.20  \\
-		     & 3 & ---  & ---  & ---  & 0.81  & 0.52  & 0.34  & 0.81  & 0.26  & 0.27  \\
-\noalign{\smallskip} \noalign{\smallskip}
-Euro-Yen & 1 & 0.44  & 0.14  & 0.39  & 0.45  & 0.15  & 0.38  & 0.45  & 0.38  & 0.40  \\
-		 & 2 & 0.09  & 0.10  & 0.02  & 0.12  & 0.12  & 0.03  & 0.12  & 0.01  & 0.07  \\
-		 & 3 & ---  & ---  & ---  & ---  & ---  & ---  & ---  & ---  & ---  \\
-\noalign{\smallskip} \noalign{\smallskip}
-Euro-Won & 1 & 0.16  & 0.13  & 0.04  & 0.16  & 0.13  & 0.04  & 0.16  & 0.13  & 0.02  \\
-\noalign{\smallskip} \noalign{\smallskip}
-Euro-AustD & 1 & 0.46  & 0.28  & 0.26  & 0.46  & 0.28  & 0.26  & 0.46  & 0.29  & 0.26  \\
-\noalign{\smallskip} \noalign{\smallskip}
-Euro-NZD & 1 & 0.30  & 0.11  & 0.26  & 0.39  & 0.21  & 0.26  & 0.48  & 0.23  & 0.22  \\
-		 & 2 & 0.49  & 0.32  & 0.26  & ---  & ---  & ---  & ---  & ---  & ---  \\
-		 & 3 & ---  & ---  & ---  & ---  & ---  & ---  & ---  & ---  & ---  \\
-\noalign{\smallskip}
-\hline
-\noalign{\smallskip}
-Pound-SWFranc & 1 & 0.63  & 0.47  & 0.24  & 0.63  & 0.50  & 0.21  & 0.63  & 0.25  & 0.25  \\
-		      & 2 & 0.30  & 0.32  & 0.06  & 0.30  & 0.30  & 0.08  & 0.30  & 0.08  & 0.06  \\
-\noalign{\smallskip} \noalign{\smallskip}
-Pound-Yen & 1 & ---  & ---  & ---  & 0.44  & 0.23  & 0.30  & 0.44  & 0.32  & 0.30  \\
-		  & 2 & ---  & ---  & ---  & 0.02  & 0.02  & 0.00  & 0.02  & 0.00  & 0.00  \\
-		  & 3 & ---  & ---  & ---  & ---  & ---  & ---  & ---  & ---  & ---  \\
-\noalign{\smallskip} \noalign{\smallskip}
-Pound-Won & 1 & 0.15  & 0.09  & 0.06  & 0.15  & 0.09  & 0.06  & 0.15  & 0.09  & 0.03  \\
-\noalign{\smallskip} \noalign{\smallskip}
-Pound-AustD & 1 & 0.44  & 0.25  & 0.29  & 0.42  & 0.26  & 0.24  & 0.63  & 0.34  & 0.35  \\
-            & 2 & 0.24  & 0.27  & 0.03  & ---  & ---  & ---  & 0.41  & 0.22  & 0.24  \\
-\noalign{\smallskip} \noalign{\smallskip}
-Pound-NZD & 1 & 0.56  & 0.49  & 0.16  & 0.57  & 0.36  & 0.29  & 0.58  & 0.16  & 0.15  \\
-		  & 2 & 0.35  & 0.19  & 0.24  & 0.35  & 0.21  & 0.22  & 0.35  & 0.22  & 0.24  \\
-\hline \hline
-	\end{tabular}
-\end{threeparttable}
-\end{table}
-
-
-
-
-
-
-\begin{table}
-\caption{Mix-Copula Dependence Measures Continued...}
-\begin{threeparttable}
-	\begin{tabular}[c]{l c r r r | r r r | r r r}
-\hline \hline
-\noalign{\smallskip}
-Currency & Regime & \multicolumn{3}{c}{Regime Switching} & \multicolumn{3}{c}{Smooth Trans.} & \multicolumn{3}{c}{Seq. Break} \\
-\noalign{\smallskip}
-\hline
-\noalign{\smallskip}
- & & $\tau$ & LTD & UTD & $\tau$ & LTD & UTD & $\tau$ & LTD & UTD \\
- \hline
-\noalign{\smallskip}
-\noalign{\smallskip} \noalign{\smallskip}
-SWFranc-Yen & 1 & ---  & ---  & ---  & 0.43  & 0.23  & 0.29  & 0.43  & 0.28  & 0.28  \\
-		    & 2 & ---  & ---  & ---  & 0.15  & 0.09  & 0.11  & 0.15  & 0.18  & 0.12  \\
-		    & 3 & ---  & ---  & ---  & ---  & ---  & ---  & ---  & ---  & ---  \\
-\noalign{\smallskip} \noalign{\smallskip}
-SWFranc-Won & 1 & 0.11  & 0.11  & 0.04  & 0.11  & 0.11  & 0.04  & 0.11  & 0.01  & 0.04  \\
-\noalign{\smallskip} \noalign{\smallskip}
-SWFranc-AustD & 1 & 0.45  & 0.29  & 0.25  & 0.47  & 0.35  & 0.21  & 0.47  & 0.33  & 0.26  \\
-			  & 2 & 0.17  & 0.16  & 0.06  & 0.28  & 0.17  & 0.18  & 0.14  & 0.03  & 0.12  \\
-			  & 3 & ---  & ---  & ---  & ---  & ---  & ---  & 0.36  & 0.10  & 0.13  \\
-\noalign{\smallskip} \noalign{\smallskip}
-SWFranc-NZD & 1 & 0.45  & 0.27  & 0.26  & 0.50  & 0.24  & 0.21  & 0.50  & 0.35  & 0.27  \\
-		    & 2 & 0.18  & 0.14  & 0.09  & 0.39  & 0.16  & 0.15  & 0.18  & 0.53  & 0.12  \\
-		    & 3 & ---  & ---  & ---  & ---  & ---  & ---  & 0.38  & 0.11  & 0.14  \\
-\noalign{\smallskip}
-\hline
-\noalign{\smallskip} \noalign{\smallskip}
-Yen-Won & 1 & ---  & ---  & ---  & NA  & NA  & NA  & 0.22  & 0.21  & 0.39  \\
-		& 2 & ---  & ---  & ---  & ---  & ---  & ---  & 0.00  & 0.00  & 0.00  \\
-\noalign{\smallskip} \noalign{\smallskip}
-Yen-AustD & 1 & ---  & ---  & ---  & NA  & NA  & NA  & 0.50  & 0.20  & 0.21  \\
-		  & 2 & ---  & ---  & ---  & ---  & ---  & ---  & 0.15  & 0.13  & 0.19  \\
-		  & 3 & ---  & ---  & ---  & ---  & ---  & ---  & 0.51  & 0.00  & 0.00  \\
-		  & 4 & ---  & ---  & ---  & ---  & ---  & ---  & 0.01  & 0.00  & 0.00  \\
-\noalign{\smallskip} \noalign{\smallskip}
-Yen-NZD & 1 & ---  & ---  & ---  & NA  & NA  & NA  & 0.51  & 0.22  & 0.22  \\
-	    & 2 & ---  & ---  & ---  & ---  & ---  & ---  & 0.03  & 0.77  & 0.03  \\
-\noalign{\smallskip}
-\hline
-\noalign{\smallskip} \noalign{\smallskip}
-Won-AustD & 1 & 0.23  & 0.10  & 0.18  & 0.22  & 0.10  & 0.18  & 0.23  & 0.10  & 0.15  \\
-\noalign{\smallskip} \noalign{\smallskip}
-Won-NZD & 1 & 0.19  & 0.11  & 0.12  & 0.19  & 0.11  & 0.12  & 0.19  & 0.11  & 0.06  \\
-\noalign{\smallskip}
-\hline
-\noalign{\smallskip} \noalign{\smallskip}
-AustD-NZD & 1 & 0.49  & 0.26  & 0.31  & 0.78  & 0.40  & 0.44  & 0.65  & 0.47  & 0.44  \\
-	      & 2 & 0.68  & 0.37  & 0.39  & 0.06  & 0.08  & 0.00  & 0.45  & 0.29  & 0.25  \\
-	      & 3 & ---  & ---  & ---  & 0.66  & 0.35  & 0.38  & 0.64  & 0.36  & 0.34  \\
-\hline \hline
-	\end{tabular}
-\end{threeparttable}
-\end{table}
 
 \printbibliography
 

@@ -1,8 +1,6 @@
 setwd("~/Git/dynocopula")
+library("quantmod")
 source("R/auto_marginal.R")
-library("jsonlite")
-library("data.table")
-library("rugarch")
 
 # bring in data
 # won comes from St Louis FRED site
@@ -54,7 +52,7 @@ for (yrs in names(year_list)) {
 }
 
 for (yrs in names(year_list)) {
-  x <- DT[year(DATE) %in% year_list[[yrs]],  austd]
+  x <- DT[year(DATE) %in% year_list[[yrs]],  candd]
   dts <- DT[year(DATE) %in% year_list[[yrs]], DATE]
   mod <- auto_fit(x)
   mod[["Dates"]] <- dts
@@ -131,9 +129,23 @@ for (yrs in names(year_list)[3:4]) {
 }
 # -------------------------------------
 
+find_coef_matrix <- function(obj)
+{
+  m <- as.data.table(obj@fit$matcoef)
+  setnames(m, names(m), trimws(names(m)))
+  m[["variable"]] <- rownames(obj@fit$matcoef)
+  m[["vcv_type"]] <- "standard"
+  rm <- as.data.table(obj@fit$robust.matcoef)
+  setnames(rm, names(rm), trimws(names(rm)))
+  rm[["variable"]] <- rownames(obj@fit$robust.matcoef)
+  rm[["vcv_type"]] <- "robust"
+  return(rbindlist(list(m, rm)))
+}
+
+
 files_ <- list.files("./data/model_objects/")
 collect_u <- vector("list", length(files_)); names(collect_u) <- files_
-collect_e <- collect_u
+collect_i <- collect_e <- collect_u
 for (f_ in files_) {
   tst <- readRDS(paste(c("./data/model_objects", f_), collapse = "/"))
   curr <- regmatches(f_, regexpr("[a-zA-Z]+", f_))
@@ -143,17 +155,42 @@ for (f_ in files_) {
   MT <- verify_marginal_test(marginal_tests(tst$model), alpha = "0.05")
   MT[, `:=`(currency=curr, group=decade)]
   collect_e[[f_]] <- MT
+  
+  CM <- find_coef_matrix(tst$model)
+  CM[, `:=`(currency=curr, group=decade)]
+  collect_i[[f_]] <- CM
+  # collect_i[[f_]][, `:=`(currency=curr, group=decade))]
 }
 dtfU <- dcast(rbindlist(collect_u), DATE ~ currency, value.var="u")
 dtfEval <- rbindlist(collect_e)
+dtfCoef <- rbindlist(collect_i)
 
+mod <- readRDS("data/model_objects/austd_yr10s.RDS")
+mod$model
+dtfEval[currency=="sterling" & group=="00"]
 
+zz <- DT[year(DATE) %in% 2000:2009, auto_fit(austd, max_arch = 3, max_garch = 3, ignore_nyblom = TRUE)]
 
+vars <- c('mu', 'ar1', 'ar2', 'ma1', 'ma2', 'ma3', 'omega', 'alpha1', 'gamma1',
+          'alpha2', 'gamma2', 'beta1', 'beta2', 'beta3', 'eta11', 'eta21', 'shape',
+          'skew')
+dtfVar <- data.table(variable=factor(vars, levels = vars))
+D1 <- dcast(dtfCoef, group + vcv_type + variable + currency ~ .,
+            value.var=c("Estimate"))
+setnames(D1, ".", "Estimate")
+D2 <- dcast(dtfCoef, group + vcv_type + variable + currency ~ .,
+            value.var=c("Std. Error"))
+setnames(D2, ".", "Std. Error")
 
-
-
-
-
+D <- merge(D1, D2)
+D[, `Std. Error`:=round(`Std. Error`, 3)]
+D[, Estimate := round(Estimate, 3)]
+D[, variable := factor(variable, levels=vars)]
+DD <- merge(dtfVar,
+            D[order(variable)][group=="10" & vcv_type=="robust" & currency=="austd"],
+      all.x=TRUE)
+melt(DD, id.vars = c("variable"), measure.vars=c("Estimate", "Std. Error"),
+     variable.name="numeric")[order(variable, numeric)]
 
 # Sterling
 # -------------------------------------

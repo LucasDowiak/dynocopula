@@ -516,11 +516,10 @@ Our approach is to start with a simple GARCH(1,1) model with no autoregressive c
 
 
 \begin{table}
-\caption{Marginal Distribution Diagnostics}
-\begin{threeparttable}
 	\begin{tabular}[c]{l c c c c c c c c}
-\hline \hline
-	& \multicolumn{2-5}{c}{2000 - 2009} & \multicolumn{6-9}{c}{2010 - 2018} \\ \cline{2-9}
+		\cline{1-9}
+                 & \multicolumn{4}{c}{2000 - 2009} & \multicolumn{4}{c}{2010 - 2018} \\
+		\cline{2-9}
                  & Euro  & Pound  & Yen   & Aust D. & Euro  & Pound  & Yen   & Aust D. \\
 K-S              &  \\
 Jarque-Bera      &  \\
@@ -529,10 +528,10 @@ Anderson-Darling &  \\
 Hong and Li      & \checkplus & \checkmark &  x & \\
 \hline \hline
 	\end{tabular}
+	\caption{Marginal Distribution Diagnostics}
 	\begin{tablenotes}
 	\item[]{\footnotesize Goodness-of-fit tests are conducted on the standardized residuals of the marginal models. All figures in the table are p-values. The Kolmogorov-Smirnov (KS) tests checks for a uniform distribution for the standardized residuals with the unit interval as its support. The moment LM tests check the PIT for serial independence. The tests take the form of the regression $\left(u_{t} - \bar{u}\right)^{m} = \sum_{k=1}^{20}\gamma_{k}\left(u_{t-k} - \bar{u}\right)^{m} + \epsilon_{t}$ for $m = 1,...,4$. Under the null of independence, the test statistic $\left(T - 20\right) R^{2}$ for each regression is distributed as $\chi^{2}\left(20\right)$. The likelihood ratio (LR) test checks for joint normality of the mean and variance. The Jarque-Bera (JB) test checks for joint normality of the skew and kurtosis. For all tests, the null hypothesis is a well specified model.}
 	\end{tablenotes}
-\end{threeparttable}
 \end{table}
 
 

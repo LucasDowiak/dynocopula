@@ -1,5 +1,7 @@
 setwd("~/Git/dynocopula")
 library("quantmod")
+library("xts")
+library("zoo")
 source("R/auto_marginal.R")
 
 # bring in data
@@ -169,7 +171,7 @@ mod <- readRDS("data/model_objects/austd_yr10s.RDS")
 mod$model
 dtfEval[currency=="sterling" & group=="00"]
 
-zz <- DT[year(DATE) %in% 2000:2009, auto_fit(austd, max_arch = 3, max_garch = 3, ignore_nyblom = TRUE)]
+zz <- DT[year(DATE) %in% 2000:2009, auto_fit(austd, max_arch = 2, max_garch = 2, ignore_nyblom = TRUE)]
 
 vars <- c('mu', 'ar1', 'ar2', 'ma1', 'ma2', 'ma3', 'omega', 'alpha1', 'gamma1',
           'alpha2', 'gamma2', 'beta1', 'beta2', 'beta3', 'eta11', 'eta21', 'shape',
@@ -192,523 +194,74 @@ DD <- merge(dtfVar,
 melt(DD, id.vars = c("variable"), measure.vars=c("Estimate", "Std. Error"),
      variable.name="numeric")[order(variable, numeric)]
 
+
 # Sterling
 # -------------------------------------
-subbool <- DT$DATE >= "1980-01-01" & DT$DATE <= "1989-12-31"
-mod <- auto_fit(DT[subbool, sterling])
 ster_mod <- ugarchspec(
-  variance.model = list(model = "sGARCH", garchOrder = c(1,1)),
-  mean.model = list(armaOrder = c(1,0), include.mean = TRUE),
-  distribution.model = "sstd"
-)
-sterling_fit_1980_1989 <- ugarchfit(
-  spec = ster_mod,
-  data = DT$sterling[subbool]
-)
-marginal_tests(sterling_fit_1980_1989)
-DTU <- merge(DTU,
-             data.frame(DATE=DT$DATE[subbool], sterling=PIT(sterling_fit_1980_1989)),
-             by="DATE", all.x=T)
-
-
-subbool <- DT$DATE >= "1990-01-01" & DT$DATE <= "1999-12-31"
-ster_mod <- ugarchspec(
-  variance.model = list(model = "sGARCH", garchOrder = c(1,1)),
-  mean.model = list(armaOrder = c(1,0), include.mean = TRUE),
+  variance.model = list(model = "gjrGARCH", garchOrder = c(1,1)),
+  mean.model = list(armaOrder = c(0, 0), include.mean = TRUE),
   distribution.model = "std"
 )
-sterling_fit_1990_1999 <- ugarchfit(
-  spec = ster_mod,
-  data = DT$sterling[subbool]
-)
-marginal_tests(sterling_fit_1990_1999)
-DTU[subbool, "sterling"] <- PIT(sterling_fit_1990_1999)
+sterling_fit_2000_2009 <- DT[year(DATE) %in% 2000:2009, ugarchfit(spec=ster_mod, data=sterling)]
+res <- verify_marginal_test(marginal_tests(sterling_fit_2000_2009), alpha="0.05")
+saveRDS(sterling_fit_2000_2009, file="data/model_objects/sterling_yr00s.rds")
 
-
-subbool <- DT$DATE >= "2000-01-01" & DT$DATE <= "2009-12-31"
 ster_mod <- ugarchspec(
-  variance.model = list(model = "sGARCH", garchOrder = c(1,1)),
-  mean.model = list(armaOrder = c(1,0), include.mean = TRUE),
-  distribution.model = "ged"
+  variance.model = list(model = "csGARCH", garchOrder = c(2,2)),
+  mean.model = list(armaOrder = c(0, 2), include.mean = FALSE),
+  distribution.model = "std" # "ged"
 )
-sterling_fit_2000_2009 <- ugarchfit(
-  spec = ster_mod,
-  data = DT$sterling[subbool]
-)
-marginal_tests(sterling_fit_2000_2009)
-DTU[subbool, "sterling"] <- PIT(sterling_fit_2000_2009)
-
-
-subbool <- DT$DATE >= "2010-01-01" & DT$DATE <= "2018-12-31"
-ster_mod <- ugarchspec(
-  variance.model = list(model = "sGARCH", garchOrder = c(1,1)),
-  mean.model = list(armaOrder = c(1,0), include.mean = TRUE),
-  distribution.model = "std"
-)
-sterling_fit_2010_2018 <- ugarchfit(
-  spec = ster_mod,
-  data = DT$sterling[subbool]
-)
-marginal_tests(sterling_fit_2010_2018)
-DTU[subbool, "sterling"] <- PIT(sterling_fit_2010_2018)
-
-# -------------------------------------
-
-
-# Swiss Franc
-# -------------------------------------
-# TODO : Hong-Li portmantau fails
-subbool <- DT$DATE >= "1980-01-01" & DT$DATE <= "1989-12-31"
-swf_mod <- ugarchspec(
-  variance.model = list(model = "sGARCH", garchOrder = c(3,1)),
-  mean.model = list(armaOrder = c(1,0), include.mean = TRUE),
-  distribution.model = "std"
-)
-swfranc_1980_1989 <- ugarchfit(
-  spec = swf_mod,
-  data = DT$swfranc[subbool]
-)
-marginal_tests(swfranc_1980_1989)
-DTU <- merge(DTU,
-             data.frame(DATE=DT$DATE[subbool], swfranc=PIT(swfranc_1980_1989)),
-             by="DATE", all.x=T)
-
-
-subbool <- DT$DATE >= "1990-01-01" & DT$DATE <= "1999-12-31"
-swf_mod <- ugarchspec(
-  variance.model = list(model = "sGARCH", garchOrder = c(1,1)),
-  mean.model = list(armaOrder = c(0,1), include.mean = TRUE),
-  distribution.model = "sstd"
-)
-swfranc_1990_1999 <- ugarchfit(
-  spec = swf_mod,
-  data = DT$swfranc[subbool]
-)
-marginal_tests(swfranc_1990_1999)
-DTU[subbool, "swfranc"] <- PIT(swfranc_1990_1999)
-
-
-subbool <- DT$DATE >= "2000-01-01" & DT$DATE <= "2009-12-31"
-swf_mod <- ugarchspec(
-  variance.model = list(model = "sGARCH", garchOrder = c(1,1)),
-  mean.model = list(armaOrder = c(1,0), include.mean = TRUE),
-  distribution.model = "sstd"
-)
-swfranc_2000_2009 <- ugarchfit(
-  spec = swf_mod,
-  data = DT$swfranc[subbool]
-)
-marginal_tests(swfranc_2000_2009)
-DTU[subbool, "swfranc"] <- PIT(swfranc_2000_2009)
-
-
-# TODO: Hong-Li portmantaeu test fails
-subbool <- DT$DATE >= "2010-01-01" & DT$DATE <= "2018-12-31"
-swf_mod <- ugarchspec(
-  variance.model = list(model = "sGARCH", garchOrder = c(1,1)),
-  mean.model = list(armaOrder = c(0,0), include.mean = TRUE),
-  distribution.model = "sstd"
-)
-swfranc_2010_2018 <- ugarchfit(
-  spec = swf_mod,
-  data = DT$swfranc[subbool]
-)
-marginal_tests(swfranc_2010_2018)
-DTU[subbool, "swfranc"] <- PIT(swfranc_2010_2018)
-
+sterling_fit_2010_2018 <- DT[year(DATE) %in% 2010:2018, ugarchfit(spec=ster_mod, data=sterling)]
+res <- verify_marginal_test(marginal_tests(sterling_fit_2010_2018), alpha="0.05")
+saveRDS(sterling_fit_2010_2018, file="data/model_objects/sterling_yr10s.rds")
 
 # -------------------------------------
 
 
 # Japanese Yen
 # -------------------------------------
-# TODO : Hong-Li portmantau fails
-subbool <- DT$DATE >= "1980-01-01" & DT$DATE <= "1989-12-31"
-yen_mod <- ugarchspec(
-  variance.model = list(model = "sGARCH", garchOrder = c(1,1)),
-  mean.model = list(armaOrder = c(5,0), include.mean = TRUE),
-  distribution.model = "sstd"
-)
-yen_1980_1989 <- ugarchfit(
-  spec = yen_mod,
-  data = DT$yen[subbool]
-)
-marginal_tests(yen_1980_1989)
-DTU <- merge(DTU,
-             data.frame(DATE=DT$DATE[subbool], yen=PIT(yen_1980_1989)),
-             by="DATE", all.x=T)
-
-
-subbool <- DT$DATE >= "1990-01-01" & DT$DATE <= "1999-12-31"
-yen_mod <- ugarchspec(
-  variance.model = list(model = "sGARCH", garchOrder = c(1,1)),
-  mean.model = list(armaOrder = c(0,0), include.mean = TRUE),
-  distribution.model = "sstd"
-)
-yen_1990_1999 <- ugarchfit(
-  spec = yen_mod,
-  data = DT$yen[subbool]
-)
-marginal_tests(yen_1990_1999)
-DTU[subbool, "yen"] <- PIT(yen_1990_1999)
-
-
-# TODO: LM 2nd and 4th moment fails
-subbool <- DT$DATE >= "2000-01-01" & DT$DATE <= "2009-12-31"
-yen_mod <- ugarchspec(
-  variance.model = list(model = "sGARCH", garchOrder = c(3,1)),
-  mean.model = list(armaOrder = c(0,0), include.mean = TRUE),
-  distribution.model = "sstd"
-)
-yen_2000_2009 <- ugarchfit(
-  spec = yen_mod,
-  data = DT$yen[subbool]
-)
-marginal_tests(yen_2000_2009)
-DTU[subbool, "yen"] <- PIT(yen_2000_2009)
-
-
-
-subbool <- DT$DATE >= "2010-01-01" & DT$DATE <= "2018-12-31"
 yen_mod <- ugarchspec(
   variance.model = list(model = "sGARCH", garchOrder = c(1,1)),
   mean.model = list(armaOrder = c(0,0), include.mean = TRUE),
   distribution.model = "std"
 )
-yen_2010_2018 <- ugarchfit(
-  spec = yen_mod,
-  data = DT$yen[subbool]
-)
-marginal_tests(yen_2010_2018)
-DTU[subbool, "yen"] <- PIT(yen_2010_2018)
+yen_fit_2000_2009 <- DT[year(DATE) %in% 2000:2009, ugarchfit(spec=yen_mod, data=yen)]
+res <- verify_marginal_test(marginal_tests(yen_fit_2000_2009), alpha="0.05")
+saveRDS(yen_fit_2000_2009, file="data/model_objects/yen_yr00s.rds")
 
-# -------------------------------------
-
-
-# Australian Dollar
-# -------------------------------------
-# TODO: Hong-Li 3rd and 4th Moment fails 
-subbool <- DT$DATE >= "1980-01-01" & DT$DATE <= "1989-12-31"
-austd_mod <- ugarchspec(
-  variance.model = list(model = "sGARCH", garchOrder = c(1,1)),
-  mean.model = list(armaOrder = c(3,1), include.mean = TRUE),
-  distribution.model = "sstd"
-)
-austd_1980_1989 <- ugarchfit(
-  spec = austd_mod,
-  data = DT$austd[subbool]
-)
-marginal_tests(austd_1980_1989)
-DTU <- merge(DTU,
-             data.frame(DATE=DT$DATE[subbool], austd=PIT(austd_1980_1989)),
-             by="DATE", all.x=T)
-
-
-subbool <- DT$DATE >= "1990-01-01" & DT$DATE <= "1999-12-31"
-austd_mod <- ugarchspec(
-  variance.model = list(model = "sGARCH", garchOrder = c(1,1)),
-  mean.model = list(armaOrder = c(0,0), include.mean = TRUE),
-  distribution.model = "sstd"
-)
-austd_1990_1999 <- ugarchfit(
-  spec = austd_mod,
-  data = DT$austd[subbool]
-)
-marginal_tests(austd_1990_1999)
-DTU[subbool, "austd"] <- PIT(austd_1990_1999)
-
-
-subbool <- DT$DATE >= "2000-01-01" & DT$DATE <= "2009-12-31"
-austd_mod <- ugarchspec(
-  variance.model = list(model = "sGARCH", garchOrder = c(1,1)),
-  mean.model = list(armaOrder = c(0,0), include.mean = TRUE),
-  distribution.model = "sstd"
-)
-austd_2000_2009 <- ugarchfit(
-  spec = austd_mod,
-  data = DT$austd[subbool]
-)
-marginal_tests(austd_2000_2009)
-DTU[subbool, "austd"] <- PIT(austd_2000_2009)
-
-
-subbool <- DT$DATE >= "2010-01-01" & DT$DATE <= "2018-12-31"
-austd_mod <- ugarchspec(
-  variance.model = list(model = "sGARCH", garchOrder = c(1,1)),
-  mean.model = list(armaOrder = c(0,0), include.mean = TRUE),
-  distribution.model = "sstd"
-)
-austd_2010_2018 <- ugarchfit(
-  spec = austd_mod,
-  data = DT$austd[subbool]
-)
-marginal_tests(austd_2010_2018)
-DTU[subbool, "austd"] <- PIT(austd_2010_2018)
-
-# -------------------------------------
-
-
-# New Zealand Dollar
-# -------------------------------------
-# TODO: Not Evaluated
-subbool <- DT$DATE >= "1980-01-01" & DT$DATE <= "1989-12-31"
-newz_mod <- ugarchspec(
-  variance.model = list(model = "gjrGARCH", garchOrder = c(3,1)),
-  mean.model = list(armaOrder = c(5,0), include.mean = TRUE),
-  distribution.model = "sstd"
-)
-newz_1980_1989 <- ugarchfit(
-  spec = newz_mod,
-  data = DT$newz[subbool]
-)
-marginal_tests(newz_1980_1989)
-DTU <- merge(DTU,
-             data.frame(DATE=DT$DATE[subbool], newz=PIT(newz_1980_1989)),
-             by="DATE", all.x=T)
-
-
-
-# TODO: Hong-Li 3rd and 4th moment fail
-subbool <- DT$DATE >= "1990-01-01" & DT$DATE <= "1999-12-31"
-newz_mod <- ugarchspec(
-  variance.model = list(model = "gjrGARCH", garchOrder = c(5,1)),
-  mean.model = list(armaOrder = c(5,0), include.mean = TRUE),
-  distribution.model = "sstd"
-)
-newz_1990_1999 <- ugarchfit(
-  spec = newz_mod,
-  data = DT$newz[subbool]
-)
-marginal_tests(newz_1990_1999)
-DTU[subbool, "newz"] <- PIT(newz_1990_1999)
-
-
-# TODO: Hong-Li portmantaeu fails & Shapiro-Wilks fails at 10 %
-subbool <- DT$DATE >= "2000-01-01" & DT$DATE <= "2009-12-31"
-newz_mod <- ugarchspec(
-  variance.model = list(model = "gjrGARCH", garchOrder = c(5,1)),
-  mean.model = list(armaOrder = c(5,0), include.mean = FALSE),
-  distribution.model = "sstd"
-)
-newz_2000_2009 <- ugarchfit(
-  spec = newz_mod,
-  data = DT$newz[subbool]
-)
-marginal_tests(newz_2000_2009)
-DTU[subbool, "newz"] <- PIT(newz_2000_2009)
-
-
-subbool <- DT$DATE >= "2010-01-01" & DT$DATE <= "2018-12-31"
-newz_mod <- ugarchspec(
-  variance.model = list(model = "sGARCH", garchOrder = c(1,1)),
-  mean.model = list(armaOrder = c(0,1), include.mean = TRUE),
-  distribution.model = "sstd"
-)
-newz_2010_2018 <- ugarchfit(
-  spec = newz_mod,
-  data = DT$newz[subbool]
-)
-marginal_tests(newz_2010_2018)
-DTU[subbool, "newz"] <- PIT(newz_2010_2018)
-
-# -------------------------------------
-
-
-# French Franc
-# -------------------------------------
-subbool <- DT$DATE >= "1980-01-01" & DT$DATE <= "1989-12-31"
-ff_mod <- ugarchspec(
-  variance.model = list(model = "gjrGARCH", garchOrder = c(2,1)),
-  mean.model = list(armaOrder = c(2,1), include.mean = TRUE),
-  distribution.model = "std"
-)
-ffranc_1980_1989 <- ugarchfit(
-  spec = ff_mod,
-  data = DT$ffranc[subbool]
-)
-marginal_tests(ffranc_1980_1989)
-DTU <- merge(DTU,
-             data.frame(DATE=DT$DATE[subbool], ffranc=PIT(ffranc_1980_1989)),
-             by="DATE", all.x=T)
-
-
-
-# TODO: LM 4th moment fails
-subbool <- DT$DATE >= "1990-01-01" & DT$DATE <= "1999-12-31"
-ff_mod <- ugarchspec(
-  variance.model = list(model = "sGARCH", garchOrder = c(5,1)),
+yen_mod <- ugarchspec(
+  variance.model = list(model = "gjrGARCH", garchOrder = c(1,1)),
   mean.model = list(armaOrder = c(0,0), include.mean = TRUE),
   distribution.model = "std"
 )
-ffranc_1990_1999 <- ugarchfit(
-  spec = ff_mod,
-  data = DT$ffranc[subbool]
-)
-marginal_tests(ffranc_1990_1999)
-DTU[subbool, "ffranc"] <- PIT(ffranc_1990_1999)
-
-
-subbool <- DT$DATE >= "2000-01-01" & DT$DATE <= "2001-12-31"
-ff_mod <- ugarchspec(
-  variance.model = list(model = "gjrGARCH", garchOrder = c(3,1)),
-  mean.model = list(armaOrder = c(1,0), include.mean = TRUE),
-  distribution.model = "sstd"
-)
-ffranc_2000_2009 <- ugarchfit(
-  spec = ff_mod,
-  data = DT$ffranc[subbool]
-)
-marginal_tests(ffranc_2000_2009)
-DTU[subbool, "ffranc"] <- PIT(ffranc_2000_2009)
-
-# -------------------------------------
-
-
-# German Deutschemark
-# -------------------------------------
-subbool <- DT$DATE >= "1980-01-01" & DT$DATE <= "1989-12-31"
-dmk_mod <- ugarchspec(
-  variance.model = list(model = "gjrGARCH", garchOrder = c(3,1)),
-  mean.model = list(armaOrder = c(1,1), include.mean = TRUE),
-  distribution.model = "std"
-)
-deutsch_1980_1989 <- ugarchfit(
-  spec = dmk_mod,
-  data = DT$deutsch[subbool]
-)
-marginal_tests(deutsch_1980_1989)
-DTU <- merge(DTU,
-             data.frame(DATE=DT$DATE[subbool], deutsch=PIT(deutsch_1980_1989)),
-             by="DATE", all.x=T)
-
-
-subbool <- DT$DATE >= "1990-01-01" & DT$DATE <= "1999-12-31"
-dmk_mod <- ugarchspec(
-  variance.model = list(model = "gjrGARCH", garchOrder = c(3,1)),
-  mean.model = list(armaOrder = c(1,1), include.mean = TRUE),
-  distribution.model = "std"
-)
-deutsch_1990_1999 <- ugarchfit(
-  spec = dmk_mod,
-  data = DT$deutsch[subbool]
-)
-marginal_tests(deutsch_1990_1999)
-DTU[subbool, "deutsch"] <- PIT(deutsch_1990_1999)
-
-
-# TODO: LM 2nd and 4th moment fails
-subbool <- DT$DATE >= "2000-01-01" & DT$DATE <= "2001-12-31"
-dmk_mod <- ugarchspec(
-  variance.model = list(model = "sGARCH", garchOrder = c(1,1)),
-  mean.model = list(armaOrder = c(1,5), include.mean = TRUE),
-  distribution.model = "sged"
-)
-deutsch_2000_2009 <- ugarchfit(
-  spec = dmk_mod,
-  data = DT$deutsch[subbool]
-)
-marginal_tests(deutsch_2000_2009)
-DTU[subbool, "deutsch"] <- PIT(deutsch_2000_2009)
-
+yen_fit_2010_2018 <- DT[year(DATE) %in% 2010:2018, ugarchfit(spec=yen_mod, data=yen)]
+res <- verify_marginal_test(marginal_tests(yen_fit_2010_2018), alpha="0.05")
+saveRDS(yen_fit_2010_2018, file="data/model_objects/yen_yr10s.rds")
 # -------------------------------------
 
 
 # Euro
 # -------------------------------------
-# TODO: LM 2nd moment fails
-subbool <- DT$DATE >= "1999-01-05" & DT$DATE <= "2009-12-31"
-euro_mod <- ugarchspec(
-  variance.model = list(model = "sGARCH", garchOrder = c(5,1)),
-  mean.model = list(armaOrder = c(0,0), include.mean = TRUE),
-  distribution.model = "sstd"
-)
-euro_2000_2009 <- ugarchfit(
-  spec = euro_mod,
-  data = DT$euro[subbool]
-)
-marginal_tests(euro_2000_2009)
-DTU <- merge(DTU,
-             data.frame(DATE=DT$DATE[subbool], euro=PIT(euro_2000_2009)),
-             by="DATE", all.x=T)
 
-
-subbool <- DT$DATE >= "2010-01-01" & DT$DATE <= "2018-12-31"
 euro_mod <- ugarchspec(
-  variance.model = list(model = "sGARCH", garchOrder = c(1,1)),
-  mean.model = list(armaOrder = c(0,0), include.mean = TRUE),
+  variance.model = list(model = "gjrGARCH", garchOrder = c(2,1)),
+  mean.model = list(armaOrder = c(0, 0), include.mean = TRUE),
   distribution.model = "std"
 )
-euro_2010_2018 <- ugarchfit(
-  spec = euro_mod,
-  data = DT$euro[subbool]
-)
-marginal_tests(euro_2010_2018)
-DTU[subbool, "euro"] <- PIT(euro_2010_2018)
-# -------------------------------------
+euro_fit_2000_2009 <- DT[year(DATE) %in% 2000:2009, ugarchfit(spec=euro_mod, data=euro)]
+res <- verify_marginal_test(marginal_tests(euro_fit_2000_2009), alpha="0.05")
+saveRDS(euro_fit_2000_2009, file="data/model_objects/euro_yr00s.rds")
 
 
-# Singapore Dollar
-# -------------------------------------
-subbool <- DT$DATE >= "2000-01-05" & DT$DATE <= "2009-12-31"
-sing_mod <- ugarchspec(
+euro_mod <- ugarchspec(
   variance.model = list(model = "sGARCH", garchOrder = c(1,1)),
-  mean.model = list(armaOrder = c(5,1), include.mean = TRUE),
-  distribution.model = "sstd"
-)
-singd_2000_2009 <- ugarchfit(
-  spec = sing_mod,
-  data = DT$singd[subbool]
-)
-marginal_tests(singd_2000_2009)
-DTU <- merge(DTU,
-             data.frame(DATE=DT$DATE[subbool], singd=PIT(singd_2000_2009)),
-             by="DATE", all.x=T)
-
-
-subbool <- DT$DATE >= "2010-01-01" & DT$DATE <= "2018-12-31"
-sing_mod <- ugarchspec(
-  variance.model = list(model = "sGARCH", garchOrder = c(1,1)),
-  mean.model = list(armaOrder = c(0,0), include.mean = TRUE),
-  distribution.model = "sstd"
-)
-singd_2010_2018 <- ugarchfit(
-  spec = sing_mod,
-  data = DT$singd[subbool]
-)
-marginal_tests(singd_2010_2018)
-DTU[subbool, "singd"] <- PIT(singd_2010_2018)
-
-# -------------------------------------
-
-
-# South Korea Won
-# -------------------------------------
-subbool <- DT$DATE >= "2005-04-04" & DT$DATE <= "2009-12-31"
-won_mod <- ugarchspec(
-  variance.model = list(model = "sGARCH", garchOrder = c(1,1)),
-  mean.model = list(armaOrder = c(0,0), include.mean = TRUE),
+  mean.model = list(armaOrder = c(0,0), include.mean = FALSE),
   distribution.model = "std"
 )
-won_2000_2009 <- ugarchfit(
-  spec = won_mod,
-  data = DT$won[subbool]
-)
-marginal_tests(won_2000_2009)
-DTU <- merge(DTU,
-             data.frame(DATE=DT$DATE[subbool], won=PIT(won_2000_2009)),
-             by="DATE", all.x=T)
+euro_fit_2010_2018 <- DT[year(DATE) %in% 2010:2018, ugarchfit(spec=euro_mod, data=euro)]
+res <- verify_marginal_test(marginal_tests(euro_fit_2010_2018), alpha="0.05")
+saveRDS(euro_fit_2010_2018, file="data/model_objects/euro_yr10s.rds")
 
-
-subbool <- DT$DATE >= "2010-01-01" & DT$DATE <= "2018-12-31"
-won_mod <- ugarchspec(
-  variance.model = list(model = "gjrGARCH", garchOrder = c(1,1)),
-  mean.model = list(armaOrder = c(0,0), include.mean = TRUE),
-  distribution.model = "sstd"
-)
-won_2010_2018 <- ugarchfit(
-  spec = won_mod,
-  data = DT$won[subbool]
-)
-marginal_tests(won_2010_2018)
-DTU[subbool, "won"] <- PIT(won_2010_2018)
 # -------------------------------------
+
+

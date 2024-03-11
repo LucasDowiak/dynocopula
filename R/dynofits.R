@@ -76,7 +76,6 @@
 #' @importFrom VineCopula BiCopDeriv2
 #' @export
 #' 
-
 BPfit <- function(x, y, fam1, fam2 = NULL, parallel = FALSE, date_names = NULL,
                   ncores = 2) {
   
@@ -173,10 +172,9 @@ BPfit <- function(x, y, fam1, fam2 = NULL, parallel = FALSE, date_names = NULL,
 #'
 #' @export
 #' 
-
 summary.seqBreakPoint <- function(obj) {
   summarize <- function(cmp) {
-    pp <- if (cmp$family == 1) cmp$pars[[1]] else cmp$pars
+    pp <- if (identical(cmp$family, 1)) cmp$pars[[1]] else cmp$pars
     n <- diff(cmp$points) + 1
     se <- sqrt(diag(cmp$sandwich))
     zstat <- pp / se
@@ -216,7 +214,6 @@ summary.seqBreakPoint <- function(obj) {
 #'
 #' @export
 #'
-
 plot.seqBreakPoint <- function(obj) {
   
   nms <- attr(obj, "marginal_names")
@@ -264,7 +261,6 @@ plot.seqBreakPoint <- function(obj) {
 #'
 #' @export
 #' 
-
 coef.seqBreakPoint <- function(obj) {
   out <- unlist(lapply(obj, `[[`, "pars"), F, T)
   if (obj[[1]]$family == 1)
@@ -281,7 +277,6 @@ coef.seqBreakPoint <- function(obj) {
 #'
 #' @export
 #'
-
 logLik.seqBreakPoint <- function(obj) {
   unlist(lapply(obj, `[[`, "log.likelihood"), F, T)
 }
@@ -342,7 +337,6 @@ logLik.seqBreakPoint <- function(obj) {
 #'
 #' @export
 #'
-
 MSfit <- function(x, y, family = list(1, 1), initValues, tol = 1e-5) {
   
   # Capture x and y names
@@ -469,7 +463,6 @@ MSfit <- function(x, y, family = list(1, 1), initValues, tol = 1e-5) {
 #'
 #' @export
 #'
-
 plot.markovCopula <- function(obj) {
   nr <- obj$nregimes
   sp <- t(obj$regime.inference$smooth.prob)
@@ -489,7 +482,6 @@ plot.markovCopula <- function(obj) {
 #'
 #' @export
 #'
-
 summary.markovCopula <- function(obj) {
   coefs <- obj$par[1:obj$ncxnr]
   se <- sqrt(diag(solve(obj$solver$hessian)))
@@ -543,7 +535,6 @@ summary.markovCopula <- function(obj) {
 #'
 #' @export
 #'
-
 coef.markovCopula <- function(obj) {
   obj$par
 }
@@ -556,7 +547,6 @@ coef.markovCopula <- function(obj) {
 #'
 #' @export
 #'
-
 logLik.markovCopula <- function(obj) {
   obj$log.likelihood
 }
@@ -592,8 +582,8 @@ logLik.markovCopula <- function(obj) {
 #' @return \code{STfit} returns an S3 object of \code{\link[base]{class}}
 #'   \code{smoothTransCopula}.
 #'   
-#'   The summary, plot, coef, and logLik functions will, repectively, print a 
-#'   summarization of the output, a plot of dependence measures, extract model
+#'   The summary, plot, coef, and logLik functions will, respectively, print a 
+#'   summary of the output, a plot of dependence measures, extract model
 #'   parameters, and extract the log-likelihood values.
 #'   
 #'   An object of class \code{smoothTransCopula} has the following components: 
@@ -615,7 +605,6 @@ logLik.markovCopula <- function(obj) {
 #'
 #' @export
 #'
-
 STfit <- function(x, y, family = 1, regimes = 2, initValues = NULL) {
   
   # Capture x and y names
@@ -738,7 +727,6 @@ STfit <- function(x, y, family = 1, regimes = 2, initValues = NULL) {
 #'
 #' @export
 #'
-
 plot.smoothTransCopula <- function(obj) {
   smooth.pars <- obj$smooth.parameters
   nmes <- names(obj$U)
@@ -764,7 +752,6 @@ plot.smoothTransCopula <- function(obj) {
 #'
 #' @export
 #'
-
 summary.smoothTransCopula <- function(obj) {
   coefs <- obj$pars
   fam <- obj$family
@@ -801,7 +788,6 @@ summary.smoothTransCopula <- function(obj) {
 #'
 #' @export
 #'
-
 logLik.smoothTransCopula <- function(obj) {
   obj$log.likelihood[length(obj$log.likelihood)]
 }
@@ -814,7 +800,6 @@ logLik.smoothTransCopula <- function(obj) {
 #'
 #' @export
 #'
-
 coef.smoothTransCopula <- function(obj) {
   obj$pars
 }
@@ -829,10 +814,8 @@ coef.smoothTransCopula <- function(obj) {
 #'
 #' @export
 #'
-
-aic_bic <- function(...) {
+aic_bic <- function(objsLst) {
   
-  objsLst <- list(...)
   sIn <- mapply(inherits, objsLst, "smoothTransCopula")
   N <- vapply(objsLst, `[[`, integer(1), 'N')
   stopifnot(all(sIn), all(N == N[1]))

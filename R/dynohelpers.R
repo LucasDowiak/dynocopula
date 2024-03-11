@@ -312,8 +312,10 @@ st_boundary <- function(fam, k) {
   else if (length(fam) == 2) {
     l1 <- switch(as.character(fam[[1]]), "3" = 0, "4" = 1, "13" = 0, "14" = 1)
     l2 <- switch(as.character(fam[[2]]), "3" = 0, "4" = 1, "13" = 0, "14" = 1)
-    UB <- c(rep(30, 2 * k), 1 - S)
-    LB <- c(rep(c(l1 + S, l2 + S), each = k), S)
+    u1 <- switch(as.character(fam[[1]]), "3" = 28, "4" = 17, "13" = 28, "14" = 17)
+    u2 <- switch(as.character(fam[[2]]), "3" = 28, "4" = 17, "13" = 28, "14" = 17)
+    UB <- c(rep(c(u1 - S, u2 - S), each=k), 1 - S)
+    LB <- c(rep(c(l1 + S, l2 + S), each=k), S)
     names(UB) <- names(LB) <- c(paste0("th1", 1:k), paste0("th2", 1:k), "wt")
   } else {
     stop("More than two copulas specified. Currently, only a mixture
@@ -346,13 +348,15 @@ ms_boundary <- function(fam) {
     if (fam == 2)
       return(list(UB = c(1 - S, 100), LB = c(-1, 2) + S))
     if (fam %in% c(3, 13))
-      return(list(UB = 30, LB = S))
+      return(list(UB = 28 - S, LB = S))
     if (fam %in% c(4, 14))
       return(list(UB = 30, LB = 1 + S))
   } else if (length(fam) == 2) {
     l1 <- switch(as.character(fam[[1]]), "3" = 0, "4" = 1, "13" = 0, "14" = 1)
     l2 <- switch(as.character(fam[[2]]), "3" = 0, "4" = 1, "13" = 0, "14" = 1)
-    return(list(UB = c(30, 30, 1 - S), LB = c(l1 + S, l2 + S, S)))
+    u1 <- switch(as.character(fam[[1]]), "3" = 28, "4" = 17, "13" = 28, "14" = 17)
+    u2 <- switch(as.character(fam[[2]]), "3" = 28, "4" = 17, "13" = 28, "14" = 17)
+    return(list(UB = c(u1 - S, u2 - S, 1 - S), LB = c(l1 + S, l2 + S, S)))
   } else {
     stop("Input variable 'fam' needs to be of length two.")
   }
@@ -670,7 +674,7 @@ markov_optim <- function(parm, x, y, family) {
 # @param family Numeric vector of length one or two indicating the copula type
 #   and family.
 #
-# @return The sum of the negalitve log-likelhood
+# @return The sum of the negaitve log-likelhood
 # 
 smooth_llh <- function(x, y, M, family) {
   stopifnot(is.matrix(M))
@@ -836,7 +840,6 @@ frank_pdf <- function(u, v, delta) {
 # 
 # @return A vector the same length as \code{u} of density values
 #
-
 Sfrank_pdf <- function(u, v, delta) {
  
   frank_pdf(1 - u, 1 - v, delta = delta)

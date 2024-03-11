@@ -35,101 +35,81 @@ year_list <- list(yr80s=yr80s, yr90s=yr90s, yr00s=yr00s, yr10s=yr10s)
 fxnames <- DT[1:10, names(.SD), .SDcols=which(names(DT) == tolower(names(DT)))]
 
 
-# Full History Currencies
+# Sterling
 # -------------------------------------
-for (yrs in names(year_list)) {
-  x <- DT[year(DATE) %in% year_list[[yrs]],  sterling]
-  dts <- DT[year(DATE) %in% year_list[[yrs]], DATE]
-  mod <- auto_fit(x, max_arch=3, max_garch=3, ignore_nyblom=TRUE)
-  mod[["Dates"]] <- dts
-  saveRDS(mod, file=sprintf("data/model_objects/sterling_%s.RDS", yrs))
-}
+ster_mod <- ugarchspec(
+  variance.model = list(model = "gjrGARCH", garchOrder = c(1,1)),
+  mean.model = list(armaOrder = c(0, 0), include.mean = TRUE),
+  distribution.model = "std"
+)
+sterling_fit_2000_2009 <- list(model=DT[year(DATE) %in% 2000:2009, ugarchfit(spec=ster_mod, data=sterling)],
+                               Dates=DT[year(DATE) %in% 2000:2009, DATE])
+res <- verify_marginal_test(marginal_tests(sterling_fit_2000_2009$model), alpha="0.05")
+saveRDS(sterling_fit_2000_2009, file="data/model_objects/sterling_yr00s.rds")
 
-for (yrs in names(year_list)) {
-  x <- DT[year(DATE) %in% year_list[[yrs]],  austd]
-  dts <- DT[year(DATE) %in% year_list[[yrs]], DATE]
-  mod <- auto_fit(x,  max_arch=3, max_garch=3, ignore_nyblom=TRUE)
-  mod[["Dates"]] <- dts
-  saveRDS(mod, file=sprintf("data/model_objects/austd_%s.RDS", yrs))
-}
-
-for (yrs in names(year_list)) {
-  x <- DT[year(DATE) %in% year_list[[yrs]],  candd]
-  dts <- DT[year(DATE) %in% year_list[[yrs]], DATE]
-  mod <- auto_fit(x)
-  mod[["Dates"]] <- dts
-  saveRDS(mod, file=sprintf("data/model_objects/candd_%s.RDS", yrs))
-}
-
-for (yrs in names(year_list)) {
-  x <- DT[year(DATE) %in% year_list[[yrs]],  newz]
-  dts <- DT[year(DATE) %in% year_list[[yrs]], DATE]
-  mod <- auto_fit(x)
-  mod[["Dates"]] <- dts
-  saveRDS(mod, file=sprintf("data/model_objects/newz_%s.RDS", yrs))
-}
-
-for (yrs in names(year_list)) {
-  x <- DT[year(DATE) %in% year_list[[yrs]],  yen]
-  dts <- DT[year(DATE) %in% year_list[[yrs]], DATE]
-  mod <- auto_fit(x,  max_arch=3, max_garch=3, ignore_nyblom=TRUE)
-  mod[["Dates"]] <- dts
-  saveRDS(mod, file=sprintf("data/model_objects/yen_%s.RDS", yrs))
-}
-
-for (yrs in names(year_list)) {
-  x <- DT[year(DATE) %in% year_list[[yrs]],  swfranc]
-  dts <- DT[year(DATE) %in% year_list[[yrs]], DATE]
-  mod <- auto_fit(x)
-  mod[["Dates"]] <- dts
-  saveRDS(mod, file=sprintf("data/model_objects/swfranc_%s.RDS", yrs))
-}
+ster_mod <- ugarchspec(
+  variance.model = list(model = "csGARCH", garchOrder = c(2,2)),
+  mean.model = list(armaOrder = c(0, 2), include.mean = FALSE),
+  distribution.model = "std" # "ged"
+)
+sterling_fit_2010_2018 <- list(model=DT[year(DATE) %in% 2010:2018, ugarchfit(spec=ster_mod, data=sterling)],
+                               Dates=DT[year(DATE) %in% 2010:2018, DATE])
+res <- verify_marginal_test(marginal_tests(sterling_fit_2010_2018$model), alpha="0.05")
+saveRDS(sterling_fit_2010_2018, file="data/model_objects/sterling_yr10s.rds")
 
 # -------------------------------------
 
 
-
-# Pre-Euro Currencies
+# Japanese Yen
 # -------------------------------------
-for (yrs in names(year_list)[1:2]) {
-  x <- DT[year(DATE) %in% year_list[[yrs]],  deutsch]
-  dts <- DT[year(DATE) %in% year_list[[yrs]], DATE]
-  mod <- auto_fit(x,  max_arch=3, max_garch=3, ignore_nyblom=TRUE)
-  mod[["Dates"]] <- dts
-  saveRDS(mod, file=sprintf("data/model_objects/deutsch_%s.RDS", yrs))
-}
+yen_mod <- ugarchspec(
+  variance.model = list(model = "sGARCH", garchOrder = c(1,1)),
+  mean.model = list(armaOrder = c(0,0), include.mean = TRUE),
+  distribution.model = "std"
+)
+yen_fit_2000_2009 <- list(model=DT[year(DATE) %in% 2000:2009, ugarchfit(spec=yen_mod, data=yen)],
+                          Dates=DT[year(DATE) %in% 2000:2009, DATE])
+res <- verify_marginal_test(marginal_tests(yen_fit_2000_2009$model), alpha="0.05")
+saveRDS(yen_fit_2000_2009, file="data/model_objects/yen_yr00s.rds")
 
-for (yrs in names(year_list)[1:2]) {
-  x <- DT[year(DATE) %in% year_list[[yrs]],  ffranc]
-  dts <- DT[year(DATE) %in% year_list[[yrs]], DATE]
-  mod <- auto_fit(x)
-  mod[["Dates"]] <- dts
-  saveRDS(mod, file=sprintf("data/model_objects/ffranc_%s.RDS", yrs))
-}
+
+yen_mod <- ugarchspec(
+  variance.model = list(model = "gjrGARCH", garchOrder = c(1,1)),
+  mean.model = list(armaOrder = c(0,0), include.mean = TRUE),
+  distribution.model = "std"
+)
+yen_fit_2010_2018 <- list(model=DT[year(DATE) %in% 2010:2018, ugarchfit(spec=yen_mod, data=yen)],
+                          Dates=DT[year(DATE) %in% 2010:2018, DATE])
+res <- verify_marginal_test(marginal_tests(yen_fit_2010_2018$model), alpha="0.05")
+saveRDS(yen_fit_2010_2018, file="data/model_objects/yen_yr10s.rds")
 # -------------------------------------
 
-
-# Euro and Sing D
-# -------------------------------------
 
 # Euro
-for (yrs in names(year_list)[3:4]) {
-  x <- DT[year(DATE) %in% year_list[[yrs]],  euro]
-  dts <- DT[year(DATE) %in% year_list[[yrs]], DATE]
-  mod <- auto_fit(x,  max_arch=3, max_garch=3, ignore_nyblom=TRUE)
-  mod[["Dates"]] <- dts
-  saveRDS(mod, file=sprintf("data/model_objects/euro_%s.RDS", yrs))
-}
-
-# Singapore Dollar - Special case with a first date value of NA 
-for (yrs in names(year_list)[3:4]) {
-  x <- DT[year(DATE) %in% year_list[[yrs]] & !is.na(singd),  singd]
-  dts <- DT[year(DATE) %in% year_list[[yrs]] & !is.na(singd), DATE]
-  mod <- auto_fit(x)
-  mod[["Dates"]] <- dts
-  saveRDS(mod, file=sprintf("data/model_objects/singd_%s.RDS", yrs))
-}
 # -------------------------------------
+euro_mod <- ugarchspec(
+  variance.model = list(model = "gjrGARCH", garchOrder = c(2,1)),
+  mean.model = list(armaOrder = c(0, 0), include.mean = TRUE),
+  distribution.model = "std"
+)
+euro_fit_2000_2009 <- list(model=DT[year(DATE) %in% 2000:2009, ugarchfit(spec=euro_mod, data=euro)],
+                           Dates=DT[year(DATE) %in% 2000:2009, DATE])
+res <- verify_marginal_test(marginal_tests(euro_fit_2000_2009$model), alpha="0.05")
+saveRDS(euro_fit_2000_2009, file="data/model_objects/euro_yr00s.rds")
+
+
+euro_mod <- ugarchspec(
+  variance.model = list(model = "sGARCH", garchOrder = c(1,1)),
+  mean.model = list(armaOrder = c(0,0), include.mean = FALSE),
+  distribution.model = "std"
+)
+euro_fit_2010_2018 <- list(model=DT[year(DATE) %in% 2010:2018, ugarchfit(spec=euro_mod, data=euro)],
+                           Dates=DT[year(DATE) %in% 2010:2018, DATE])
+res <- verify_marginal_test(marginal_tests(euro_fit_2010_2018$model), alpha="0.05")
+saveRDS(euro_fit_2010_2018, file="data/model_objects/euro_yr10s.rds")
+# -------------------------------------
+
+
 
 find_coef_matrix <- function(obj)
 {
@@ -161,21 +141,22 @@ for (f_ in files_) {
   CM <- find_coef_matrix(tst$model)
   CM[, `:=`(currency=curr, group=decade)]
   collect_i[[f_]] <- CM
-  # collect_i[[f_]][, `:=`(currency=curr, group=decade))]
+  cat("----------------------------------------------------------------\n")
+  print(sprintf("Object: %s", f_))
+  print(tst$model)
+  cat("\n----------------------------------------------------------------\n\nn")
 }
 dtfU <- dcast(rbindlist(collect_u), DATE ~ currency, value.var="u")
 dtfEval <- rbindlist(collect_e)
 dtfCoef <- rbindlist(collect_i)
 
-mod <- readRDS("data/model_objects/austd_yr10s.RDS")
-mod$model
-dtfEval[currency=="sterling" & group=="00"]
+mod <- readRDS("data/model_objects/yen_yr00s.RDS")
+coef(mod$model)
 
-zz <- DT[year(DATE) %in% 2000:2009, auto_fit(austd, max_arch = 2, max_garch = 2, ignore_nyblom = TRUE)]
-
-vars <- c('mu', 'ar1', 'ar2', 'ma1', 'ma2', 'ma3', 'omega', 'alpha1', 'gamma1',
-          'alpha2', 'gamma2', 'beta1', 'beta2', 'beta3', 'eta11', 'eta21', 'shape',
-          'skew')
+# 
+vars <- c('mu', "ar1",
+          'omega', 'alpha1', 'gamma1', 'alpha2', 'gamma2','beta1', 'beta2',
+          'shape')
 dtfVar <- data.table(variable=factor(vars, levels = vars))
 D1 <- dcast(dtfCoef, group + vcv_type + variable + currency ~ .,
             value.var=c("Estimate"))
@@ -184,84 +165,36 @@ D2 <- dcast(dtfCoef, group + vcv_type + variable + currency ~ .,
             value.var=c("Std. Error"))
 setnames(D2, ".", "Std. Error")
 
+
+# Regression Summaries
+# ----------------------------------------------------
 D <- merge(D1, D2)
 D[, `Std. Error`:=round(`Std. Error`, 3)]
 D[, Estimate := round(Estimate, 3)]
 D[, variable := factor(variable, levels=vars)]
-DD <- merge(dtfVar,
-            D[order(variable)][group=="10" & vcv_type=="robust" & currency=="austd"],
-      all.x=TRUE)
-melt(DD, id.vars = c("variable"), measure.vars=c("Estimate", "Std. Error"),
-     variable.name="numeric")[order(variable, numeric)]
+
+D2 <- D[group=="00" & vcv_type=="standard" & currency=="euro"]
+melt(merge(dtfVar, D2, all.x = TRUE),
+     id.vars=c("currency", "variable", "group"), variable.name = "Stat",
+           measure.vars = c("Estimate", "Std. Error"))[order(variable, Stat)]
+
+# ----------------------------------------------------
 
 
-# Sterling
-# -------------------------------------
-ster_mod <- ugarchspec(
-  variance.model = list(model = "gjrGARCH", garchOrder = c(1,1)),
-  mean.model = list(armaOrder = c(0, 0), include.mean = TRUE),
-  distribution.model = "std"
-)
-sterling_fit_2000_2009 <- DT[year(DATE) %in% 2000:2009, ugarchfit(spec=ster_mod, data=sterling)]
-res <- verify_marginal_test(marginal_tests(sterling_fit_2000_2009), alpha="0.05")
-saveRDS(sterling_fit_2000_2009, file="data/model_objects/sterling_yr00s.rds")
+# Validation Summaries
+# ----------------------------------------------------
+tmp <- dcast(dtfEval[!grepl("NYBLOM", Test)],
+                     Test + Spec + group ~ currency,
+                     value.var="P-Value")[order(group, Test, Spec)]
+tmp[group=="00"] # , round(.SD, 4), .SDcols=4:6]
+tmp[group=="10", round(.SD, 3), .SDcols=4:6]
 
-ster_mod <- ugarchspec(
-  variance.model = list(model = "csGARCH", garchOrder = c(2,2)),
-  mean.model = list(armaOrder = c(0, 2), include.mean = FALSE),
-  distribution.model = "std" # "ged"
-)
-sterling_fit_2010_2018 <- DT[year(DATE) %in% 2010:2018, ugarchfit(spec=ster_mod, data=sterling)]
-res <- verify_marginal_test(marginal_tests(sterling_fit_2010_2018), alpha="0.05")
-saveRDS(sterling_fit_2010_2018, file="data/model_objects/sterling_yr10s.rds")
+tmp <- dcast(dtfEval[grepl("NYBLOM", Test)],
+             Test + Spec + group ~ currency,
+             value.var="Stat")[order(group, Test, Spec)]
+tmp[group=="00"] # , round(.SD, 4), .SDcols=4:6]
+tmp[group=="00", round(.SD, 3), .SDcols=4:6]
 
-# -------------------------------------
-
-
-# Japanese Yen
-# -------------------------------------
-yen_mod <- ugarchspec(
-  variance.model = list(model = "sGARCH", garchOrder = c(1,1)),
-  mean.model = list(armaOrder = c(0,0), include.mean = TRUE),
-  distribution.model = "std"
-)
-yen_fit_2000_2009 <- DT[year(DATE) %in% 2000:2009, ugarchfit(spec=yen_mod, data=yen)]
-res <- verify_marginal_test(marginal_tests(yen_fit_2000_2009), alpha="0.05")
-saveRDS(yen_fit_2000_2009, file="data/model_objects/yen_yr00s.rds")
-
-yen_mod <- ugarchspec(
-  variance.model = list(model = "gjrGARCH", garchOrder = c(1,1)),
-  mean.model = list(armaOrder = c(0,0), include.mean = TRUE),
-  distribution.model = "std"
-)
-yen_fit_2010_2018 <- DT[year(DATE) %in% 2010:2018, ugarchfit(spec=yen_mod, data=yen)]
-res <- verify_marginal_test(marginal_tests(yen_fit_2010_2018), alpha="0.05")
-saveRDS(yen_fit_2010_2018, file="data/model_objects/yen_yr10s.rds")
-# -------------------------------------
-
-
-# Euro
-# -------------------------------------
-
-euro_mod <- ugarchspec(
-  variance.model = list(model = "gjrGARCH", garchOrder = c(2,1)),
-  mean.model = list(armaOrder = c(0, 0), include.mean = TRUE),
-  distribution.model = "std"
-)
-euro_fit_2000_2009 <- DT[year(DATE) %in% 2000:2009, ugarchfit(spec=euro_mod, data=euro)]
-res <- verify_marginal_test(marginal_tests(euro_fit_2000_2009), alpha="0.05")
-saveRDS(euro_fit_2000_2009, file="data/model_objects/euro_yr00s.rds")
-
-
-euro_mod <- ugarchspec(
-  variance.model = list(model = "sGARCH", garchOrder = c(1,1)),
-  mean.model = list(armaOrder = c(0,0), include.mean = FALSE),
-  distribution.model = "std"
-)
-euro_fit_2010_2018 <- DT[year(DATE) %in% 2010:2018, ugarchfit(spec=euro_mod, data=euro)]
-res <- verify_marginal_test(marginal_tests(euro_fit_2010_2018), alpha="0.05")
-saveRDS(euro_fit_2010_2018, file="data/model_objects/euro_yr10s.rds")
-
-# -------------------------------------
+# ----------------------------------------------------
 
 

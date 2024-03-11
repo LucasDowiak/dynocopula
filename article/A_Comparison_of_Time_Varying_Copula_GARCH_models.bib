@@ -159,7 +159,7 @@
     issn = {15684997},
     doi = {https://doi.org/10.1016/B978-044450896-6.50010-8},
     url = {https://www.sciencedirect.com/science/article/pii/B9780444508966500108},
-    author = {Paul Embrechts and Filip Lindskog and Alexander Mcneil}
+    author = {Paul Embrechts and Filip Lindskog and Alexander McNeil}
 }
 
 @article{Genest_and_Favre_2007,
@@ -316,7 +316,7 @@
 }
 
 @article{Dijk_and_Frances_1999,
-  author={Dijk, Dick van and Franses, Philip Hans},
+  author={van Dijk, Dick and Franses, Philip Hans},
   title={Modeling Multiple Regimes in the Business Cycle},
   journal={Macroeconomic Dynamics},
   year=1999,
@@ -383,4 +383,69 @@
     volume = {19},
     year = {2001}
 }
+
+@Manual{RBase,
+    title = {R: A Language and Environment for Statistical Computing},
+    author = {R Core Team},
+    organization = {R Foundation for Statistical Computing},
+    address = {Vienna, Austria},
+    year = {2021},
+    url = {https://www.R-project.org/},
+}
+
+@Manual{Rugarch,
+  title = {rugarch: Univariate GARCH models.},
+  author = {Alexios Ghalanos},
+  year = {2020},
+  note = {R package version 1.4-4.},
+}
+
+
+@article{Fisher_Gallagher_2012,
+    author = {Thomas J. Fisher and Colin M. Gallagher},
+    title = {New Weighted Portmanteau Statistics for Time Series Goodness of Fit Testing},
+    journal = {Journal of the American Statistical Association},
+    volume = {107},
+    number = {498},
+    pages = {777-787},
+    year = {2012},
+    publisher = {Taylor & Francis},
+    doi = {10.1080/01621459.2012.688465},
+    URL = {https://doi.org/10.1080/01621459.2012.688465},
+    eprint = {https://doi.org/10.1080/01621459.2012.688465},
+    abstract = {We exploit ideas from high-dimensional data analysis to derive new portmanteau tests that are based on the trace of the square of the mth order autocorrelation matrix. The resulting statistics are weighted sums of the squares of the sample autocorrelation coefficients that, unlike many other tests appearing in the literature, are numerically stable even when the number of lags considered is relatively close to the sample size. The statistics behave asymptotically as a linear combination of chi-squared random variables and their asymptotic distribution can be approximated by a gamma distribution. The proposed tests are modified to check for nonlinearity and to check the adequacy of a fitted nonlinear model. Simulation evidence indicates that the proposed goodness of fit tests tend to have higher power than other tests appearing in the literature, particularly in detecting long-memory nonlinear models. The efficacy of the proposed methods is demonstrated by investigating nonlinear effects in Apple, Inc., and Nikkei-300 daily returns during the 2006â2007 calendar years. The supplementary materials for this article are available online.}
+}
+
+
+@article{NYBLOM_1989,
+    ISSN = {01621459},
+    URL = {http://www.jstor.org/stable/2289867},
+    abstract = {Tests are proposed for detecting possible changes in parameters when the observations are obtained sequentially in time. While deriving the tests the alternative one has in mind specifies the parameter process as a martingale. The distribution theory of these tests relies on the large-sample results; that is, only the limiting null distributions are known (except in very special cases). The main tool in establishing these limiting distributions is weak convergence of stochastic processes. Suppose that we have vector-valued observations x1,...,xn obtained sequentially in time (or ordered in some other linear fashion). Their joint distribution is described by determining the initial distribution for x1 and the conditional distribution for each xk given the past up to xk - 1. Suppose further that these distributions depend on a p-dimensional parameter vector θ. At least locally (i.e., in a short time period) this may be more or less legitimate. In the long run, however, the possibility of some changes in the observation-generating process should be taken into account. Specifically, it is assumed here that those changes occur through a parameter variation in the form of a martingale. The martingale specification has an advantage of covering several types of departure of constancy: for example, a single jump at an unknown time point (the so-called change-point model) or slow random variation (typically random walk). The tests are derived by first finding the locally most powerful test against a martingale-type alternative when the starting value of the parameter process is known. After some simplification a test having a known numerically tractable limiting distribution is developed. When the starting point is unknown an efficient estimate is substituted for it. In addition, the corresponding limiting distribution is established. The proposed tests turn out to be based on cumulative sums of the score function (the derivative of the log-likelihood).},
+    author = {Jukka Nyblom},
+    journal = {Journal of the American Statistical Association},
+    number = {405},
+    pages = {223--230},
+    publisher = {[American Statistical Association, Taylor & Francis, Ltd.]},
+    title = {Testing for the Constancy of Parameters Over Time},
+    urldate = {2024-03-04},
+    volume = {84},
+    year = {1989}
+}
+
+
+@article{Engle_Ng_1993,
+    ISSN = {00221082, 15406261},
+    URL = {http://www.jstor.org/stable/2329066},
+    abstract = {This paper defines the news impact curve which measures how new information is incorporated into volatility estimates. Various new and existing ARCH models including a partially nonparametric one are compared and estimated with daily Japanese stock return data. New diagnostic tests are presented which emphasize the asymmetry of the volatility response to news. Our results suggest that the model by Glosten, Jagannathan, and Runkle is the best parametric model. The EGARCH also can capture most of the asymmetry; however, there is evidence that the variability of the conditional variance implied by the EGARCH is too high.},
+    author = {Robert F. Engle and Victor K. Ng},
+    journal = {The Journal of Finance},
+    number = {5},
+    pages = {1749--1778},
+    publisher = {[American Finance Association, Wiley]},
+    title = {Measuring and Testing the Impact of News on Volatility},
+    urldate = {2024-03-05},
+    volume = {48},
+    year = {1993}
+}
+
 

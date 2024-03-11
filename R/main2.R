@@ -27,10 +27,28 @@ dtfEval <- rbindlist(collect_e)
 
 
 # currencies
-fxnames1 <- c("deutsch", "sterling", "yen")
-fxnames2 <- c("euro", "sterling", "yen")
+fxnames <- c("euro", "sterling", "yen")
 
 year_list <- list(1980:1989, 1990:1999, 2000:2009, 2010:2018)
+
+
+# Single Regime Data Estimation
+# ------------------------------------------------------------------------------
+uu <- dtfU[, sterling]
+vv <- dtfU[, yen]
+summary(BiCopEst(uu, vv, family=4))
+
+
+optim(par=c(1.15, 1.06, 0.5), cop_llh, u=uu, v=vv, fam1=4, fam2=14,
+      method="L-BFGS-B", lower=c(0, 0, 0), upper=c(17, 17, 0.999))
+
+
+# BIC
+2 * log(dtfU[, .N]) - 2 * 163.1549
+
+# ------------------------------------------------------------------------------
+
+
 # Break Point Optimization
 # ------------------------------------------------------------------------------
 # 2H T-cop
@@ -74,36 +92,39 @@ for (pair in combn(fxnames2, 2, simplify=FALSE)) {
 
 # Markov Switching
 # ------------------------------------------------------------------------------
-dt_names <- dtfU[year(DATE) %in% unlist(year_list[3:4])][["DATE"]]
-states <- 2:4
+dt_names <- dtfU[, DATE]
+fxnames <- c("euro", "sterling", "yen")
+states <- 2:3
+tol <- 1e-5
+
 for (s in states) {
-  for (pair in combn(fxnames2, 2, simplify=FALSE)) {
+  for (pair in combn(fxnames, 2, simplify=FALSE)) {
     print(sprintf("Pair: %s-%s Regimes: %d started at %s", pair[1], pair[2], s, Sys.time()))
-    aa <- MSfit(dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[1]]],
-                dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[2]]], 
-                family=as.list(rep(2, s)), tol=1e-4)
+    aa <- MSfit(dtfU[[pair[1]]],
+                dtfU[[pair[2]]], 
+                family=as.list(rep(2, s)), tol=tol)
     saveRDS(aa, file=sprintf("data/dynocop_objects/MSfit_%s_%s_tcop_00_18_s%d.RDS", pair[1], pair[2], s))
   }
 }
 
-states <- 2:4
+
 for (s in states) {
-  for (pair in combn(fxnames2, 2, simplify=FALSE)) {
+  for (pair in combn(fxnames, 2, simplify=FALSE)) {
     print(sprintf("Pair: %s-%s Regimes: %d started at %s", pair[1], pair[2], s, Sys.time()))
-    aa <- MSfit(dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[1]]],
-                dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[2]]], 
-                family=split(rep(c(3, 13), s), floor((1:(2*s) / 2) - 0.5)), tol=1e-4)
+    aa <- MSfit(dtfU[[pair[1]]],
+                dtfU[[pair[2]]], 
+                family=split(rep(c(3, 13), s), floor((1:(2*s) / 2) - 0.5)), tol=tol)
     saveRDS(aa, file=sprintf("data/dynocop_objects/MSfit_%s_%s_clayton_00_18_s%d.RDS", pair[1], pair[2], s))
   }
 }
 
-states <- 2:4
+
 for (s in states) {
-  for (pair in combn(fxnames2, 2, simplify=FALSE)) {
+  for (pair in combn(fxnames, 2, simplify=FALSE)) {
     print(sprintf("Pair: %s-%s Regimes: %d started at %s", pair[1], pair[2], s, Sys.time()))
-    aa <- MSfit(dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[1]]],
-                dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[2]]], 
-                family=split(rep(c(4, 14), s), floor((1:(2*s) / 2) - 0.5)), tol=1e-4)
+    aa <- MSfit(dtfU[[pair[1]]],
+                dtfU[[pair[2]]], 
+                family=split(rep(c(4, 14), s), floor((1:(2*s) / 2) - 0.5)), tol=tol)
     saveRDS(aa, file=sprintf("data/dynocop_objects/MSfit_%s_%s_gumbel_00_18_s%d.RDS", pair[1], pair[2], s))
   }
 }
@@ -114,6 +135,113 @@ aa <- MSfit(dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[1]]],
             dtfU[year(DATE) %in% unlist(year_list[3:4])][[pair[2]]], 
             family=list(2,2,2))
 # ------------------------------------------------------------------------------
+
+
+# Smooth Transition
+# ------------------------------------------------------------------------------
+dt_names <- dtfU[, DATE]
+fxnames <- c("euro", "sterling", "yen")
+states <- 4
+tol <- 1e-5
+
+for (s in states) {
+  for (pair in combn(fxnames, 2, simplify=FALSE)) {
+    print(sprintf("Pair: %s-%s Regimes: %d started at %s", pair[1], pair[2], s, Sys.time()))
+    aa <- STfit(dtfU[[pair[1]]],
+                dtfU[[pair[2]]], 
+                family=2, regimes=s)
+    saveRDS(aa, file=sprintf("data/dynocop_objects/STfit_%s_%s_tcop_00_18_s%d.RDS", pair[1], pair[2], s))
+  }
+}
+
+
+for (s in states) {
+  for (pair in combn(fxnames, 2, simplify=FALSE)) {
+    print(sprintf("Pair: %s-%s Regimes: %d started at %s", pair[1], pair[2], s, Sys.time()))
+    aa <- STfit(dtfU[[pair[1]]],
+                dtfU[[pair[2]]], 
+                family=c(3, 13), regimes=s)
+    saveRDS(aa, file=sprintf("data/dynocop_objects/STfit_%s_%s_clayton_00_18_s%d.RDS", pair[1], pair[2], s))
+  }
+}
+
+
+for (s in states) {
+  for (pair in combn(fxnames, 2, simplify=FALSE)) {
+    print(sprintf("Pair: %s-%s Regimes: %d started at %s", pair[1], pair[2], s, Sys.time()))
+    aa <- STfit(dtfU[[pair[1]]],
+                dtfU[[pair[2]]], 
+                family=c(4, 14), regimes=s)
+    saveRDS(aa, file=sprintf("data/dynocop_objects/STfit_%s_%s_gumbel_00_18_s%d.RDS", pair[1], pair[2], s))
+  }
+}
+
+
+
+
+# ------------------------------------------------------------------------------
+
+
+# Model Selection
+# ----------------------------------------------------
+
+files_ <- list.files("data/dynocop_objects/", pattern="BPfit_euro_sterling")
+lst_mods <- lapply(files_, function(x) readRDS(sprintf("data/dynocop_objects/%s", x)))
+
+lapply(lst_mods, length)
+Ls <- lapply(lst_mods, function(x) sum(logLik(x)))
+ks <- lapply(lst_mods, function(x) length(x) * length(x[[1]]$pars))
+N <- dtfU[, .N]
+data.table(file=files_, BIC=mapply(function(l, k) log(N) * k - 2 * (l), Ls, ks))
+
+summary(lst_mods[[3]])
+
+
+
+
+files_ <- list.files("data/dynocop_objects/", pattern="STfit_sterling_yen")
+lst_mods <- lapply(files_, function(x) readRDS(sprintf("data/dynocop_objects/%s", x)))
+aicbic <- aic_bic(lst_mods)
+aicbic$BIC[, colnames(aicbic$BIC)[grepl("4", colnames(aicbic$BIC))]]
+
+
+
+files_ <- list.files("data/dynocop_objects/", pattern="MSfit_sterling_yen")
+lst_mods <- lapply(files_, function(x) readRDS(sprintf("data/dynocop_objects/%s", x)))
+
+Ls <- lapply(lst_mods, function(x) logLik(x))
+ks <- lapply(lst_mods, function(x) length(coef(x)))
+N <- dtfU[, .N]
+data.table(file=files_, BIC=mapply(function(l, k) log(N) * k - 2 * (l), Ls, ks))
+
+
+summary(readRDS("data/dynocop_objects/STfit_sterling_yen_tcop_00_18_s3.RDS"))
+
+# ----------------------------------------------------
+
+# Date of Regime Switches
+# ----------------------------------------------------
+mod <- readRDS("data/dynocop_objects/MSfit_sterling_yen_tcop_00_18_s2.RDS")
+P <- mod$regime.inference$smooth.prob
+idx <- which(abs(diff(P[1, ] > 0.5)) == 1) + 1
+dtfU[c(1, idx), .(DATE)]
+
+
+mod <- readRDS("data/dynocop_objects/STfit_sterling_yen_tcop_00_18_s3.RDS")
+p <- coef(mod)
+dtfU[round(.N * p[grepl("c", names(p))])]
+
+
+mod <- readRDS("data/dynocop_objects/BPfit_sterling_yen_tcop_00_18.RDS")
+sapply(rev(attr(mod, "initial_bp")), `[[`, "Date")
+
+
+
+
+
+# ----------------------------------------------------
+plot(readRDS("data/dynocop_objects/BPfit_euro_sterling_tcop_00_18.RDS"))
+
 
 
 plot_country_pairs <- function(cty, modlist, Dt)

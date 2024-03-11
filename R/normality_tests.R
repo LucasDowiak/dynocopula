@@ -95,18 +95,19 @@ marginal_tests <- function(obj, PRINT=FALSE, PLOT=FALSE)
 
   ####### Specification Tests
   ## Weighted LM tests of the standard residuals
+  # H0: The data are independently distributed
   lm_matrix <- do.call(cbind, lapply(1:2, function(x) weighted_ljung_box_test(z, x, df=armadf)))
 
   # Normality Tests
-  "add cramer von mises?"
-  nybl <- nyblom(obj) # Parameter Stability
-  sgnb <- signbias(obj) # Test for Asymmetric Impact of Errors
-  
+  nybl <- nyblom(obj) # Parameter Stability - H0: tests the null hypothesis that all parameters are constant against the alternative of that some of the parameters are unstable
+  sgnb <- signbias(obj) # Test for Asymmetric Impact of Errors - H0: null of no asymmetric effects present in the standard residuals
   gofm <- gof(obj, groups=2:5 * 10) # Distribution Check
-  # ks_test <- ks.test(u, punif)     # Kolmogorov-Smirnov test (stats package)
-  # sw_test <- shapiro.test(as.numeric(qnorm(u))) # Shapiro Test for Normality (stats package)
-  # jb_test <- jarque_bera(as.numeric(qnorm(u)), length(coef(obj)))  # Jarque-Bera test for joint normality of Skew and Kurtosis
   wtd_arch_table <- weighted_arch_lm_test(obj, df=gdf) # Test ARCH Specification
+  
+  ks_test <- ks.test(u, punif)     # Kolmogorov-Smirnov test (stats package)
+  sw_test <- shapiro.test(as.numeric(qnorm(u))) # Shapiro Test for Normality (stats package)
+  jb_test <- jarque_bera(as.numeric(qnorm(u)), length(coef(obj)))  # Jarque-Bera test for joint normality of Skew and Kurtosis
+  
   if (FALSE) {
     cat("\n-------------------------------------------------------------------------")
     cat("\nWeighted Ljung-Box test on standard residuals")
@@ -121,12 +122,9 @@ marginal_tests <- function(obj, PRINT=FALSE, PLOT=FALSE)
     msg <- sprintf("W = %.5f, p-value = %.4f", sw_test[["statistic"]], sw_test[["p.value"]])
     cat(msg,"\n")
     cat("\n-------------------------------------------------------------------------\n")
-    cat("Jarque Bera test of the qnorm(PIT)\n")
-    cat("H0: Skew and kurtosis are jointly normal\n\n")
-    print(matrix(jb_test, dimnames=list("", "p-Value")))
     cat("\n-------------------------------------------------------------------------\n")
     cat("Test that PIT are U(0,1)\n")
-    print(ks_test)
+    print(gofm)
   }
   return(invisible(list(
     lm_tests=lm_matrix,
@@ -178,7 +176,7 @@ verify_marginal_test <- function(mt, alpha=c("0.01", "0.05", "0.10"), ignore_nyb
   out <- rbindlist(list(p_arch_lm_test, p_arma_lm_test, p_gof_test,
                         p_indv_par_stab, p_join_par_stab, p_signbias_test),
                    use.names=TRUE, fill=TRUE)
-  out[!is.na(`P-Value`), pass_test := `P-Value` > alpha]
+  out[!is.na(`P-Value`), pass_test := 1 - `P-Value` < alpha]
   out[is.na(`P-Value`), pass_test := Stat < CV]
   if (ignore_nyblom) {
     out[grepl("NYBLOM", Test), pass_test := NA]

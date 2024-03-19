@@ -26,6 +26,39 @@ names(fxreturns) <- tolower(names(fxreturns))
 DT <- as.data.table(cbind(DT, as.data.frame(fxreturns)))
 rm(fxreturns)
 
+# Lag the euro, sterling, and yen log-returns
+DT[, l1_euro := shift(euro)]
+DT[, l2_euro := shift(euro, n=2)]
+DT[, l1_sterling := shift(sterling)]
+DT[, l2_sterling := shift(sterling, n=2)]
+DT[, l1_yen := shift(yen)]
+DT[, l2_yen := shift(yen, n=2)]
+
+# Lagged Residuals
+files_ <- setdiff(list.files("./data/model_objects/"), "tmp1")
+collect <- vector("list", length(files_)); names(collect) <- files_
+for (f_ in files_) {
+  tst <- readRDS(paste(c("./data/model_objects", f_), collapse = "/"))
+  curr <- regmatches(f_, regexpr("[a-zA-Z]+", f_))
+  dtbl <- data.table(DATE=tst$Dates, currency=curr, resids=as.numeric(rugarch::residuals(tst$model)),
+                     res_type="normal_resid")
+  dtbl2 <- data.table(DATE=tst$Dates, currency=curr, resids=as.numeric(rugarch::residuals(tst$model, standardize=TRUE)),
+                      res_type="standardize_resid")
+
+  collect[[f_]] <- rbindlist(list(dtbl, dtbl2))
+}
+dtfResids <- rbindlist(collect)
+dtfResids <- dcast(rbindlist(collect), DATE ~ currency + res_type, value.var="resids")
+
+dtfResids[, l1_euro_normal_resid := shift(euro_normal_resid)]
+dtfResids[, l2_euro_normal_resid := shift(euro_normal_resid, n=2L)]
+dtfResids[, l1_sterling_normal_resid := shift(sterling_normal_resid)]
+dtfResids[, l2_sterling_normal_resid := shift(sterling_normal_resid, n=2L)]
+dtfResids[, l1_yen_normal_resid := shift(yen_normal_resid)]
+dtfResids[, l2_yen_normal_resid := shift(yen_normal_resid, n=2L)]
+DT <- merge(DT, dtfResids, by="DATE", all.x=TRUE)
+
+
 # All Currencies
 yr80s <- 1980:1989
 yr90s <- 1990:1999
@@ -38,24 +71,25 @@ fxnames <- DT[1:10, names(.SD), .SDcols=which(names(DT) == tolower(names(DT)))]
 # Sterling
 # -------------------------------------
 ster_mod <- ugarchspec(
-  variance.model = list(model = "gjrGARCH", garchOrder = c(1,1)),
+  variance.model = list(model = "sGARCH", garchOrder = c(1,1)),
   mean.model = list(armaOrder = c(0, 0), include.mean = TRUE),
   distribution.model = "std"
 )
-sterling_fit_2000_2009 <- list(model=DT[year(DATE) %in% 2000:2009, ugarchfit(spec=ster_mod, data=sterling)],
-                               Dates=DT[year(DATE) %in% 2000:2009, DATE])
+sterling_fit_2000_2009 <- list(model=DT[year(DATE) %in% 2000:2007, ugarchfit(spec=ster_mod, data=sterling)],
+                               Dates=DT[year(DATE) %in% 2000:2007, DATE])
 res <- verify_marginal_test(marginal_tests(sterling_fit_2000_2009$model), alpha="0.05")
-saveRDS(sterling_fit_2000_2009, file="data/model_objects/sterling_yr00s.rds")
+saveRDS(sterling_fit_2000_2009, file="data/model_objects/tmp1/sterling_yr00s.rds")
 
 ster_mod <- ugarchspec(
-  variance.model = list(model = "csGARCH", garchOrder = c(2,2)),
-  mean.model = list(armaOrder = c(0, 2), include.mean = FALSE),
+  variance.model = list(model = "gjrGARCH", garchOrder = c(2,2)),
+  mean.model = list(armaOrder = c(0,0), include.mean = TRUE),
   distribution.model = "std" # "ged"
 )
-sterling_fit_2010_2018 <- list(model=DT[year(DATE) %in% 2010:2018, ugarchfit(spec=ster_mod, data=sterling)],
-                               Dates=DT[year(DATE) %in% 2010:2018, DATE])
+sterling_fit_2010_2018 <- list(model=DT[year(DATE) %in% 2008:2018, ugarchfit(spec=ster_mod, data=sterling)],
+                               Dates=DT[year(DATE) %in% 2008:2018, DATE])
 res <- verify_marginal_test(marginal_tests(sterling_fit_2010_2018$model), alpha="0.05")
-saveRDS(sterling_fit_2010_2018, file="data/model_objects/sterling_yr10s.rds")
+saveRDS(sterling_fit_2010_2018, file="data/model_objects/tmp1/sterling_yr10s.rds")
+
 
 # -------------------------------------
 
@@ -67,10 +101,10 @@ yen_mod <- ugarchspec(
   mean.model = list(armaOrder = c(0,0), include.mean = TRUE),
   distribution.model = "std"
 )
-yen_fit_2000_2009 <- list(model=DT[year(DATE) %in% 2000:2009, ugarchfit(spec=yen_mod, data=yen)],
-                          Dates=DT[year(DATE) %in% 2000:2009, DATE])
+yen_fit_2000_2009 <- list(model=DT[year(DATE) %in% 2000:2007, ugarchfit(spec=yen_mod, data=yen)],
+                          Dates=DT[year(DATE) %in% 2000:2007, DATE])
 res <- verify_marginal_test(marginal_tests(yen_fit_2000_2009$model), alpha="0.05")
-saveRDS(yen_fit_2000_2009, file="data/model_objects/yen_yr00s.rds")
+saveRDS(yen_fit_2000_2009, file="data/model_objects/tmp1/yen_yr00s.rds")
 
 
 yen_mod <- ugarchspec(
@@ -78,10 +112,12 @@ yen_mod <- ugarchspec(
   mean.model = list(armaOrder = c(0,0), include.mean = TRUE),
   distribution.model = "std"
 )
-yen_fit_2010_2018 <- list(model=DT[year(DATE) %in% 2010:2018, ugarchfit(spec=yen_mod, data=yen)],
-                          Dates=DT[year(DATE) %in% 2010:2018, DATE])
+yen_fit_2010_2018 <- list(model=DT[year(DATE) %in% 2008:2018, ugarchfit(spec=yen_mod, data=yen)],
+                          Dates=DT[year(DATE) %in% 2008:2018, DATE])
 res <- verify_marginal_test(marginal_tests(yen_fit_2010_2018$model), alpha="0.05")
-saveRDS(yen_fit_2010_2018, file="data/model_objects/yen_yr10s.rds")
+saveRDS(yen_fit_2010_2018, file="data/model_objects/tmp1/yen_yr10s.rds")
+
+
 # -------------------------------------
 
 
@@ -92,10 +128,10 @@ euro_mod <- ugarchspec(
   mean.model = list(armaOrder = c(0, 0), include.mean = TRUE),
   distribution.model = "std"
 )
-euro_fit_2000_2009 <- list(model=DT[year(DATE) %in% 2000:2009, ugarchfit(spec=euro_mod, data=euro)],
-                           Dates=DT[year(DATE) %in% 2000:2009, DATE])
+euro_fit_2000_2009 <- list(model=DT[year(DATE) %in% 2000:2007, ugarchfit(spec=euro_mod, data=euro)],
+                           Dates=DT[year(DATE) %in% 2000:2007, DATE])
 res <- verify_marginal_test(marginal_tests(euro_fit_2000_2009$model), alpha="0.05")
-saveRDS(euro_fit_2000_2009, file="data/model_objects/euro_yr00s.rds")
+saveRDS(euro_fit_2000_2009, file="data/model_objects/tmp1/euro_yr00s.rds")
 
 
 euro_mod <- ugarchspec(
@@ -103,14 +139,18 @@ euro_mod <- ugarchspec(
   mean.model = list(armaOrder = c(0,0), include.mean = FALSE),
   distribution.model = "std"
 )
-euro_fit_2010_2018 <- list(model=DT[year(DATE) %in% 2010:2018, ugarchfit(spec=euro_mod, data=euro)],
-                           Dates=DT[year(DATE) %in% 2010:2018, DATE])
+euro_fit_2010_2018 <- list(model=DT[year(DATE) %in% 2008:2018, ugarchfit(spec=euro_mod, data=euro)],
+                           Dates=DT[year(DATE) %in% 2008:2018, DATE])
 res <- verify_marginal_test(marginal_tests(euro_fit_2010_2018$model), alpha="0.05")
-saveRDS(euro_fit_2010_2018, file="data/model_objects/euro_yr10s.rds")
+saveRDS(euro_fit_2010_2018, file="data/model_objects/tmp1/euro_yr10s.rds")
+
+
+
 # -------------------------------------
 
 
-
+# Marginal Model Regression Summaries
+# -----------------------------------------------------------------------------
 find_coef_matrix <- function(obj)
 {
   m <- as.data.table(obj@fit$matcoef)
@@ -167,7 +207,6 @@ setnames(D2, ".", "Std. Error")
 
 
 # Regression Summaries
-# ----------------------------------------------------
 D <- merge(D1, D2)
 D[, `Std. Error`:=round(`Std. Error`, 3)]
 D[, Estimate := round(Estimate, 3)]
@@ -196,5 +235,58 @@ tmp[group=="00"] # , round(.SD, 4), .SDcols=4:6]
 tmp[group=="00", round(.SD, 3), .SDcols=4:6]
 
 # ----------------------------------------------------
+
+# Orthogonality Tests for Conditional Copula
+# ------------------------------------------------------------------------------
+
+############ Mean model
+
+# 2000 - 2009
+# Not needed since no AR or MA components in the mean equation
+
+
+# 2010 - 2018
+summary(lm(euro_normal_resid ~ l1_sterling, data=DT[year(DATE) %in% 2010:2018]))
+summary(lm(yen_normal_resid ~ l1_sterling, data=DT[year(DATE) %in% 2010:2018]))
+
+
+
+############ Variance
+
+# 2000 - 2009
+summary(lm(I(euro_standardize_resid**2) ~ I(l1_sterling_normal_resid**2),
+           data=DT[year(DATE) %in% 2000:2009]))
+summary(lm(I(euro_standardize_resid**2) ~ I(l1_yen_normal_resid**2),
+           data=DT[year(DATE) %in% 2000:2009]))
+
+
+summary(lm(I(sterling_standardize_resid**2) ~ I(l1_euro_normal_resid**2) + I(l2_euro_normal_resid**2),
+           data=DT[year(DATE) %in% 2000:2009]))
+summary(lm(I(sterling_standardize_resid**2) ~ I(l1_yen_normal_resid**2),
+           data=DT[year(DATE) %in% 2000:2009]))
+
+
+summary(lm(I(yen_standardize_resid**2) ~ I(l1_euro_normal_resid**2) + I(l2_euro_normal_resid**2),
+           data=DT[year(DATE) %in% 2000:2009]))
+summary(lm(I(yen_standardize_resid**2) ~ I(l1_sterling_normal_resid**2),
+           data=DT[year(DATE) %in% 2000:2009]))
+
+
+# 2010 - 2018
+summary(lm(I(euro_standardize_resid**2) ~ I(l1_sterling_normal_resid**2) + I(l2_sterling_normal_resid**2),
+           data=DT[year(DATE) %in% 2010:2018]))
+summary(lm(I(euro_standardize_resid**2) ~ I(l1_yen_normal_resid**2),
+           data=DT[year(DATE) %in% 2010:2018]))
+
+summary(lm(I(sterling_standardize_resid**2) ~ I(l1_euro_normal_resid**2),
+           data=DT[year(DATE) %in% 2010:2018]))
+summary(lm(I(sterling_standardize_resid**2) ~ I(l1_yen_normal_resid**2),
+           data=DT[year(DATE) %in% 2010:2018]))
+
+
+summary(lm(I(yen_standardize_resid**2) ~ I(l1_euro_normal_resid**2),
+           data=DT[year(DATE) %in% 2010:2018]))
+summary(lm(I(yen_standardize_resid**2) ~ I(l1_sterling_normal_resid**2) + I(l2_sterling_normal_resid**2),
+           data=DT[year(DATE) %in% 2010:2018]))
 
 

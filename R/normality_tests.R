@@ -176,7 +176,7 @@ verify_marginal_test <- function(mt, alpha=c("0.01", "0.05", "0.10"), ignore_nyb
   out <- rbindlist(list(p_arch_lm_test, p_arma_lm_test, p_gof_test,
                         p_indv_par_stab, p_join_par_stab, p_signbias_test),
                    use.names=TRUE, fill=TRUE)
-  out[!is.na(`P-Value`), pass_test := 1 - `P-Value` < alpha]
+  out[!is.na(`P-Value`), pass_test := `P-Value` > alpha]
   out[is.na(`P-Value`), pass_test := Stat < CV]
   if (ignore_nyblom) {
     out[grepl("NYBLOM", Test), pass_test := NA]

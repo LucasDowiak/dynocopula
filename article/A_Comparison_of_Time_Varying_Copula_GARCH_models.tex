@@ -25,7 +25,8 @@
   backend=biber,
   url=false,
   doi=true,
-  style=authoryear,
+  style=numeric,
+  citestyle=numeric,
   sorting=nty
 ]{biblatex}
 
@@ -77,19 +78,19 @@ In this section, we briefly discuss the necessary copula theory and definitions 
 The term 'copula' has already been used various times in the introduction. To start, we provide a formal definition:
 
 \begin{defn} \label{defn:copula}
-	A bivariate copula is a function $C$ from $\left[0,1\right]^{2}$ to $\left[0,1\right]$ that satisfies (1) For every $u,w$ in $\left[0,1\right] :C\left(u,0\right) = C\left(0,w\right) = 0;$ (2) For every $u,w$ in $\left[0,1\right] :C\left(u,1\right) = u\ \ $and $\ C\left(1,w\right) = w;$ and (3) For every $u_{1}, u_{2}, w_{1}, w_{2}$ in $\left[0,1\right]$ such that $u_{1} \leq u_{2}$ and $w_{1} \leq w_{2}:C\left(u_{2}, w_{2}\right) - C\left(u_{1}, w_{2}\right) - C\left(u_{2}, w_{1}\right) + C\left(u_{1}, w_{1}\right)$ $\geq 0$.
+	A bivariate copula is a function $C$ from $\left[0,1\right]^{2}$ to $\left[0,1\right]$ that satisfies (1) For every $u,w$ in $\left[0,1\right] :C\left(u,0\right) = C\left(0,w\right) = 0;$ (2) For every $u,w$ in $\left[0,1\right] :C\left(u,1\right) = u\ \ $and $\ C\left(1,w\right) = w;$ and (3) For every $u_{1}, u_{2}, w_{1}, w_{2}$ in $\left[0,1\right]$ such that $u_{1} \leq u_{2}$ and $w_{1} \leq w_{2}:C\left(u_{2}, w_{2}\right) - C\left(u_{1}, w_{2}\right) - C\left(u_{2}, w_{1}\right) + C\left(u_{1}, w_{1}\right)$ $\geq 0$. $_{\blacksquare}$
 \end{defn}
 
 Taken together, properties (1) - (3) imply that a copula is a nondecreasing function in each argument, a quality shared by all distribution functions. It is, in fact, helpful to think of copulas as distribution functions whose domain is restricted to the unit square---or the unit hypercube in higher dimensions. With this in mind, we present Sklar's theorem, the foundation for empirical applications of copulas.
 
-\begin{thm} [Sklar, 1959] \label{thm:skl}
+\begin{thm}[Sklar, 1959] \label{thm:skl}
 	Let $F_{XY}$ be a joint distribution function with margins $F_{X}$ and $F_{Y}$. Then there exists a copula $C$ such that for all $x,y$ in $\bar{\mathbb{R}}$,
 
 	\begin{equation} \label{eq:sklars}
 		F_{XY}\left( x,y\right) =C\left(F_{X}\left(x\right), F_{Y}\left(y\right)\right) = C\left(u,w\right)
 	\end{equation}
 
-	If $F_{X}$ and $F_{Y}$ are continuous, then $C$ is unique; otherwise, $C$ is uniquely determined on $RanX\times RanY$. Conversely, if $C$ is a copula and $F_{X}$ and $F_{Y}$ are distribution functions, then the function $F_{XY}$ defined by equation~\ref{eq:sklars} is a joint distribution function with margins $F_{X}$ and $F_{Y}$.
+	If $F_{X}$ and $F_{Y}$ are continuous, then $C$ is unique; otherwise, $C$ is uniquely determined on $RanX\times RanY$. Conversely, if $C$ is a copula and $F_{X}$ and $F_{Y}$ are distribution functions, then the function $F_{XY}$ defined by equation~\ref{eq:sklars} is a joint distribution function with margins $F_{X}$ and $F_{Y}$. $_{\blacksquare}$
 \end{thm}
 
 The copula approach to multivariate distributions first transforms each marginal distribution from the extended real line $\left(\bar{\mathbb{R}}\right)$ to the unit interval through the \textit{probability integral transform} (PIT). First investigated by \cite{Rosenblatt_1952}, this transform states that if $X$ is a continuous random variable with density $f_{X}$, then the random variable $U$ defined by
@@ -102,22 +103,22 @@ is identically and independently distributed (iid) uniformly on the unit interva
 
 \subsection{Patton's Extension}
 
-Taking inspiration from \cite{Hansen_1994} work on time-varying density estimation, \cite{Patton_2006} broadens Sklar's original theorem to conditional distributions. This extension paves the way for conditional copulas with time-varying parameters. Consider a bivariate series $\left(X_{t},Y_{t}\right)^{\prime}$ on some information set $\Im_{t-1}$. In the same manner as Theorem~\ref{thm:skl}, we can decompose the conditional distribution of $\left(X_{t},Y_{t}\right)$ given $\Im _{t-1}$ into its marginal distributions and the conditional copula. Given 
+Taking inspiration from \cite{Hansen_1994} work on time-varying density estimation, \cite{Patton_2006} extends Sklar's original theorem to the case of conditional distributions. This extension paves the way for copulas with time-varying parameterizations. In the same manner as Theorem~\ref{thm:skl}, \cite{Patton_2006} decomposes the conditional distribution $\left(X,Y\right) | Z$ into its marginal distributions and the conditional copula.
 
-\begin{gather*}
-	X_{t}~|~\Im _{t-1}~\sim~F_{X}\left(x|\Im_{t-1}\right), ~~~ Y_{t}~|~\Im_{t-1}~\sim ~ F_{Y}\left(y|\Im_{t-1}\right) \\ \left(X_{t},Y_{t}\right) | \Im _{t-1}~ \sim ~ F_{XY}\left(x,y|\Im_{t-1}\right) 
-\end{gather*}
 
-Then
+\begin{thm}[Patton, 2006] \label{thm:cond_skl}
+	Let $F_{X|Z}(\cdot|z)$ be a the conditional distribution of $X|Z=z$, $F_{Y|Z}(\cdot|z)$ be a the conditional distribution of $Y|Z=z$, $F_{XY|Z}(\cdot|z)$ be the conditional distribution of $(X, Y)|Z = z$ and $\mathcal{Z}$ be the support of $Z$. Assume that $F_{X|Z}(\cdot|z)$ and $F_{X|Z}(\cdot|z)$ are continuous in $x$ and $y$ for all $z \in \mathcal{Z}$. Then there exists a unique conditional copula $C(\cdot|z)$ such that
 
-\begin{equation} \label{eqn:patton}
-	F_{XY}\left(x,y| \Im_{t-1}\right) = C\left(F_{X}\left(x| \Im_{t-1}\right)
-,F_{Y}\left(y| \Im_{t-1}\right) ~|~ \Im_{t-1}\right)
-\end{equation}
+	\begin{eqnarray}
+		F_{XY|Z}\left(x,y|z\right) & = & C\left(F_{X}\left(x|z\right), F_{Y}\left(y|z\right)|z\right)  \label{eq:cond_sklars} \\
+		 & &\forall(x, y) \in \bar{\mathbb{R}} \times \bar{\mathbb{R}} \text{ and each } z \in \mathcal{Z} \nonumber
+	\end{eqnarray}
 
-As discussed in \cite{Patton_2006}, the same information set must be used for each margin and the copula. Conditioning the marginal models and the copula on different information sets will yield a function $\hat{F}_{XY}\left(\cdot|\Im_{t-1}\right)$ that is not the joint distribution of $\left(X,Y\right)|\Im_{t-1}$. In practice, this complication has the potential to offset the most attractive quality of the copula approach: modeling each marginal distribution and the copula separately.
+	Conversely, if we let $F_{X|Z}(\cdot|z)$ be the conditional distribution of $X|Z=z$, $F_{Y|Z}(\cdot|z)$ be the conditional distribution of $Y|Z=z$, and {$C(\cdot|w)$} be a family of conditional copulas that is measurable in z, then the function $F_{XY|Z}(\cdot|z)$ defined by Equation (\ref{eq:cond_sklars}) is a conditional bivariate distribution function with conditional marginal distributions $F_{X|Z}(\cdot|z)$ and $F_{Y|Z}(\cdot|z)$.  $_{\blacksquare}$
+\end{thm}
 
-Say our information set consists of two conditioning variables $Z_{1},Z_{2}\in\Im_{t-1}$, and we condition $X$ on $Z_{1}$ and $Y$ on $Z_{2}$. The only way $\hat{F}_{XY}\left(\cdot|\Im_{t-1}\right)$ will be the joint distribution function of $\left(X,Y\right)|\Im_{t-1}$ is the special case when $F_{X}\left(x|Z_{1}\right) = F_{X}\left(x|Z_{1},Z_{2}\right)$ and $F_{Y}\left(y|Z_{2}\right) = F_{Y}\left(y|Z_{1},Z_{2}\right)$. This can occur when $Z_{1}$ is orthogonal to $Y|Z_{2}$ and $Z_{2}$ is orthogonal to $X|Z_{1}$. To provide an example of this special case in the context of exchange rates, define the Euro-Dollar return as $X_{t}$ with a lagged value as its conditioning variable $X_{t-k} = Z_{1}$. Likewise, define the Yen-Dollar return as $Y_{t}$ with a lagged value as its conditioning variable $Y_{t-k} = Z_{2}$. If the lagged Euro-Dollar return $X_{t-k}$ has no predictive power for the conditional Yen-Dollar return $Y_{t}|Y_{t-k}$, and conversely the lagged Yen-Dollar return $Y_{t-k}$ has no predictive power for the conditional Euro-Dollar return $X_{t}|X_{t-k}$, then our orthogonality conditions are met and we can correctly interpret the function $\hat{F}_{XY}\left(\cdot|\Im_{t-1}\right)$ as the joint distribution function of $\left(X,Y\right)|\Im _{t-1}$. These conditions must be evaluated and motivates the regression tests discussed at the end of Section 4.
+\cite{Patton_2006} stresses that the same conditioning variables must be used for each margin and the copula. Using different conditioning variables for the marginal models and the copula may yield a function $\hat{F}_{XY}\left(\cdot|Z\right)$ that is not the joint distribution of $\left(X,Y\right)|Z$. In practice, this complication has the potential to offset the most attractive quality of the copula approach---modeling the marginal distributions and the copula separately. There is a way to salvage the situation, though. Say there are two conditioning variables, $Z_{1}, Z_{2} \in Z$, and we condition $X$ on $Z_{1}$ and $Y$ on $Z_{2}$. The only way $\hat{F}_{XY}\left(\cdot|Z\right)$ will be the joint distribution function of $\left(X,Y\right)|Z$ is the special case when $F_{X}\left(x|Z_{1}\right) = F_{X}\left(x|Z_{1},Z_{2}\right)$ and $F_{Y}\left(y|Z_{2}\right) = F_{Y}\left(y|Z_{1},Z_{2}\right)$. This can occur when $Z_{2}$ is orthogonal to $Y|Z_{1}$ and $Z_{1}$ is orthogonal to $X|Z_{2}$. In this essay, tests for these orthogonality conditions are included in the diagnostics checks discussed at the end of Section \ref{sec:marginal_distributions}.
+
 
 \subsection{Methods for Constructing Copulas}
 
@@ -147,11 +148,11 @@ where $Q=\Gamma\left(\frac{v}{2}\right)^{-1}\Gamma\left(\frac{\nu +1}{2}\right)^
 The second class we consider are referred to as Archimedean copulas. Families of these copulas are defined by their generator function $\varphi$, which usually contain one or two parameters. These parameters play a fundamental role in specifying the dependence structure between the marginal distributions. Consider the following definitions:
 
 \begin{defn} \label{def:Arch1}
-	The generator $\varphi$ of an Archimedean copula is a function from $\left[0,1\right]$ to $\left[0,\infty\right]$ that is continuous, strictly decreasing, convex, and satisfies $\varphi\left(1\right) = 0$.
+	The generator $\varphi$ of an Archimedean copula is a function from $\left[0,1\right]$ to $\left[0,\infty\right]$ that is continuous, strictly decreasing, convex, and satisfies $\varphi\left(1\right) = 0$. $_{\blacksquare}$
 \end{defn}
 
 \begin{defn} \label{def:Arch2}
-	The pseudo-inverse of $\varphi$ is the function $\varphi^{\left[-1\right]}$ from $\left[0,\infty\right]$ to $\left[0,1\right]$ given by $\varphi^{\left[-1\right]}\left(t\right) = \varphi^{\left[-1\right]}\left(t\right)$ for $t$ in $\left[0,\varphi\left(0\right)\right]$ and $\varphi^{\left[-1\right]}\left(t\right) = 0$ for $t$ in $\left[\varphi\left(0\right),\infty\right]$. If $\varphi\left(0\right) = \infty$, the pseudo-inverse is simply the inverse $\varphi^{-1}\left(t\right)$.
+	The pseudo-inverse of $\varphi$ is the function $\varphi^{\left[-1\right]}$ from $\left[0,\infty\right]$ to $\left[0,1\right]$ given by $\varphi^{\left[-1\right]}\left(t\right) = \varphi^{\left[-1\right]}\left(t\right)$ for $t$ in $\left[0,\varphi\left(0\right)\right]$ and $\varphi^{\left[-1\right]}\left(t\right) = 0$ for $t$ in $\left[\varphi\left(0\right),\infty\right]$. If $\varphi\left(0\right) = \infty$, the pseudo-inverse is simply the inverse $\varphi^{-1}\left(t\right)$. $_{\blacksquare}$
 \end{defn}
 
 Given definition~\ref{def:Arch1} and definition~\ref{def:Arch2}, an Archimedean copula is constructed in the following manner:
@@ -220,7 +221,7 @@ There are many forms of dependence when discussing multivariate distributions. T
 A global measure of association, Kendall's tau is a popular measure of the degree of monotonic dependence between two random variates. Invariant to strictly increasing transformations, Kendall's tau provides a measure of correlation between the ranks of two marginal distributions. This short section begins with the definition of concordant and discordant observations.
 
 \begin{defn}
-	For a vector of continuous random variables $\left(X,Y\right)$, let $\left(x_{i},y_{i}\right)$ and $\left(x_{j},y_{j}\right)$ represent two observations. We say $\left(x_{i},y_{i}\right)$ and $\left(x_{j},y_{j}\right)$ are concordant if $\left(x_{i} - x_{j}\right)\left(y_{i}-y_{j}\right) > 0$ and discordant if $\left(x_{i}-x_{j}\right)\left(y_{i} - y_{j}\right) < 0$.
+	For a vector of continuous random variables $\left(X,Y\right)$, let $\left(x_{i},y_{i}\right)$ and $\left(x_{j},y_{j}\right)$ represent two observations. We say $\left(x_{i},y_{i}\right)$ and $\left(x_{j},y_{j}\right)$ are concordant if $\left(x_{i} - x_{j}\right)\left(y_{i}-y_{j}\right) > 0$ and discordant if $\left(x_{i}-x_{j}\right)\left(y_{i} - y_{j}\right) < 0$. $_{\blacksquare}$
 \end{defn}
 
 The population version of Kendall's tau is defined as the probability of concordance minus the probability of discordance:
@@ -242,7 +243,7 @@ By choosing to represent global dependence through Kendall's tau, we are creatin
 Tail dependence is a localized measure of association and allows us to make probabilistic statements about observations in the upper-right corner and lower-left corner of the unit square. In our present context on exchange rates, upper tail dependence is a statement about the probability of two currency pairs experiencing strong concurrent depreciations against the dollar. Conversely, lower tail dependence is a statement about the probability of two currency pairs experiencing strong concurrent appreciations against the dollar. It is worth pointing out that tail dependence is a property of the copula and not of the marginal distributions. The following definition is due to \cite{Joe_1997}.
 
 \begin{defn} \label{defn:tail_dep}
-	For a copula $C$, if $\lambda^{U}\equiv\lim_{t\nearrow 1}P\left[X > F_{X}^{-1}\left(t\right) | Y > F_{Y}^{-1}\left(t\right)\right] = \lim_{t\nearrow 1}\frac{1-2t+C\left(t,t\right)}{1-t}$ exists, then $C$ has upper tail dependence if $\lambda^{U}$ is in $(0,1]$ and no upper tail dependence if $\lambda^{U}=0$. Likewise, if $\lambda ^{L}\equiv \lim_{t\searrow 0}P\left[X\leq F_{X}^{-1}\left(t\right) | Y\leq F_{Y}^{-1}\left(t\right)\right] =\lim_{t\searrow 0}\frac{C\left(t,t\right)}{t}$ exists, $C$ has lower tail dependence if $\lambda ^{L}$ is in $(0,1]$ and no lower tail dependence if $\lambda^{L} = 0$.
+	For a copula $C$, if $\lambda^{U}\equiv\lim_{t\nearrow 1}P\left[X > F_{X}^{-1}\left(t\right) | Y > F_{Y}^{-1}\left(t\right)\right] = \lim_{t\nearrow 1}\frac{1-2t+C\left(t,t\right)}{1-t}$ exists, then $C$ has upper tail dependence if $\lambda^{U}$ is in $(0,1]$ and no upper tail dependence if $\lambda^{U}=0$. Likewise, if $\lambda ^{L}\equiv \lim_{t\searrow 0}P\left[X\leq F_{X}^{-1}\left(t\right) | Y\leq F_{Y}^{-1}\left(t\right)\right] =\lim_{t\searrow 0}\frac{C\left(t,t\right)}{t}$ exists, $C$ has lower tail dependence if $\lambda ^{L}$ is in $(0,1]$ and no lower tail dependence if $\lambda^{L} = 0$. $_{\blacksquare}$
 \end{defn}
 
 When considering a mixture copula $C^{\ast}$ as described in equation (\ref{eqn:mixture}), the tail dependence is the weighted average of the tail dependence values for each component copula:
@@ -288,7 +289,7 @@ A brief survey of various time-varying copulas in the literature is provided by 
 
 \subsection{Sequential Change Point Analysis}
 
-This first method we use to introduce time-varying dependence is the most simple. \cite{Dias_and_Embrechts_2004} and \cite{Dias_and_Embrechts_2009} outline a framework to detect structural breaks in the parameters of a copula over time. We employ that framework here. Consider the sequence of random vectors $\left(U_{t}, W_{t}\right)$ created by the PIT from our marginal models where $U_{t}\equiv F_{X}\left(X_{t}|\Im_{t-1}\right)$ and $W_{t}\equiv F_{Y}\left(y_{t} | \Im_{t-1}\right)$. The dependence at each date can be modeled by a copula $C\left(U_{t}, V_{t};~\boldsymbol{\theta}_{t}\right)$ with parameter vector $\boldsymbol{\theta}_{t}=(\theta_{1,t},...,\theta_{N,t})$. The vector $\theta_{t}$ should contain the weights $\pi _{i,t}$ for any mixture copula described in section (\ref{sec:mixtureCopula}). The idea is to test the null hypothesis of an absence of any structural break in the copula parameters
+This first method we use to introduce time-varying dependence is the most simple. \cite{Dias_and_Embrechts_2004} and \cite{Dias_and_Embrechts_2009} outline a framework to detect structural breaks in the parameters of a copula over time. We employ that framework here. Consider the random vectors $\left(U_{t}, W_{t}\right)$ created by the PIT from our marginal models where $U_{t}\equiv F_{X}\left(X_{t}|Z\right)$ and $W_{t}\equiv F_{Y}\left(y_{t} | Z\right)$. The dependence at each date can be modeled by a copula $C\left(U_{t}, V_{t};~\boldsymbol{\theta}_{t}\right)$ with parameter vector $\boldsymbol{\theta}_{t}=(\theta_{1,t},...,\theta_{N,t})$. The vector $\theta_{t}$ should contain the weights $\pi _{i,t}$ for any mixture copula described in section (\ref{sec:mixtureCopula}). The idea is to test the null hypothesis of an absence of any structural break in the copula parameters
 
 \begin{equation}
 	H_{0}:\boldsymbol{\theta}_{t} = \boldsymbol{\theta}
@@ -402,7 +403,7 @@ Other specifications for $G\left( \cdot \right) $ can be found in \cite{Dijk_and
 
 \section{Marginal Distributions} \label{sec:marginal_distributions}
 
-As stated earlier, the copula approach enables us to model the marginal distributions and dependence structure separately. In this section, we summarize how each univariate margin is modeled and validated. For any particular exchange rate, define the return as $x_{t} = \log \left(S_{t}\right) - \log\left(S_{t-1}\right)$, where $S_{t}$ is the spot price at time $t$. All exchange rates are denoted in foreign currency units per US dollar. Like many other financial assets, exchange rates are subject to volatility clustering, skewness, and leptokurtosis. To manage these properties, each return series $\left\{X_{t}\right\}_{t=1}^{T}$ is modeled using a ARMA-GARCH specification with a Student-t distribution or a skewed Student-t distribution. The overall dynamics of the ARMA-GARCH process can be summarized by the following two equations.
+As stated earlier, the copula approach enables us to model the marginal distributions and dependence structure separately. In this section, we summarize how each univariate margin is modeled and validated. For any particular exchange rate, define the return as $x_{t} = \log \left(S_{t}\right) - \log\left(S_{t-1}\right)$, where $S_{t}$ is the spot price at time $t$. All exchange rates are denoted in foreign currency units per US dollar. Like many other financial assets, exchange rates are subject to volatility clustering, skewness, and leptokurtosis. To manage these properties, each return series $\left\{x_{t}\right\}_{t=1}^{T}$ is modeled using a ARMA-GARCH specification with a Student-t distribution or a skewed Student-t distribution. The overall dynamics of the ARMA-GARCH process can be summarized by the following two equations.
 
 \begin{equation} \label{eqn:marginalModel}
     x_{t} = \mu_{t} + \varepsilon_{t}
@@ -421,7 +422,7 @@ where $\eta_{t}$ are independent and identically distributed with $E[\eta_{t}] =
  The value $p$ is the order of of autoregressive component and $q$ is the order of the moving average component. The conditional volatility process for the models under consideration can be generalized with the following formula. Functions \emph{A} and \emph{B} are generic stand-ins that will differ across the various GARCH specifications.
 
 \begin{equation} \label{eq:conditional_var}
-    h_{t} = \omega + \sum_{j=1}^{m} \alpha_{j} \emph{A}(\varepsilon^{2}_{t - j}) + \sum_{i=1}^{k} \beta_{i} \emph{B}(h_{t - i})
+    h_{t} = \omega + \sum_{j=1}^{b} \alpha_{j} \emph{A}(\varepsilon^{2}_{t - j}) + \sum_{i=1}^{k} \beta_{i} \emph{B}(h_{t - i})
 \end{equation}
 
 The conditional mean and variance are used to center and scale the innovation terms.
@@ -469,7 +470,7 @@ To test for a correct ARMA specification the weighted Ljung-Box test of \cite{Fi
 	Q_{W} = n(n + 2) \sum_{j=1}^{m} \frac{m - j + 1}{m} \frac{[r_{j}(x)]^{2}}{n - j}
 \end{equation}
 
-The value $m$ is set to the largest lag and the weight term, $(m - j + 1) / m$, decreases as the length of the lag increases. In the equation above, $\hat{r}_{j}(x)$ is used to denote the sample correlation value of the series $x$ at the k$^{th}$ lag.
+The value $m$ is set to the largest lag and the weight term, $(m - j + 1) / m$, decreases as the length of the lag increases. In the equation above, $\hat{r}_{j}(x)$ is used to denote the sample correlation value of the series $x$ at the j$^{th}$ lag.
 
 \begin{equation} \label{eq:sample_correlation}
 	r_{j}(x) = \frac{\sum_{t=j+1}^{n} (x_{t} - \bar{x}) (x_{t-j} - \bar{x})}{\sum_{t=1}^{n} (x_{t} - \bar{x})^{2}}
@@ -495,11 +496,28 @@ The fourth diagnostic check reported here checks for the presence of any asymmet
 
 The dependent variable, $\hat{z}_{t}^{2}$, is the square of the standardized residuals. The coefficient $b_{1}$ tests for any significant asymmetric effects remaining in the residuals while $b_{2}$ and $b_{3}$ capture the magnitude of the asymmetric effects. The t-ratios of $b_{1}$, $b_{2}$, and $b_{3}$ are the test statistics for the sign-bias, the negative sign-bias, and the positive sign-bias, respectively. The joint test evaluates the significance of the three coefficients together using a LM test whose statistic follows an asymptotic chi-squared distribution with three degrees of freedom. The null hypothesis is for a well specified model with no asymmetric effects present.
 
-Finally, due to a time series' sequential nature, the fitted ARMA-GARCH models are checked for the constancy of their parameters over the duration of the sample. The test used in this essay was proposed by \cite{NYBLOM_1989}. Our approach is to start with a simple GARCH(1,1) model with no mean equation (e.g. no intercept, AR, or MA components). If our tests indicate that the model is well specified, we stop there. If not, we continue to add additional parameters or try different functional forms until an acceptable fit is obtained.
+Due to a time series' sequential nature, the fitted ARMA-GARCH models are checked for the constancy of their parameters over the duration of the sample. The test used in this essay was proposed by \cite{NYBLOM_1989}. Our approach is to start with a simple GARCH(1,1) model with no mean equation (e.g. no intercept, AR, or MA components). If our tests indicate that the model is well specified, we stop there. If not, we continue to add additional parameters or try different functional forms until an acceptable fit is obtained.
 
-Table \ref{tbl:correlation_to_log_dtw_regression} summarizes the marginal models of the exchanges rates under review in this paper. This includes the exchange rates between the US Dollar and the following three major global currencies: the European Euro, the Japanese Yen, and the British Pound. A major takeaway from Table \ref{tbl:correlation_to_log_dtw_regression} is that the GARCH processes for all three exchange rates changes from one estimation period to the next. From 2000-2009, the Euro/USD and Pound/USD exchange rates have asymmetric volatility responses while the Yen/USD exchange rate is symmetric. These specifications flip during the 2010-2018 timeframe. Also, the shape parameters (the degrees of freedom parameter from the t-Distribution) for each exchange rate are collectively lower in 2010-2018 than in 2000-2009, indicating slightly fatter tails for the 2010-2018 timeframe.
+Finally, this essay follows \cite{Patton_2006} to test the orthogonality assumption between the conditional varibles of one exchange rate model against the conditional variables of the other marginal models. For two arbitrary exchange rates, A and B, to test for the orthogonality of the conditioning variables in the mean equation of exchange rate B, the residuals of the marginal model for A are regressed against any lagged autoregressive terms in the marginal model for exchange rate B.
 
-Table \ref{tbl:margin_model_diagnostic_pvalues} summarizing the diagnostic checks for the ARMA-GARCH models shows that, overall, the chosen marginal models are well specified and capture the conditional mean and conditional variance of the underlying processes. The top part of the table records the p-values for the ARCH-LM, ARMA-LM, Goodness-of-Fit, and Sign-Bias tests. The bottom portion of the table records the value of test statistic for Nyblom's test for parameter constancy. One problematic area is the constant parameter assumption for the GARCH intercept term, $\omega$. It is consistently rejected at the 1\% significance level which causes the rejection of the joint parameter test as well. The only other test that rejects the null of a well specified model at the 5\% significance level concerns the 2010-2018 Pound/USD series; the ARMA-LM test on the fifth lag using a degree of 2. Finding a model specification that satisfies this particular test proved insurmountable. A wide range of GARCH models and distributional assumptions were tested but none were able to provide a specification that passed all ARMA-LM tests.
+\begin{equation} \label{eq:mean_orthogonality_assumption}
+	\hat{\varepsilon}_{A, t} = \beta_{0} + \sum_{j=1}^{p_{B}}\beta_{B,j} x_{B, t-j} + \epsilon_{t}
+\end{equation}
+
+The p-values for each coefficient in the vector $\boldsymbol{\beta}_{B}$ are reported. Any coefficient that is statistically different than zero is interpreted as a rejection of the orthogonality assumption. The relationship between the two exchange rate are then reversed and the residuals of marginal model B are regressed against any autoregressive terms in the marginal model for A. Tests for the the orthogonality assumption in the variance equation is carried out in a similar manner, but instead of regressing residuals against lagged autoregressive terms, the standardized squared residuals of one marginal model are regressed against the lagged squared residauls from the other models.
+
+\begin{equation}  \label{eq:var_orthogonality_assumption}
+	\hat{\varepsilon}_{A,t}^{2} / \hat{h}_{A,t} = \delta_{0} + \sum_{j=1}^{b_{B}}\delta_{B,j} \hat{\varepsilon}^{2}_{B, t-j} + \epsilon_{t}
+\end{equation}
+
+The p-values for each coefficient in the vector $\boldsymbol{\delta}_{B}$ are reported. Any coefficient that is statistically different than zero is interpreted as a rejection of the orthogonality assumption.
+
+Table \ref{tbl:marginal_model_regressions} summarizes the marginal models of the exchanges rates under review in this paper. This includes the exchange rates between the US Dollar and the following three major global currencies: the European Euro, the Japanese Yen, and the British Pound. A major takeaway from Table \ref{tbl:marginal_model_regressions} is that the GARCH processes for all three exchange rates changes from one estimation period to the next. From 2000-2009, the Euro/USD and Pound/USD exchange rates have asymmetric volatility responses while the Yen/USD exchange rate is symmetric. These specifications flip during the 2010-2018 timeframe. Also, the shape parameters (the degrees of freedom parameter from the t-Distribution) for each exchange rate are collectively lower in 2010-2018 than in 2000-2009, indicating slightly fatter tails for the 2010-2018 timeframe.
+
+Table \ref{tbl:margin_model_diagnostic_pvalues} summarizes the diagnostic checks for the ARMA-GARCH models and shows that, overall, the chosen marginal models are well specified and capture the conditional mean and conditional variance of the underlying processes. The top part of the table records the p-values for the ARCH-LM, ARMA-LM, Goodness-of-Fit, and Sign-Bias tests. The bottom portion of the table records the value of test statistic for Nyblom's test for parameter constancy. One problematic area is the constant parameter assumption for the GARCH intercept term, $\omega$. It is consistently rejected at the 1\% significance level which causes the rejection of the joint parameter test as well. The only other test that rejects the null of a well specified model at the 5\% significance level concerns the 2010-2018 Pound/USD series; the ARMA-LM test on the fifth lag using a degree of 2. Finding a model specification that satisfies this particular test proved insurmountable. A wide range of GARCH models and distributional assumptions were tested but none were able to provide a specification that passed all ARMA-LM tests.
+
+Table \ref{tbl:Conditioning_Variable_Checks} summarizes the orthogonality tests mentioned in \cite{Patton_2006}, which is a requirement for the use of conditional copulas. The results provide some cause for concern. For the 2000-2009 time period the orthogonality tests for the variance equation fail at the 5\% significance level between the Euro and Yen exchange rates against the dollar. No lagged autoregressive components were estimated for these three exchange rates during the 2000-2009 time period. 
+
 
 \begin{table}
 	\fontsize{10pt}{10pt}\selectfont
@@ -530,7 +548,7 @@ Table \ref{tbl:margin_model_diagnostic_pvalues} summarizing the diagnostic check
          $\beta_{2}$   &     --           &    --        &    --        &    --        & 0.074        &    --        \\
                        &     --           &    --        &    --        &    --        & 0.004$^{**}$ &    --        \\ \\
          shape         &  9.387           & 9.953        & 6.879        & 8.388        & 8.301        & 4.907        \\
-         shape         &  1.683$^{**}$    & 1.551$^{**}$ & 1.230$^{**}$ & 0.989$^{**}$ & 0.852$^{**}$ & 0.456$^{**}$ \\ \\
+                       &  1.683$^{**}$    & 1.551$^{**}$ & 1.230$^{**}$ & 0.989$^{**}$ & 0.852$^{**}$ & 0.456$^{**}$ \\ \\
 		 Distribution  & T-Dist           & T-Dist       & T-Dist       & T-Dist       & T-Dist       & T-Dist       \\
 		 GARCH Spec.   & gjr              &   gjr        &    std       &    std       &    std       &  gjr         \\
 		 ARMA          &  0, 0            &  0, 0        &   0, 0       &   0, 0       &   1, 0       &  0, 0        \\
@@ -540,7 +558,7 @@ Table \ref{tbl:margin_model_diagnostic_pvalues} summarizing the diagnostic check
 	\begin{tablenotes}
 		\item{\footnotesize \textbf{Signif. Codes:} 0 '**' 0.01 '*' 0.05 '+' 0.1 ' ' 1}
 	\end{tablenotes}
-	\label{tbl:correlation_to_log_dtw_regression}
+	\label{tbl:marginal_model_regressions}
 \end{table}
 
 
@@ -570,7 +588,7 @@ SIGN-BIAS &       Joint Effect & 0.471 & 0.090$^{+}$ & 0.513       & & 0.591    
 SIGN-BIAS & Negative Sign Bias & 0.376 & 0.161       & 0.647       & & 0.302       & 0.457       & 0.168       \\
 SIGN-BIAS & Positive Sign Bias & 0.188 & 0.675       & 0.173       & & 0.532       & 0.540       & 0.562       \\
 SIGN-BIAS &          Sign Bias & 0.234 & 0.338       & 0.510       & & 0.487       & 0.700       & 0.319       \\
-\midrule \\
+\midrule
    NYBLOM &         $\phi_{0}$ & 0.161        & 0.276        & 0.118        & &    --        &      --        &   0.258        \\
    NYBLOM &         $\phi_{1}$ &    --        &    --        &    --        & &    --        &   0.251        &      --        \\
    NYBLOM &         $\omega$   & 228.7$^{**}$ & 292.1$^{**}$ & 186.3$^{**}$ & & 293.9$^{**}$ &   232.3$^{**}$ &   134.8$^{**}$ \\
@@ -595,6 +613,32 @@ SIGN-BIAS &          Sign Bias & 0.234 & 0.338       & 0.510       & & 0.487    
 	\label{tbl:margin_model_diagnostic_pvalues}
 \end{table}
 
+
+\begin{table}
+	\fontsize{10pt}{10pt}\selectfont
+	\centering
+	\caption{Orthogonal Assumption Tests}
+	\begin{tabular}{l l | l l l | l l l}
+		\midrule
+				& & \multicolumn{3}{c}{2000-2009} & \multicolumn{3}{c}{2010-2018} \\
+		\midrule
+				& & Euro & Pound & Yen & Euro & Pound & Yen \\
+		\hline
+        Mean Equation     & $P_{t-1}$                            & --    & --    & --          &  0.766       & --      & 0.067$^{+}$  \\ \\ \\
+		Variance Equation & Euro $\hat{\varepsilon}^{2}_{t-1}$   & --    & 0.760 & 0.138       &  --          & 0.281   & 0.777        \\
+                          & Euro $\hat{\varepsilon}^{2}_{t-2}$   & --    & 0.256 & 0.026$^{*}$ &  --          & --      & --           \\ \\
+		                  & Pound $\hat{\varepsilon}^{2}_{t-1}$  & 0.381 & --    & 0.189       &  0.173       & --      & 0.724        \\
+		                  & Pound $\hat{\varepsilon}^{2}_{t-2}$  & --    & --    & --          &  0.577       & --      & 0.928        \\ \\
+                          & Yen $\hat{\varepsilon}^{2}_{t-1}$    & 0.130 & 0.248 & --          &  0.099$^{+}$ & 0.346   & --           \\
+	\hline
+	\end{tabular}
+	\begin{tablenotes}
+		\item{\footnotesize \textbf{Signif. Codes:} 0 '**' 0.01 '*' 0.05 '+' 0.1 ' ' 1}
+		\item{\footnotesize \textbf{Note:} This table checks the orthogonality assumption for the conditional copula. The values in the table are the p-values reported for the coefficients in equations (\ref{eq:mean_orthogonality_assumption}) and (\ref{eq:var_orthogonality_assumption}). For the mean equations, only the 2010-2018 Pound/USD model contains an autoregressive component. Therefore, the residuals of the Euro/USD and Yen/USD are regressed against the first lag of the Pound/USD. For the variance equations all exchange rate models have at least one ARCH component while the 2000-2009 Euro/USD and the 2010-2018 Pound/USD have two ARCH components. The orthogonality test requires regressing the standardized squared residuals of one model against the lagged squared residuals of the other marginal models.}
+		\item{\footnotesize \textbf{Note:} It is clear that the orthogonality assumption is violated, at the 5\% significance level for the Euro and Yen exchange rates against the dollar during the 2000-2009 time period. The second lagged square residual is found to have explanatory power for the standard squared residual of the Yen/USD exchange rate.}
+	\end{tablenotes}
+	\label{tbl:Conditioning_Variable_Checks}
+\end{table}
 
 \section{Results} \label{sec:Results}
 
@@ -634,7 +678,7 @@ The utility of using these three tools in conjunction with each other was demons
 		Pound-Yen   & 1 &           -365.1 &  -309.4 &  -273.5 &           -365.1 &  -309.4 &  -273.5 &            -365.1 &  -309.4 &   -273.4  \\
 		            & 2 &  \textbf{-496.9} &  -424.1 &  -407.7 &           -416.0 &  -341.7 &  -312.8 &                -- &      -- &  --       \\
 				    & 3 &           -470.2 &  -366.0 &  -365.6 &  \textbf{-481.5} &  -347.9 &  -325.5 &                -- &      -- &  --       \\
-				    & 4 &           -406.8 &  -274.2 &  -298.5 &           -473.2 &  -397.1 &    80.8 &   \textbf{-511.1} &  -418.0 &   -387.5  \\
+				    & 4 &           -406.8 &  -274.2 &  -298.5 &           -473.2 &  -397.1 &  -447.3 &   \textbf{-511.1} &  -418.0 &   -387.5  \\
 		\hline
 	\end{tabular}
 	\begin{tablenotes}
@@ -650,7 +694,7 @@ The utility of using these three tools in conjunction with each other was demons
 	\caption{Estimated Dependence Measures from Fitted Models}
 	\begin{tabular}[c]{l c r r r | r r r | r r r}
 		\midrule
-		         &        & \multicolumn{3}{c}{\underline{Markov Switching}} & \multicolumn{3}{c}{\underline{Smooth Trans.}} & \multicolumn{3}{c}{\underline{Seq. Break}} \\
+		         &        & \multicolumn{3}{c}{\underline{Markov Switching}} & \multicolumn{3}{c}{\underline{Smooth Transition}} & \multicolumn{3}{c}{\underline{Seq. Break Point}} \\
 		Currency & Regime & $\tau$ & LTD & UTD & $\tau$ & LTD & UTD & $\tau$ & LTD & UTD \\
 		\midrule
 		Euro-Pound  & 1 &  0.558 & 0.255 & 0.255 &  0.155 & 0.004 & 0.004 &  0.381 & 0.111 & 0.111 \\
@@ -693,8 +737,8 @@ The utility of using these three tools in conjunction with each other was demons
 		2003-01-30 &  2 &         -- &  2 &         -- &  2 \\
 		2003-10-17 &  1 &         -- &  2 &         -- &  2 \\
 		        -- &  1 &         -- &  2 & 2004-12-29 &  3 \\
-		        -- &  1 &         -- &  2 & 2007-07-13 &  4 \\				
-		        -- &  1 & 2007-04-17 &  3 &         -- &  4 \\
+				-- &  1 & 2007-04-17 &  3 &         -- &  3 \\
+		        -- &  1 &         -- &  3 & 2007-07-13 &  4 \\				
 		2007-09-11 &  2 &         -- &  3 &         -- &  4 \\
 		2008-06-12 &  1 &         -- &  3 &         -- &  4 \\
 		2008-11-11 &  2 &         -- &  3 &         -- &  4 \\
@@ -732,8 +776,8 @@ The utility of using these three tools in conjunction with each other was demons
 		2003-09-19 &  2 &         -- &  2 &         -- &  2 \\
 		        -- &  2 &         -- &  2 & 2004-07-02 &  3 \\
 				-- &  2 &         -- &  2 & 2007-01-03 &  4 \\
-		2007-05-29 &  1 &         -- &  2 &         -- &  4 \\
-		        -- &  1 & 2007-02-23 &  3 &         -- &  4 \\
+				-- &  2 & 2007-02-23 &  3 &         -- &  4 \\
+		2007-05-29 &  1 &         -- &  3 &         -- &  4 \\
 		2008-02-13 &  2 &         -- &  3 &         -- &  4 \\
 		2008-08-13 &  1 &         -- &  3 &         -- &  4 \\
 		2009-06-04 &  2 &         -- &  3 &         -- &  4 \\

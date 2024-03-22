@@ -40,11 +40,11 @@ summary(BiCopEst(uu, vv, family=4))
 
 
 optim(par=c(1.15, 1.06, 0.5), cop_llh, u=uu, v=vv, fam1=4, fam2=14,
-      method="L-BFGS-B", lower=c(0, 0, 0), upper=c(17, 17, 0.999))
+      method="L-BFGS-B", lower=c(1, 1, 0), upper=c(17, 17, 0.999))
 
 
 # BIC
-2 * log(dtfU[, .N]) - 2 * 163.1549
+3 * log(dtfU[, .N]) - 2 * 236.3893# 163.1549
 
 # ------------------------------------------------------------------------------
 

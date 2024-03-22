@@ -290,3 +290,7 @@ summary(lm(I(yen_standardize_resid**2) ~ I(l1_sterling_normal_resid**2) + I(l2_s
            data=DT[year(DATE) %in% 2010:2018]))
 
 
+# ------------------------------------------------------------------------------
+
+
+

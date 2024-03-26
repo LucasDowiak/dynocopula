@@ -59,15 +59,15 @@ New York, NY, 10016, \textit{Email: ldowiak@gradcenter.cuny.edu}
 
 \section{Introduction}
 
-The field of international finance has a long-running concern regarding the distribution of asset returns. Harry Markowitz (\cite{Markowitz_1952, Markowitz_1959}) provided the launching pad for modern portfolio theory by using a Gaussian framework to model the returns for a portfolio composed of an arbitrary number of assets. Over the past few decades though, a consensus has conformed on the belief that assuming normality, or joint-normality, of asset returns is not always wise. Empirical evidence strongly supports the fact that returns for certain asset classes frequently exhibit traits that deviate from normality. Two famous articles \cite{Mandelbrot_1963} and \cite{Fama_1965} present evidence that the tails of the Gaussian distribution are far too narrow to account for the number of observations occurring at least two standard deviations from the mean. More recently, \cite{Longin_1996} abandons the use of elliptical distributions to describe extreme returns altogether. \cite{Ang_and_Chen_2002} and \cite{Kroner_and_Ng_1998} study asymmetric co-movements in the returns of certain equity assets. \cite{Ang_and_Chen_2002} document stronger downside risk between a range of portfolios and the aggregate U.S. market than upside risk. \cite{Kroner_and_Ng_1998} find "significant asymmetric effects in both the variances and covariances" for large-firm and small-firm returns.
+The field of international finance has a long-running concern regarding the distribution of asset returns. Harry Markowitz \cite{Markowitz_1952, Markowitz_1959} provided the launching pad for modern portfolio theory by using a Gaussian framework to model the returns for a portfolio composed of an arbitrary number of assets. Over the past few decades though, a consensus has conformed on the belief that assuming normality, or joint-normality, of asset returns is not always wise. Empirical evidence strongly supports the fact that returns for certain asset classes frequently exhibit traits that deviate from normality. Two famous articles \cite{Mandelbrot_1963} and \cite{Fama_1965} present evidence that the tails of the Gaussian distribution are much too narrow to account for the number of observations occurring at least two standard deviations from the mean. More recently, \cite{Longin_1996} abandons the use of elliptical distributions to describe extreme returns altogether. \cite{Ang_and_Chen_2002} and \cite{Kroner_and_Ng_1998} study asymmetric co-movements in the returns of certain equity assets. \cite{Ang_and_Chen_2002} documents stronger downside risk between a range of portfolios and the aggregate U.S. market than upside risk. \cite{Kroner_and_Ng_1998} find "significant asymmetric effects in both the variances and covariances" for large-firm and small-firm returns.
 
-The assumption of a constant correlation has also been challenged. In a popular article, \cite{Longin_and_Solnik_1995} review the correlation of excess returns on equities for the countries of France, U.S., U.K., Sweden, Japan, Canada, and Germany using monthly data from 1960-1990. Their results suggest a rejection of a constant international conditional correlation. In a similar vein, \cite{Ramchand_and_Susmel_1998} use a markov switching ARCH model and find that the correlation between the U.S. and other foreign markets is significantly higher in times of elevated volatility. \cite{Rodriguez_2007} studies financial contagion during the Asian financial crisis (circa 1997) and the Mexican peso devaluation (circa 1994). By combining a markov switching ARCH model with copula-based distributions, \cite{Rodriguez_2007} documents a change in dependence between a high variance regime and a low variance regime.
+The assumption of a constant correlation has also been challenged. In a popular article, \cite{Longin_and_Solnik_1995} review the correlation of excess returns on equities for the countries of France, U.S., U.K., Sweden, Japan, Canada, and Germany using monthly data from 1960-1990. Their results suggest a rejection of a constant international conditional correlation. In a similar vein, \cite{Ramchand_and_Susmel_1998} use a Markov Transition ARCH model and find that the correlation between the U.S. and other foreign markets is significantly higher in times of elevated volatility. \cite{Rodriguez_2007} studies financial contagion during the Asian financial crisis (circa 1997) and the Mexican peso devaluation (circa 1994). By combining a Markov Transition ARCH model with copula-based distributions, \cite{Rodriguez_2007} documents a change in dependence between a high variance regime and a low variance regime.
 
-In this article, we employ a framework that will allow asset returns to deviate from the normality assumption by distribution and by time-varying dependence. In particular, this article studies evolution of three exchange rate pairs from 2000 to 2018, a period of time that includes the effect the financial crisis of 2007-2008 had on the foreign exchange market. To incorporate a degree of flexibility regarding the distribution of returns, copula theory will be applied to daily exchange rate data for the world's most influential currencies: the US Dollar, Japanese Yen, European Euro, and the British Pound. According to the 2010 Triennial Central Bank Survey conducted by the Bank of International Settlements, these currencies account for 78.0\% of all foreign exchange turnover in 2010. To capture potential breaks in the dependence over time, we estimate and compare three popular multi-regime models: a markov transition model, a smooth transition model, and a sequential break point model.
+In this article, we employ a framework that will allow asset returns to deviate from the normality assumption by distribution and by time-varying dependence. In particular, this article studies evolution of three exchange rate pairs from 2000 to 2018, a period of time that includes the effect the financial crisis of 2007-2008 had on the foreign exchange market. To incorporate a degree of flexibility regarding the distribution of returns, copula theory will be applied to daily exchange rate data for some of the world's most influential currencies: the US Dollar, Japanese Yen, European Euro, and the British Pound. According to the 2010 Triennial Central Bank Survey conducted by the Bank of International Settlements, these currencies account for 78.0\% of all foreign exchange turnover in 2010. To capture potential breaks in the dependence over time, we estimate and compare three popular multi-regime models: a Markov Transition model, a Smooth Transition model, and a Sequential Break Point model.
 
 Daily data is required since one focus of the article concentrates on estimating the dependence between observations in the extremes of the joint distribution. Weekly or monthly data will lead to a sample size that is too small to populate the tails, leading to imprecise estimates of the dependence and distributional parameters. The source for these series will be the Bank of England, whose database on historical exchange rates includes many of the world's currencies and is easy to access. The timeframe under review will be restricted to January 4, 2000 to October 4, 2018.
 
-The layout for the rest of the paper is as follows. Section 2 discusses all relevant copula theory and important definitions. Section 3 provides the details of three popular multi-regime time series models while section 4 focuses on estimating an ARMA-GARCH model for the exchange rates of the world's four most used currencies, by volume. Section 5 reviews the evolution of dependence between the major foreign exchange rates during the timeframe under review. Section 6 offers some concluding remarks.
+The layout for the rest of the paper is as follows. Section 2 discusses all relevant copula theory and important definitions. Section 3 provides the details of three popular multi-regime time series models while Section 4 focuses on estimating an ARMA-GARCH model for the exchange rates of the world's four most used currencies, by volume. Section 5 reviews the evolution of dependence between the major foreign exchange rates during the timeframe under review. Section 6 offers some concluding remarks.
 
 \section{Copula Theory}
 
@@ -90,7 +90,7 @@ Taken together, properties (1) - (3) imply that a copula is a nondecreasing func
 		F_{XY}\left( x,y\right) =C\left(F_{X}\left(x\right), F_{Y}\left(y\right)\right) = C\left(u,w\right)
 	\end{equation}
 
-	If $F_{X}$ and $F_{Y}$ are continuous, then $C$ is unique; otherwise, $C$ is uniquely determined on $RanX\times RanY$. Conversely, if $C$ is a copula and $F_{X}$ and $F_{Y}$ are distribution functions, then the function $F_{XY}$ defined by equation~\ref{eq:sklars} is a joint distribution function with margins $F_{X}$ and $F_{Y}$. $_{\blacksquare}$
+	If $F_{X}$ and $F_{Y}$ are continuous, then $C$ is unique; otherwise, $C$ is uniquely determined on $RanX\times RanY$. Conversely, if $C$ is a copula and $F_{X}$ and $F_{Y}$ are distribution functions, then the function $F_{XY}$ defined by equation (\ref{eq:sklars}) is a joint distribution function with margins $F_{X}$ and $F_{Y}$. $_{\blacksquare}$
 \end{thm}
 
 The copula approach to multivariate distributions first transforms each marginal distribution from the extended real line $\left(\bar{\mathbb{R}}\right)$ to the unit interval through the \textit{probability integral transform} (PIT). First investigated by \cite{Rosenblatt_1952}, this transform states that if $X$ is a continuous random variable with density $f_{X}$, then the random variable $U$ defined by
@@ -99,22 +99,22 @@ The copula approach to multivariate distributions first transforms each marginal
 	u=\int_{-\infty}^{x}f_{X}\left(t\right) dt=F_{X}\left(x\right)
 \end{equation}
 
-is identically and independently distributed (iid) uniformly on the unit interval. In the bivariate case, this transformation shifts the domain of analysis from the extended real plane to the unit square. A copula is then chosen to install a dependence structure between the two marginal distributions. Sklar's theorem confirms the existence of a copula $C$ whose value $C\left(u,w\right) = C\left(F_{X}\left(x\right), F_{Y}\left(y\right)\right)$ provides the joint probability $P\left[U < u,~W < w\right] = P\left[X < x,~Y < y\right]$. In application, the copula approach allows us to separate a joint distribution $F_{XY}$ into marginal distributions $F_{X},F_{Y}$ and a dependence function $C$. The dependence between the marginal distributions $F_{X},F_{Y}$ is completely governed by the copula, and just as Sklar's theorem states, we can model this dependence separately.
+is identically and independently distributed (iid) uniformly on the unit interval. In the bivariate case, this transformation shifts the domain of analysis from the extended real plane to the unit square. A copula is then chosen to install a dependence structure between the two marginal distributions. Sklar's theorem confirms the existence of a copula $C$ whose value $C\left(u,w\right) = C\left(F_{X}\left(x\right), F_{Y}\left(y\right)\right)$ provides the joint probability $P\left[U < u,~W < w\right] = P\left[X < x,~Y < y\right]$. In application, the copula approach allows us to separate a joint distribution $F_{XY}$ into marginal distributions $F_{X},F_{Y}$ and a dependence function $C$. The dependence between the marginal distributions $F_{X},F_{Y}$ is completely governed by the copula---and just as Sklar's theorem states---we can model this dependence separately.
 
 \subsection{Patton's Extension}
 
-Taking inspiration from \cite{Hansen_1994} work on time-varying density estimation, \cite{Patton_2006} extends Sklar's original theorem to the case of conditional distributions. This extension paves the way for copulas with time-varying parameterizations. In the same manner as Theorem~\ref{thm:skl}, \cite{Patton_2006} decomposes the conditional distribution $\left(X,Y\right) | Z$ into its marginal distributions and the conditional copula.
+Taking inspiration from \cite{Hansen_1994} and their work on time-varying density estimation, \cite{Patton_2006} extends Sklar's original theorem to the case of conditional distributions. This extension paves the way for copulas with time-varying parameterizations. In the same manner as Theorem~\ref{thm:skl}, \cite{Patton_2006} decomposes the conditional distribution $\left(X,Y\right) | Z$ into conditional marginal distributions and the conditional copula.
 
 
 \begin{thm}[Patton, 2006] \label{thm:cond_skl}
-	Let $F_{X|Z}(\cdot|z)$ be a the conditional distribution of $X|Z=z$, $F_{Y|Z}(\cdot|z)$ be a the conditional distribution of $Y|Z=z$, $F_{XY|Z}(\cdot|z)$ be the conditional distribution of $(X, Y)|Z = z$ and $\mathcal{Z}$ be the support of $Z$. Assume that $F_{X|Z}(\cdot|z)$ and $F_{X|Z}(\cdot|z)$ are continuous in $x$ and $y$ for all $z \in \mathcal{Z}$. Then there exists a unique conditional copula $C(\cdot|z)$ such that
+	Let $F_{X|Z}(\cdot|z)$ be the conditional distribution of $X|Z=z$, $F_{Y|Z}(\cdot|z)$ be the conditional distribution of $Y|Z=z$, $F_{XY|Z}(\cdot|z)$ be the conditional distribution of $(X, Y)|Z = z$, and $\mathcal{Z}$ be the support of $Z$. Assume that $F_{X|Z}(\cdot|z)$ and $F_{X|Z}(\cdot|z)$ are continuous in $x$ and $y$ for all $z \in \mathcal{Z}$. Then there exists a unique conditional copula $C(\cdot|z)$ such that
 
 	\begin{eqnarray}
-		F_{XY|Z}\left(x,y|z\right) & = & C\left(F_{X}\left(x|z\right), F_{Y}\left(y|z\right)|z\right)  \label{eq:cond_sklars} \\
+		F_{XY|Z}\left(x,y|z\right) & = & C\left(F_{X}\left(x|z\right), F_{Y}\left(y|z\right)|\,z\right)  \label{eq:cond_sklars} \\
 		 & &\forall(x, y) \in \bar{\mathbb{R}} \times \bar{\mathbb{R}} \text{ and each } z \in \mathcal{Z} \nonumber
 	\end{eqnarray}
 
-	Conversely, if we let $F_{X|Z}(\cdot|z)$ be the conditional distribution of $X|Z=z$, $F_{Y|Z}(\cdot|z)$ be the conditional distribution of $Y|Z=z$, and {$C(\cdot|w)$} be a family of conditional copulas that is measurable in z, then the function $F_{XY|Z}(\cdot|z)$ defined by Equation (\ref{eq:cond_sklars}) is a conditional bivariate distribution function with conditional marginal distributions $F_{X|Z}(\cdot|z)$ and $F_{Y|Z}(\cdot|z)$.  $_{\blacksquare}$
+	Conversely, if we let $F_{X|Z}(\cdot|z)$ be the conditional distribution of $X|Z=z$, $F_{Y|Z}(\cdot|z)$ be the conditional distribution of $Y|Z=z$, and {$C(\cdot|w)$} be a family of conditional copulas that is measurable in z, then the function $F_{XY|Z}(\cdot|z)$ defined by equation (\ref{eq:cond_sklars}) is a conditional bivariate distribution function with conditional marginal distributions $F_{X|Z}(\cdot|z)$ and $F_{Y|Z}(\cdot|z)$.  $_{\blacksquare}$
 \end{thm}
 
 \cite{Patton_2006} stresses that the same conditioning variables must be used for each margin and the copula. Using different conditioning variables for the marginal models and the copula may yield a function $\hat{F}_{XY}\left(\cdot|Z\right)$ that is not the joint distribution of $\left(X,Y\right)|Z$. In practice, this complication has the potential to offset the most attractive quality of the copula approach---modeling the marginal distributions and the copula separately. There is a way to salvage the situation, though. Say there are two conditioning variables, $Z_{1}, Z_{2} \in Z$, and we condition $X$ on $Z_{1}$ and $Y$ on $Z_{2}$. The only way $\hat{F}_{XY}\left(\cdot|Z\right)$ will be the joint distribution function of $\left(X,Y\right)|Z$ is the special case when $F_{X}\left(x|Z_{1}\right) = F_{X}\left(x|Z_{1},Z_{2}\right)$ and $F_{Y}\left(y|Z_{2}\right) = F_{Y}\left(y|Z_{1},Z_{2}\right)$. This can occur when $Z_{2}$ is orthogonal to $Y|Z_{1}$ and $Z_{1}$ is orthogonal to $X|Z_{2}$. In this essay, tests for these orthogonality conditions are included in the diagnostics checks discussed at the end of Section \ref{sec:marginal_distributions}.
@@ -134,7 +134,7 @@ The Gaussian and Student-t Copula are created using the inversion method: $C\lef
 	/2}dxdy \notag
 \end{eqnarray}
 
-where $\boldsymbol{t}_{v}$ is the bivariate t-distribution function, $t_{\nu}^{-1}$ is the univariate quantile function, $x = t_{\nu}^{-1}\left(u\right)$, $y = t_{\nu }^{-1}\left(w\right)$, and $q = \Gamma\left(\frac{1}{2}\right)^{-1}\Gamma\left(\frac{\nu +2}{2}\right)\left(\nu\pi\right)^{-1}$. Differentiation of equation \ref{eq:stdTinv} with respect to $u$ and $w$ produces the Student-t copula density:
+where $\boldsymbol{t}_{v}$ is the bivariate t-distribution function, $t_{\nu}^{-1}$ is the univariate quantile function, $x = t_{\nu}^{-1}\left(u\right)$, $y = t_{\nu }^{-1}\left(w\right)$, and $q = \Gamma\left(\frac{1}{2}\right)^{-1}\Gamma\left(\frac{\nu +2}{2}\right)\left(\nu\pi\right)^{-1}$. Differentiation of equation (\ref{eq:stdTinv}) with respect to $u$ and $w$ produces the Student-t copula density:
 
 \begin{eqnarray}
 	c_{\boldsymbol{t}}\left(u,w;\rho,\nu\right) &=& Q\left(1-\rho\right)^{-\frac{1}{2}}\left[1+\nu^{-1}\left(1-\rho\right)^{-1}\left(x^{2}-2\rho xy+y^{2}\right)\right]^{-\left(\nu +2\right)/2} \notag \\
@@ -161,7 +161,7 @@ Given definition~\ref{def:Arch1} and definition~\ref{def:Arch2}, an Archimedean 
 	C\left(u,w\right) = \varphi^{\left[-1\right]}\left(\varphi\left(u\right)+\varphi\left(w\right)\right)
 \end{equation}
 
-Again, when viewed through the context of Theorem~\ref{thm:skl}, one can interpret $C\left(u,w\right)$ as a cumulative distribution function. To provide a concrete example, consider the Gumbel copula. The generator function is given by $\varphi\left(t\right) = \left(-\ln t\right)^{\theta}$. Using equation~\ref{eqn:Archm}, it is straight forward to construct the copula that corresponds to this particular generator:
+Again, when viewed through the context of Theorem~\ref{thm:skl}, one can interpret $C\left(u,w\right)$ as a cumulative distribution function. To provide a concrete example, consider the Gumbel copula. The generator function is given by $\varphi\left(t\right) = \left(-\ln t\right)^{\theta}$. Using equation (\ref{eqn:Archm}), it is straight forward to construct the copula that corresponds to this particular generator:
 
 \begin{equation} \label{eqn:Gumbel}
 	C_{G}\left(u,w;\theta\right) = \exp\left\{-\left[\left(-\ln u\right)^{\theta}+\left( -\ln w\right)^{\theta }\right]^{\frac{1}{\theta}}\right\}
@@ -195,7 +195,7 @@ The distribution $H$ is referred to as the 'mixing distribution'. Notice that in
 
 \subsection{Survival Copulas and Symmetry}
 
-It was mentioned that Theorem~\ref{thm:skl} confirms the existence of a copula $C$ whose value $C\left(u,w\right) = C\left(F_{X}\left(x\right), F_{Y}\left(y\right)\right)$ provides the probability $P\left[X < x, Y < y\right] = P\left[U < u, W < w\right]$. At times, the joint probability $P\left[X > x, Y > y\right] = 1-F_{XY}\left(x,y\right)\equiv S_{XY}\left(x,y\right)$ is also of interest. As econometricians, we refer to the function $S_{XY}$ as a survival or duration function. For an arbitrary copula $C$, here is a corresponding survival copula $\hat{C}$ that models the joint survival function:
+It was mentioned that Theorem~\ref{thm:skl} confirms the existence of a copula $C$ whose value $C\left(u,w\right) = C\left(F_{X}\left(x\right), F_{Y}\left(y\right)\right)$ provides the probability $P\left[X < x, Y < y\right] = P\left[U < u, W < w\right]$. At times, the joint probability $P\left[X > x, Y > y\right] = 1-F_{XY}\left(x,y\right)\equiv S_{XY}\left(x,y\right)$ is also of interest. As econometricians, we refer to the function $S_{XY}$ as a survival or duration function. For an arbitrary copula $C$, there is a corresponding survival copula $\hat{C}$ that models the joint survival function:
 
 \begin{eqnarray*}
 S_{XY}\left(x,y\right) &=& P\left[X > x, Y > y\right] \\
@@ -210,7 +210,7 @@ The relationship between a copula $C$ and its survival copula $\hat{C}$ is given
 	\hat{C}\left( u,w\right) =u+w-1+C\left( 1-u,1-v\right)
 \end{equation}
 
-Equation~\ref{eqn:survival} has the effect of rotating a copula 180 degrees along the main diagonal of the unit square. Many papers in the literature discuss the process of producing 'symmetric' copulas, especially in the bivariate case. There is nothing intimidating about this process. It is a special case of the mixture method defined in section (2.3.3). For $N=2$, one can take an arbitrary copula $C$, its corresponding survival copula $\hat{C}$, and apply equal weights so that $C^{\ast}\left(u,w\right) = 0.5\left[ C\left(u,w\right) +\hat{C}\left(u,w\right)\right]$. At times, restricting the weights in mixture copula can aid in identification. If the model is simple enough, this restriction can be jettisoned, and the weights can be estimated along with the parameters of the component copulas.
+Equation (\ref{eqn:survival}) has the effect of rotating a copula 180 degrees along the main diagonal of the unit square. Many papers in the literature discuss the process of producing \textit{symmetric} copulas, especially in the bivariate case. There is nothing intimidating about this process. It is a special case of the mixture method defined in Section \ref{sec:mixtureCopula}. For $N=2$, one can take an arbitrary copula $C$, its corresponding survival copula $\hat{C}$, and apply equal weights so that $C^{\ast}\left(u,w\right) = 0.5\left[ C\left(u,w\right) +\hat{C}\left(u,w\right)\right]$. At times, restricting the weights in mixture copula can aid in identification. If the model is simple enough, this restriction can be jettisoned, and the weights can be estimated along with the parameters of the component copulas.
 
 \subsection{Dependence}
 
@@ -287,9 +287,9 @@ Full information maximum likelihood would require the simultaneous estimation of
 
 A brief survey of various time-varying copulas in the literature is provided by \cite{Manner_and_Reznikova_2012}. All models are generalized to $k$ different regimes.
 
-\subsection{Sequential Change Point Analysis}
+\subsection{Sequential Break Point Analysis}
 
-This first method we use to introduce time-varying dependence is the most simple. \cite{Dias_and_Embrechts_2004} and \cite{Dias_and_Embrechts_2009} outline a framework to detect structural breaks in the parameters of a copula over time. We employ that framework here. Consider the random vectors $\left(U_{t}, W_{t}\right)$ created by the PIT from our marginal models where $U_{t}\equiv F_{X}\left(X_{t}|Z\right)$ and $W_{t}\equiv F_{Y}\left(y_{t} | Z\right)$. The dependence at each date can be modeled by a copula $C\left(U_{t}, V_{t};~\boldsymbol{\theta}_{t}\right)$ with parameter vector $\boldsymbol{\theta}_{t}=(\theta_{1,t},...,\theta_{N,t})$. The vector $\theta_{t}$ should contain the weights $\pi _{i,t}$ for any mixture copula described in section (\ref{sec:mixtureCopula}). The idea is to test the null hypothesis of an absence of any structural break in the copula parameters
+This first method we use to introduce time-varying dependence is the most simple. \cite{Dias_and_Embrechts_2004} and \cite{Dias_and_Embrechts_2009} outline a framework to detect structural breaks in the parameters of a copula over time. We employ that framework here. Consider the random vectors $\left(\boldsymbol{u}, \boldsymbol{w}\right)$ created by the PIT from our marginal models where $u_{t}\equiv F_{X}\left(x_{t}|Z\right)$ and $w_{t}\equiv F_{Y}\left(y_{t} | Z\right)$. The dependence at each date can be modeled by a copula $C\left(u_{t}, v_{t};~\boldsymbol{\theta}_{t}\right)$ with parameter vector $\boldsymbol{\theta}_{t}=(\theta_{1,t},...,\theta_{N,t})$. The vector $\boldsymbol{\theta}_{t}$ should contain the weights $\pi _{i,t}$ for any mixture copula described in Section \ref{sec:mixtureCopula}. The idea is to test the null hypothesis of an absence of any structural break in the copula parameters
 
 \begin{equation}
 	H_{0}:\boldsymbol{\theta}_{t} = \boldsymbol{\theta}
@@ -315,13 +315,13 @@ Define $L_{0}\left(\theta_{0}\right)$, $L_{1}\left(\theta_{1}\right)$, and $L_{2
 Since the break point $\tau$ is not known, ex ante, a sequence of tests will be performed for each date in a subset of the full sample $\left(t_{l},t_{h}\right) \subset \left[1, T\right]$. To avoid the decreasing power of the test as the break point nears the edge of the series, the subset of potential break dates $\left( t_{l},t_{h}\right)$ will exclude a number of dates at the beginning and end of the sample series. A five percent trim is used at both ends. With this setup, the null will be rejected for large values of:
 
 \begin{equation}
-	Z_{t}=\max_{t_{l}\leq t\leq t_{h}}\left[ -2\log \left( \Lambda _{t}\right)\right]
+	\zeta_{t}=\max_{t_{l}\leq t\leq t_{h}}\left[ -2\log \left( \Lambda _{t}\right)\right]
 \end{equation}
 
-Inference is based on the asymptotic distribution of $Z_{t}^{1/2}$, which has been derived by \cite{Csorgo_and_Horvath_1997}. Due to the slow convergence of $Z_{t}^{1/2}$ to its asymptotic distribution, an approximation is used to improve the rejection regions of the test for small samples. Simulation results in \cite{Dias_and_Embrechts_2004} provided tentative evidence that this approximation provides accurate p-values.
+Inference is based on the asymptotic distribution of $\zeta_{t}^{1/2}$, which has been derived by \cite{Csorgo_and_Horvath_1997}. Due to the slow convergence of $\zeta_{t}^{1/2}$ to its asymptotic distribution, an approximation is used to improve the rejection regions of the test for small samples. Simulation results in \cite{Dias_and_Embrechts_2004} provided tentative evidence that this approximation provides accurate p-values.
 
 \begin{eqnarray}
-P\left(Z_{t}^{1/2} \geq x\right) &\approx& \frac{x^{p} \exp\left\{-x^{2}/2\right\}}{2^{p/2}\Gamma \left(p/2\right)} \times  \\
+P\left(\zeta_{t}^{1/2} \geq x\right) &\approx& \frac{x^{p} \exp\left\{-x^{2}/2\right\}}{2^{p/2}\Gamma \left(p/2\right)} \times  \\
                                  && \left[\log \frac{\left(1-h\right) \left(1-l\right)}{hl} - \frac{p}{x^{2}}\log \frac{\left(1-h\right)\left(1-l\right)}{hl} + \frac{4}{x^{2}} + O \left(\frac{1}{x^{4}}\right)\right]
 \end{eqnarray}
 
@@ -329,7 +329,7 @@ Taking into consideration the possibility of more than one break, the approach d
 
 Once a collection of break dates $\hat{\tau}_{1},\hat{\tau}_{2},...,\hat{\tau}_{k-1}$ has been estimated, \cite{Dias_and_Embrechts_2009} suggest a repartition method identical to \cite{Bai_1997}. Since the alternative hypothesis of the test is that of a single break, the sequential process to find additional breaks could lead to biased estimates for the location of $\hat{\tau}_{i}:i > 1$. To alleviate these concerns, each break date is reestimated $\hat{\tau}_{i}^{\ast}$ by applying the test to the subsamples $\left[ \hat{\tau}_{i-1}+1\leq t\leq \hat{\tau}_{i+1}\right]$ for $i=1,...,k-1$. Here $\hat{\tau}_{0} = 0$ and $\hat{\tau}_{k} = T$.
 
-The advantages of this approach is its relative simplicity. Many static copula have tractable gradients and hessians. The dimensionality of the parameter space is kept to a minimum as well. The only dynamics, so-to-speak, are the estimated break points. Other regime-varying models in the literature, such as the markov transition and smooth transition models discussed later, usually produce results where the dependence structure of the underlying data may change from day-to-day.
+The advantages of this approach is its relative simplicity. Many static copula have tractable gradients and hessians. The dimensionality of the parameter space is kept to a minimum as well. The only dynamics, so-to-speak, are the estimated break points. Other regime-varying models in the literature, such as the Markov Transition and Smooth Transition models discussed later, usually produce results where the dependence structure of the underlying data may change from day-to-day.
 
 \subsection{Markov Transition}
 
@@ -357,9 +357,9 @@ For each of the $k$ possible states, a copula is used to model the dependence fo
 \end{array}
 \right] = \left[
 \begin{array}{c}
-c_{1}\left(F_{X}\left(x_{t} | \Im_{t-1}\right), F_{Y}\left(y_{t} | \Im_{t-1}\right) ;\mathbf{\theta}_{1}\right) \\ 
+c_{1}\left(F_{X}\left(x_{t} | Z\right), F_{Y}\left(y_{t} | Z\right) ;\mathbf{\theta}_{1}\right) \\ 
 \vdots \\ 
-c_{k}\left(F_{X}\left(x_{t} | \Im_{t-1}\right), F_{Y}\left(y_{t} | \Im_{t-1}\right) ;\mathbf{\theta }_{k}\right)
+c_{k}\left(F_{X}\left(x_{t} | Z\right), F_{Y}\left(y_{t} | Z\right) ;\mathbf{\theta }_{k}\right)
 \end{array}
 \right]
 \end{equation}
@@ -387,13 +387,13 @@ The operator $\left(\div\right)$ denotes element-by-element division. Changes in
 
 \subsection{Smooth Transition}
 
-The third, and final, approach to time-varying dependence this study implements is a version of the smooth-transition copula-GARCH (STCG) model. We employ a single copula but allow the parameters of the copula to evolve over time. More specifically, for any given copula $C\left(\cdot | \mathbf{\theta}_{t}\right)$, we allow the possibility for each parameter $\theta_{i}$ to undergo multiple transitions.
+The third, and final, approach to time-varying dependence this study implements is a version of the smooth-transition copula-GARCH (STCG) model. We employ a single copula but allow the parameters of the copula to evolve over time. More specifically, for any given copula $C\left(\cdot | \mathbf{\theta}_{t}\right)$, we allow the possibility for each parameter $\boldsymbol{\theta}_{i}$ to undergo multiple transitions.
 
 \begin{equation} \label{eqn:smoothTrans}
 	\theta_{i,t} = \theta_{i,1} + \sum_{m=1}^{k-1}\left(\theta_{i,m+1} - \theta_{i,m}\right) G_{m}\left(s_{t}; c_{i,m},\gamma_{i,m}\right)
 \end{equation}
 
-In general, $G_{m}\left(\cdot\right)$ is a bounded function with respect to the continuous transition variable $s_{t}$. In this study, $s_{t}$ will be constructed as a linear time trend $s_{t}=\frac{t}{T}$ and $G_{m}\left(\cdot\right)$ takes the form of the logistic function:
+In general, $G_{m}\left(\cdot\right)$ is a bounded function with respect to the continuous transition variable $s_{t}$. In this study, $s_{t}$ will be constructed as a linear time trend, $s_{t}=\frac{t}{T}$, and $G_{m}\left(\cdot\right)$ takes the form of the logistic function:
 
 \begin{equation} \label{eqn:smoothTransLogit}
 	G\left(s_{t}; c, \gamma\right) = \left(1+\exp\left\{ -\gamma \left(s_{t}-c\right) \right\}\right)^{-1}~~~~~~~\gamma > 0
@@ -498,13 +498,13 @@ The dependent variable, $\hat{z}_{t}^{2}$, is the square of the standardized res
 
 Due to a time series' sequential nature, the fitted ARMA-GARCH models are checked for the constancy of their parameters over the duration of the sample. The test used in this essay was proposed by \cite{NYBLOM_1989}. Our approach is to start with a simple GARCH(1,1) model with no mean equation (e.g. no intercept, AR, or MA components). If our tests indicate that the model is well specified, we stop there. If not, we continue to add additional parameters or try different functional forms until an acceptable fit is obtained.
 
-Finally, this essay follows \cite{Patton_2006} to test the orthogonality assumption between the conditional varibles of one exchange rate model against the conditional variables of the other marginal models. For two arbitrary exchange rates, A and B, to test for the orthogonality of the conditioning variables in the mean equation of exchange rate B, the residuals of the marginal model for A are regressed against any lagged autoregressive terms in the marginal model for exchange rate B.
+Finally, this essay follows \cite{Patton_2006} to test the orthogonality assumption between the conditional variables of one exchange rate model against the conditional variables of the other marginal models. For two arbitrary exchange rates, A and B, to test for the orthogonality of the conditioning variables in the mean equation of exchange rate B, the residuals of the marginal model for A are regressed against any lagged autoregressive terms in the marginal model for exchange rate B.
 
 \begin{equation} \label{eq:mean_orthogonality_assumption}
 	\hat{\varepsilon}_{A, t} = \beta_{0} + \sum_{j=1}^{p_{B}}\beta_{B,j} x_{B, t-j} + \epsilon_{t}
 \end{equation}
 
-The p-values for each coefficient in the vector $\boldsymbol{\beta}_{B}$ are reported. Any coefficient that is statistically different than zero is interpreted as a rejection of the orthogonality assumption. The relationship between the two exchange rate are then reversed and the residuals of marginal model B are regressed against any autoregressive terms in the marginal model for A. Tests for the the orthogonality assumption in the variance equation is carried out in a similar manner, but instead of regressing residuals against lagged autoregressive terms, the standardized squared residuals of one marginal model are regressed against the lagged squared residauls from the other models.
+The p-values for each coefficient in the vector $\boldsymbol{\beta}_{B}$ are reported. Any coefficient that is statistically different than zero is interpreted as a rejection of the orthogonality assumption. The relationship between the two exchange rate are then reversed and the residuals of marginal model B are regressed against any autoregressive terms in the marginal model for A. Tests for the the orthogonality assumption in the variance equation is carried out in a similar manner, but instead of regressing residuals against lagged autoregressive terms, the standardized squared residuals of one marginal model are regressed against the lagged squared residuals from the other models.
 
 \begin{equation}  \label{eq:var_orthogonality_assumption}
 	\hat{\varepsilon}_{A,t}^{2} / \hat{h}_{A,t} = \delta_{0} + \sum_{j=1}^{b_{B}}\delta_{B,j} \hat{\varepsilon}^{2}_{B, t-j} + \epsilon_{t}
@@ -512,11 +512,13 @@ The p-values for each coefficient in the vector $\boldsymbol{\beta}_{B}$ are rep
 
 The p-values for each coefficient in the vector $\boldsymbol{\delta}_{B}$ are reported. Any coefficient that is statistically different than zero is interpreted as a rejection of the orthogonality assumption.
 
+\subsubsection{Validation Results}
+
 Table \ref{tbl:marginal_model_regressions} summarizes the marginal models of the exchanges rates under review in this paper. This includes the exchange rates between the US Dollar and the following three major global currencies: the European Euro, the Japanese Yen, and the British Pound. A major takeaway from Table \ref{tbl:marginal_model_regressions} is that the GARCH processes for all three exchange rates changes from one estimation period to the next. From 2000-2009, the Euro/USD and Pound/USD exchange rates have asymmetric volatility responses while the Yen/USD exchange rate is symmetric. These specifications flip during the 2010-2018 timeframe. Also, the shape parameters (the degrees of freedom parameter from the t-Distribution) for each exchange rate are collectively lower in 2010-2018 than in 2000-2009, indicating slightly fatter tails for the 2010-2018 timeframe.
 
-Table \ref{tbl:margin_model_diagnostic_pvalues} summarizes the diagnostic checks for the ARMA-GARCH models and shows that, overall, the chosen marginal models are well specified and capture the conditional mean and conditional variance of the underlying processes. The top part of the table records the p-values for the ARCH-LM, ARMA-LM, Goodness-of-Fit, and Sign-Bias tests. The bottom portion of the table records the value of test statistic for Nyblom's test for parameter constancy. One problematic area is the constant parameter assumption for the GARCH intercept term, $\omega$. It is consistently rejected at the 1\% significance level which causes the rejection of the joint parameter test as well. The only other test that rejects the null of a well specified model at the 5\% significance level concerns the 2010-2018 Pound/USD series; the ARMA-LM test on the fifth lag using a degree of 2. Finding a model specification that satisfies this particular test proved insurmountable. A wide range of GARCH models and distributional assumptions were tested but none were able to provide a specification that passed all ARMA-LM tests.
+Table \ref{tbl:margin_model_diagnostic_pvalues} summarizes the diagnostic checks for the ARMA-GARCH models and shows that, overall, the chosen marginal models are well specified and capture the conditional mean and conditional variance of the underlying processes. The top part of the table records the p-values for the ARCH-LM, ARMA-LM, Goodness-of-Fit, and Sign-Bias tests. The bottom portion of the table records the value of test statistic for Nyblom's test for parameter consistency. One problematic area is the constant parameter assumption for the GARCH intercept term, $\omega$. It is consistently rejected at the 1\% significance level which causes the rejection of the joint parameter test as well. The only other test that rejects the null of a well specified model at the 5\% significance level concerns the 2010-2018 Pound/USD series; the ARMA-LM test on the fifth lag using a degree of 2. Finding a model specification that satisfies this particular test proved insurmountable. A wide range of GARCH models and distributional assumptions were tested but none were able to provide a specification that passed all ARMA-LM tests.
 
-Table \ref{tbl:Conditioning_Variable_Checks} summarizes the orthogonality tests mentioned in \cite{Patton_2006}, which is a requirement for the use of conditional copulas. The results provide some cause for concern. For the 2000-2009 time period the orthogonality tests for the variance equation fail at the 5\% significance level between the Euro and Yen exchange rates against the dollar. No lagged autoregressive components were estimated for these three exchange rates during the 2000-2009 time period. 
+Table \ref{tbl:Conditioning_Variable_Checks} summarizes the orthogonality tests mentioned in \cite{Patton_2006}, which are necessary for the correct interpretation of a conditional copula. One of the tests rejects the null hypothesis of orthogonal conditioning variables. For the 2000-2009 time period, the second lagged ARCH term of the Euro/USD model retains explanatory power for the Yen/USD exchange model, rejecting the null of an orthogonality relationship at the 5\% significance level. This is a cause for concern since it implies that Theorem \ref{thm:cond_skl} may not hold and the Yen/USD and Euro/USD exchange rates may need to be modeled with a bivariate distribution rather than separate univariate models.
 
 
 \begin{table}
@@ -635,24 +637,28 @@ SIGN-BIAS &          Sign Bias & 0.234 & 0.338       & 0.510       & & 0.487    
 	\begin{tablenotes}
 		\item{\footnotesize \textbf{Signif. Codes:} 0 '**' 0.01 '*' 0.05 '+' 0.1 ' ' 1}
 		\item{\footnotesize \textbf{Note:} This table checks the orthogonality assumption for the conditional copula. The values in the table are the p-values reported for the coefficients in equations (\ref{eq:mean_orthogonality_assumption}) and (\ref{eq:var_orthogonality_assumption}). For the mean equations, only the 2010-2018 Pound/USD model contains an autoregressive component. Therefore, the residuals of the Euro/USD and Yen/USD are regressed against the first lag of the Pound/USD. For the variance equations all exchange rate models have at least one ARCH component while the 2000-2009 Euro/USD and the 2010-2018 Pound/USD have two ARCH components. The orthogonality test requires regressing the standardized squared residuals of one model against the lagged squared residuals of the other marginal models.}
-		\item{\footnotesize \textbf{Note:} It is clear that the orthogonality assumption is violated, at the 5\% significance level for the Euro and Yen exchange rates against the dollar during the 2000-2009 time period. The second lagged square residual is found to have explanatory power for the standard squared residual of the Yen/USD exchange rate.}
+		\item{\footnotesize \textbf{Note:} It is clear that the orthogonality assumption is violated, at the 5\% significance level for the Euro and Yen exchange rates against the dollar during the 2000-2009 time period. The second lagged square residual is found to have explanatory power for the standard squared residual of the Yen/USD exchange rate. This implies that Theorem \ref{thm:cond_skl} may not hold and the Yen/USD and Euro/USD exchange rates may need to be modeled with a bivariate distribution rather than separate univariate models.}
 	\end{tablenotes}
 	\label{tbl:Conditioning_Variable_Checks}
 \end{table}
 
 \section{Results} \label{sec:Results}
 
-Tables \ref{tbl:BIC_model_comparison} through \ref{tbl:regime_changes_pound_yen} summarize the various copulas estimated on exchange rate pairs after their marginal ARMA-GARCH models are estimated. Table \ref{tbl:BIC_model_comparison} records the Bayesian Information Criterion (BIC) across the three different time-varying models of Section \ref{sec:time_varying_models} and the three different exchange rate pairs. The bolded values highlight the minimum BIC value for each exchange rate pair and model. The dependency measures for the bolded models are contained in Tables \ref{tbl:dependence_measure_summary} while Tables \ref{tbl:regime_changes_euro_pound} through \ref{tbl:regime_changes_pound_yen} each record the dates that indicate the transition from one regime to another for each exchange rate pair. The sequential break model returns the day of each regime explicitly. For the smooth transition model the date implied by parameter $c$ from equation (\ref{eqn:smoothTrans}) is reported. For the markov switching model, the reported regime switching dates are the days the implied state probability of equation (\ref{eqn:Kim_smooth_probability}) crosses the 0.5 value in either direction.
+Having modeled the univariate exchange rate series, the uniform residuals from these models can be used as inputs to the three time-varying models described in Section \ref{sec:time_varying_models}. Since the optimal ARMA-GARCH models from Table \ref{tbl:marginal_model_regressions} all utilize the t-distribution, the t-Copula will act as the benchmark copula in this essay. Two alternative copulas will be estimated as well. One is a finite mixture copula like the one described in equation (\ref{eqn:mixture}). This particular mixture combines a regular Gumbel\footnote{The Gumbel copula is an Archimedean copula with generator function $\varphi\left(t\right) = \left(-\ln t\right)^{\theta}$} copula with a survival Gumbel copula. Like in \cite{Patton_2006}, this mixture specification allows a researcher to model the upper and lower tail dependence a distribution similar to the t-Copula. Unlike the t-Copula, though, the upper and lower-tail dependence are allowed to be asymmetric and differ in value. The third copula used this essay is a mixture of the regular Clayton\footnote{The Clayton copula is an Archimedean copula with generator function $\varphi\left(t\right) = (t^{-\theta} - 1) / \theta$} copula and its survival copula. These three copulas specifications---the t-Copula, the Symmetric Gumbel and the Symmetric Clayton---form the basis of our comparison. 
 
-It's clear that the t-Copula is the preferred distributional model for all three exchange rate pairs. It outperforms the mixture Clayton and mixture Gumbel copulas across all three time varying models under consideration in this essay. The sequential break point model is the only model of the three that produces the number of optimal regimes endogenously and its outcome provides a good cross-check to using the BIC for selecting the number of regimes to specify for the markov switching and smooth transition models. For all three exchange rate pairs it finds the optimal number of regimes over the 2000 to 2018 time period to be four. The dates of the regime changes, in 2001, 2004, and 2007, are close in time as well.
+Table \ref{tbl:BIC_model_comparison} records the Bayesian Information Criterion (BIC) across the three different time-varying models of Section \ref{sec:time_varying_models} and the three different exchange rate pairs. The bolded values highlight the minimum BIC for each pair and model. The Sequential Break Point model is the only model of the three that produces the number of optimal regimes endogenously and its outcome provides a good cross-check to using the BIC for selecting the number of regimes to specify for the Markov Transition and Smooth Transition models. It's clear that the t-Copula is the preferred copula model, beating out the Symmetric Clayton and Symmetric Gumbel copulas across all three time varying models and all three exchange rate pairs under consideration. When it comes to the best time-varying model, the Markov Transition model outperforms the Smooth Transition and Sequential Breakpoint models for the Euro-Pound and Euro-Yen pairs while the Sequential Breakpoint model achieves the lowest BIC value for the Pound-Yen pair. Apart from the t-Copula's dominance, the Symmetric Gumbel copula fits the dependence structure of the exchange rate data better than the Symmetric Clayton copula. Interestingly, according to the BIC value, the two-state Markov Transition models perform better than the three-state and four-state options.
 
-When it comes to the markov switching models, the optimal number of regimes for each exchange rate pair is two. For pairs containing the Euro there is one regime with high overall association---as judged by Kendall's $\tau$---with heavy tail dependence. The alternate regime has a reduced level of association and reduced tail dependence. One of the key features of the markov switching models used in this essay is their flexible nature. They can switch back-and-forth between their regimes on almost a daily basis, something that is not feasible with the smooth transition model due to its particular functional form. This characteristic of the model is easily seen in the markov switching columns of Tables \ref{tbl:regime_changes_euro_pound}, \ref{tbl:regime_changes_euro_yen}, and \ref{tbl:regime_changes_euro_pound}. The number of times the model iterates between the two regimes far exceeds the number of total regimes modeled by the other time-varying methods.
+The dependency measures for the bolded models are contained in Tables \ref{tbl:dependence_measure_summary} while Tables \ref{tbl:regime_changes_euro_pound}, \ref{tbl:regime_changes_euro_yen}, and \ref{tbl:regime_changes_pound_yen} each record the dates of transition from one regime to another for each exchange rate pair. Figures \ref{fig:BPfit_dependence} - \ref{fig:STfit_dependence} record the evolution of the dependence measures for each of the three time-varying models under review. The Sequential Break Point model returns the day of each regime explicitly. For the Markov Transition model, the reported transition dates are the days the implied state probability of equation (\ref{eqn:Kim_smooth_probability}) crosses the 0.5 value in either direction. For the Smooth Transition model, the date implied by parameter $c$ from equation (\ref{eqn:smoothTrans}) is reported, but this date may be misleading since the pace of the transition, captured by $\gamma$ in equation (\ref{eqn:smoothTrans}), plays an important role as well. In certain situations, being able to estimate the pace of transition can be helpful. An overnight change in a relationship could indicate a response to a global economic shock while a slow but gradual change could be evidence of larger long-term economic forces such as the Law of One Price. These competing narratives can be seen playing out for the Pound-Yen pair in Figure \ref{fig:STfit_dependence}: a slow but gradual strengthening of the pair's dependence from 2000 to 2006, an abrupt reversal of that dependence in the early days of 2007\footnote{The extended dip into negative dependence from 2007 to 2009 is not a fact shared by the two competing dynamic models but it is representative of the data. Kendall's tau was calculated on a a rolling 60-day basis for the Pound/USD and Yen/USD exchange rate pair. A negative value of Kendall's tau was observed 927 times over the duration of the series with 421 of those values occurring in 2007, 2008, and 2009.}, and then a gradual return over the following ten years to a level of dependence similar to that observed in the beginning of 2000. The presence of gradual changes, though, can make it difficult to interpret the date of the regime change in a meaningful and chronological way. 
+
+The unique properties of the Sequential Break Point model can be seen in its time-dependence structure. Unconditional copulas are estimated on the sub-samples demarcated by the the dates of each break. This explains the step-like nature of the dependence measures seen in Figure \ref{fig:BPfit_dependence}. All exchange rate pairs undergo three regime changes leading to four different periods, each defined by a different state of dependence. All three breaks occur before 2008 for each of the pairs. Overall dependence, as measured by Kendall's $\tau$, is increasing from 2000 to 2006 and then drops precipitously in 2007, where it remains unchanged until the end of the sample in 2018. By assessing the order of the break dates in Tables \ref{tbl:regime_changes_euro_pound}, \ref{tbl:regime_changes_euro_yen}, and \ref{tbl:regime_changes_pound_yen}, a general pattern emerges that a change in dependence with the Yen, compared to either European currency, is a leading indicator to a change in dependence between the Pound/USD and Euro/USD exchange rates.
+
+When it comes to the Markov Transition models, the optimal number of regimes for each exchange rate pair is two. For pairs containing the Euro exchange rate there is one regime with high overall association---as judged by Kendall's $\tau$---with heavy tail dependence. The alternate regime has a reduced level of association and reduced tail dependence. One of the key features of the Markov Transition models used in this essay is their flexible nature. They can switch back-and-forth between their regimes on almost a daily basis, something that is not feasible with the Smooth Transition model due to its particular functional form. This characteristic of the model is easily seen in the markov transition columns of Tables \ref{tbl:regime_changes_euro_pound}, \ref{tbl:regime_changes_euro_yen}, and \ref{tbl:regime_changes_euro_pound}. The number of times the model iterates between the two regimes far exceeds the number of total regimes modeled by the other time-varying methods. Like the Sequential Break Point model, the Markov Transition model confirms the pattern of a change in dependence with the Yen/USD exchange rate precedes a change in dependence of the Euro/USD and Pound/USD exchange rates for dates up to the 2007 US mortgage backed crisis. That leading relationship breaks down, though, after 2008. The Euro-Pound pair enter a sustain period of reduced dependence from 2013 to 2017 while the dependence measures for pairs involving the Yen/USD exchange rate continue to oscillate between the two regimes.
 
 \section{Conclusion} \label{sec:Conclusion}
 
-This essay explored a set of tools that can be used study financial time series and model their bivariate distributions. These tools include the ARMA-GARCH framework for modeling the conditional mean and conditional volatility process of the exchange rates studied in this essay. The ARMA-GARCH models allow the research to control for asymmetry in response to positive versus negative returns and periods of volatility clustering. The use of Copulas allows for flexible distributional assumptions including excessive leptokurtosis and asymmetric tail dependencies.
+This essay explored a set of tools that can be used study financial time series and model their bivariate distributions. These tools include the ARMA-GARCH framework for modeling the conditional mean and conditional volatility process of the exchange rates studied in this essay. The ARMA-GARCH models allow the researcher to control for asymmetry in response to positive versus negative returns and periods of volatility clustering. The use of Copulas allows for flexible distributional assumptions including excessive leptokurtosis, asymmetric tail dependencies, and departures from standard elliptical distributions. The use of the Sequential Break Point, Markov Transition, and Smooth Transition models provide different paths to model changes in the dependence structure over time. 
 
-The utility of using these three tools in conjunction with each other was demonstrated on three major global currencies and their exchange rate fluctuations with the US Dollar from 2000 to 2018.
+The utility of using these tools in conjunction with each other was demonstrated on three major global currencies and their exchange rate fluctuations with the US Dollar from 2000 to 2018.
 
 
 \begin{landscape}
@@ -663,9 +669,9 @@ The utility of using these three tools in conjunction with each other was demons
 	\centering
 	\begin{tabular}[c]{l c r r r | r r r | r r r}
 		\midrule
-		            &        & \multicolumn{3}{c}{Markov Switching} & \multicolumn{3}{c}{Smooth Trans.} & \multicolumn{3}{c}{Seq. Break$^{1}$} \\
+		            &        & \multicolumn{3}{c}{Markov Transition} & \multicolumn{3}{c}{Smooth Trans.} & \multicolumn{3}{c}{Seq. Break$^{1}$} \\
 		\midrule
-		Distribution& Regime & tCop & Gumbel & Clayton & tCop & Gumbel & Clayton & tCop & Gumbel & Clayton \\
+		Exchange Rate& Regime & tCop & S. Gumbel & S. Clayton & tCop & S. Gumbel & S. Clayton & tCop & S. Gumbel & S. Clayton \\
 		\midrule
 		Euro-Pound  & 1 &          -2634.1 & -2643.2 & -2556.0 &          -2634.1 & -2643.2 & -2556.0 &           -2634.1 & -2643.2 &  -2556.0  \\		
 		            & 2 & \textbf{-2750.0} & -2727.7 & -2626.5 &          -2681.3 & -2672.5 & -2590.1 &                -- &      -- &  --       \\
@@ -682,8 +688,8 @@ The utility of using these three tools in conjunction with each other was demons
 		\hline
 	\end{tabular}
 	\begin{tablenotes}
-		\item{This table records the Bayesian information criterion (BIC) for each model. The values in bold represent the minimum BIC value by exchange rate distribution and regime switching model.}
-		\item{\footnotesize $^{1}$ The researcher does not need to provide the number of regimes to the sequential break point model.}
+		\item{This table records the Bayesian information criterion (BIC) for each model. The values in bold represent the minimum BIC value by exchange rate distribution and Markov Transition model.}
+		\item{\footnotesize $^{1}$ The researcher does not need to provide the number of regimes to the Sequential Break Point model.}
 	\end{tablenotes}
 	\label{tbl:BIC_model_comparison}
 \end{table}
@@ -694,7 +700,7 @@ The utility of using these three tools in conjunction with each other was demons
 	\caption{Estimated Dependence Measures from Fitted Models}
 	\begin{tabular}[c]{l c r r r | r r r | r r r}
 		\midrule
-		         &        & \multicolumn{3}{c}{\underline{Markov Switching}} & \multicolumn{3}{c}{\underline{Smooth Transition}} & \multicolumn{3}{c}{\underline{Seq. Break Point}} \\
+		         &        & \multicolumn{3}{c}{\underline{Markov Transition}} & \multicolumn{3}{c}{\underline{Smooth Transition}} & \multicolumn{3}{c}{\underline{Seq. Break Point}} \\
 		Currency & Regime & $\tau$ & LTD & UTD & $\tau$ & LTD & UTD & $\tau$ & LTD & UTD \\
 		\midrule
 		Euro-Pound  & 1 &  0.558 & 0.255 & 0.255 &  0.155 & 0.004 & 0.004 &  0.381 & 0.111 & 0.111 \\
@@ -712,20 +718,40 @@ The utility of using these three tools in conjunction with each other was demons
 		\hline
 	\end{tabular}
 	\begin{tablenotes}
-		\item{\footnotesize This table summarizes the changes of tail dependency and Kendall's $\tau$ as estimated from the Markov Switching, Smooth Transition, and Sequential Breakpoint models. The values of Kendall's $\tau$ and tail dependence come from the models that minimize the BIC value. This is recorded in Table 4.}
+		\item{\footnotesize This table summarizes the changes of tail dependency and Kendall's $\tau$ as estimated from the Markov Transition, Smooth Transition, and Sequential Breakpoint models. The values of Kendall's $\tau$ and tail dependence come from the models that minimize the BIC value. This is recorded in Table 4.}
 	\end{tablenotes}
 	\label{tbl:dependence_measure_summary}
 \end{table}
 
 \end{landscape}
 
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{BPfit_dependence.png}
+    \caption{This figure captures the time-varying dependence from the Sequential Break Point model. The top figure shows the change in Kendall's $\tau$ while the bottom figure shows the change in tail dependence of the estimated t-Copula. The unique properties of the model can be seen in the time-dependence structure. Unconditional copulas are estimated on the sub-samples demarcated by the the dates of each break. This explains the step-like nature of the evolution of the dependence measures. All three exchange rate pairs undergo three breakpoints creating four different dependence regimes with all three breaks occurring before 2008. Overall dependence, as measured by Kendall's $\tau$, is increasing from 2000 to 2006 and then drops precipitous in 2007, where it remains unchanged until the end of the sample in 2018.}
+    \label{fig:BPfit_dependence}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{MSfit_dependence.png}
+    \caption{This figure captures the time-varying dependence from the Markov Transition model. The top figure shows the change in Kendall's $\tau$ while the bottom figure shows the change in tail dependence of the estimated t-Copula. The unique markov property of the model can be seen in the time-dependence structure. Instead of three or four different regimes recorded by the Sequential Break Point and Smooth Transition models, the Markov Transition model selects two separate regimes and iterates back and forth between the two over the duration of the timeframe.}
+    \label{fig:MSfit_dependence}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{STfit_dependence.png}
+    \caption{This figure captures the time-varying dependence from the Smooth Transition model. The top figure shows the change in Kendall's $\tau$ while the bottom figure shows the change in tail dependence of the estimated t-Copula. The unique properties of the model can be seen in the time-dependence structure. Unlike the Markov Transition model, whose day-to-day dependence measures can vary wildly between the different regimes, the dependence measure of the Smooth Transition models have a more fluid evolution.}
+    \label{fig:STfit_dependence}
+\end{figure}
 
 \begin{table}
 	\centering
 	\caption{Dates of Regime Change: Euro-Pound}
 	\begin{tabular}[c]{r r | r r | r r}
 		\midrule
-		\multicolumn{2}{c}{Markov Switching} & \multicolumn{2}{c}{Smooth Trans.} & \multicolumn{2}{c}{Seq. Break} \\
+		\multicolumn{2}{c}{Markov Transition} & \multicolumn{2}{c}{Smooth Trans.} & \multicolumn{2}{c}{Seq. Break} \\
 		\midrule
 		Date & Regime & Date & Regime & Date & Regime \\
 		\midrule
@@ -751,7 +777,7 @@ The utility of using these three tools in conjunction with each other was demons
 		\hline
 	\end{tabular}
 	\begin{tablenotes}
-		\item{\footnotesize This table records the dates of regime switching as indicated by each model. The sequential break model returns the day of each regime explicitly. For the smooth transition model the date implied by parameter $c$ from equation (\ref{eqn:smoothTrans}) is reported. For the Markov Switching model, the reported regime switching dates are the days the implied state probability of equation (\ref{eqn:Kim_smooth_probability}) crosses the 0.5 value in either direction.}
+		\item{\footnotesize This table records the dates of regime switching as indicated by each model. The Sequential Break Point model returns the day of each regime explicitly. For the Smooth Transition model the date implied by parameter $c$ from equation (\ref{eqn:smoothTrans}) is reported. For the Markov Transition model, the reported regime switching dates are the days the implied state probability of equation (\ref{eqn:Kim_smooth_probability}) crosses the 0.5 value in either direction.}
 	\end{tablenotes}
 	\label{tbl:regime_changes_euro_pound}
 \end{table}
@@ -762,7 +788,7 @@ The utility of using these three tools in conjunction with each other was demons
 	\caption{Dates of Regime Change: Euro-Yen}
 	\begin{tabular}[c]{r r | r r | r r}
 		\midrule
-		\multicolumn{2}{c}{Markov Switching} & \multicolumn{2}{c}{Smooth Trans.} & \multicolumn{2}{c}{Seq. Break} \\
+		\multicolumn{2}{c}{Markov Transition} & \multicolumn{2}{c}{Smooth Trans.} & \multicolumn{2}{c}{Seq. Break} \\
 		\midrule
 		Date & Regime & Date & Regime & Date & Regime \\
 		\midrule
@@ -804,7 +830,7 @@ The utility of using these three tools in conjunction with each other was demons
 		\hline
 	\end{tabular}
 	\begin{tablenotes}
-		\item{\footnotesize This table records the dates of regime switching as indicated by each model. The sequential break model returns the day of each regime explicitly. For the smooth transition model the date implied by parameter $c$ from equation (\ref{eqn:smoothTrans}) is reported. For the Markov Switching model, the reported regime switching dates are the days the implied state probability of equation (\ref{eqn:Kim_smooth_probability}) crosses the 0.5 value in either direction.}
+		\item{\footnotesize This table records the dates of regime switching as indicated by each model. The Sequential Break Point model returns the day of each regime explicitly. For the Smooth Transition model the date implied by parameter $c$ from equation (\ref{eqn:smoothTrans}) is reported. For the Markov Transition model, the reported regime switching dates are the days the implied state probability of equation (\ref{eqn:Kim_smooth_probability}) crosses the 0.5 value in either direction.}
 	\end{tablenotes}
 	\label{tbl:regime_changes_euro_yen}
 \end{table}
@@ -815,7 +841,7 @@ The utility of using these three tools in conjunction with each other was demons
 	\caption{Dates of Regime Change: Pound-Yen}
 	\begin{tabular}[c]{r r | r r | r r}
 		\midrule
-		\multicolumn{2}{c}{Markov Switching} & \multicolumn{2}{c}{Smooth Trans.} & \multicolumn{2}{c}{Seq. Break} \\
+		\multicolumn{2}{c}{Markov Transition} & \multicolumn{2}{c}{Smooth Trans.} & \multicolumn{2}{c}{Seq. Break} \\
 		\midrule
 		Date & Regime & Date & Regime & Date & Regime \\
 		\midrule
@@ -856,10 +882,12 @@ The utility of using these three tools in conjunction with each other was demons
 		\hline
 	\end{tabular}
 	\begin{tablenotes}
-		\item{\footnotesize This table records the dates of regime switching as indicated by each model. The sequential break model returns the day of each regime explicitly. For the smooth transition model the date implied by parameter $c$ from equation (\ref{eqn:smoothTrans}) is reported. For the Markov Switching model, the reported regime switching dates are the days the implied state probability of equation (\ref{eqn:Kim_smooth_probability}) crosses the 0.5 value in either direction.}
+		\item{\footnotesize This table records the dates of regime switching as indicated by each model. The Sequential Break Point model returns the day of each regime explicitly. For the Smooth Transition model the date implied by parameter $c$ from equation (\ref{eqn:smoothTrans}) is reported. For the Markov Transition model, the reported regime switching dates are the days the implied state probability of equation (\ref{eqn:Kim_smooth_probability}) crosses the 0.5 value in either direction.}
 	\end{tablenotes}
 	\label{tbl:regime_changes_pound_yen}
 \end{table}
+
+\clearpage
 
 \printbibliography
 

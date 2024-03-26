@@ -226,8 +226,12 @@ plot.seqBreakPoint <- function(obj) {
   on.exit(par(mfrow = c(1, 1)))
   layout(matrix(c(1, 1, 2, 3), 2, 2, byrow = TRUE),
          widths = c(1, 1), heights = c(2, 3))
+  
+  ktaus <- rep(ktau, diff(idx)[idx2] + 1)
+  utdeps <- rep(tdep["upper", ], diff(idx)[idx2] + 1)
+  taudifs <- rep(taudif, diff(idx)[idx2] + 1)
   # Top Graph
-  plot(rep(ktau, diff(idx)[idx2] + 1),
+  plot(ktaus,
        type = "l", col = "tomato",
        ylim = range(ktau) + c(-0.15, 0.15),
        ylab = "",
@@ -237,7 +241,7 @@ plot.seqBreakPoint <- function(obj) {
   abline(h = 0, lty = 2)
   grid(col = "grey65")
   # Bottom Left
-  plot(rep(taudif, diff(idx)[idx2] + 1), type = "l", col = "blue",
+  plot(taudifs, type = "l", col = "blue",
        ylim = range(taudif) + c(-0.05, 0.05),
        xlab = "", ylab = "",
        main = paste("family:", paste(obj[[1]]$family, collapse = ", ")))
@@ -245,12 +249,13 @@ plot.seqBreakPoint <- function(obj) {
   abline(h = 0, lty = 2)
   grid(col = "grey65")
   # Bottom Right
-  plot(rep(tdep["upper", ], diff(idx)[idx2] + 1), type = "l", col = "olivedrab4",
+  plot(utdeps, type = "l", col = "olivedrab4",
        ylim = range(tdep["upper", ]) + c(-0.025, 0.025),
        xlab = "", ylab = "")
   legend("topright", "UTD", bty = "n")
   abline(h = 0, lty = 2)
   grid(col = "grey65")
+  return(list(ktaus=ktaus, utdeps=utdeps, taudifs=taudifs))
 }
 
 
@@ -466,12 +471,20 @@ MSfit <- function(x, y, family = list(1, 1), initValues, tol = 1e-5) {
 plot.markovCopula <- function(obj) {
   nr <- obj$nregimes
   sp <- t(obj$regime.inference$smooth.prob)
+  ktau <- unlist(obj$copula$ktau)
+  ltdep <- sapply(obj$copula$tail_dep, `[[`, 1) # lower tail dep
+  utdep <- sapply(obj$copula$tail_dep, `[[`, 2) # upper tail dep
+  ktaus <- rowSums(sweep(sp, 2, ktau, `*`))
+  ltdeps <- rowSums(sweep(sp, 2, ltdep, `*`))
+  utdeps <- rowSums(sweep(sp, 2, utdep, `*`))
+  
   on.exit(par(mfrow = c(1,1)))
   par(mfrow = c(nr, 1))
   for (pp in 1:nr) {
     plot(sp[, pp], type = "l", xlab = paste("regime", pp), ylab = "smooth prob.")
     grid()
   }
+  return(list(ktau=ktaus, ltdep=ltdeps, utdep=utdeps))
 }
 
 
@@ -731,7 +744,7 @@ plot.smoothTransCopula <- function(obj) {
   smooth.pars <- obj$smooth.parameters
   nmes <- names(obj$U)
   fam <- obj$family
-  nc <- ncol(obj$smooth.parameters)
+  nc <- ncol(smooth.pars)
   ylabs <- switch(as.character(nc), "1" = "mu", "2" = c("mu", "v"),
                   c("th1", "th2"))
   on.exit(par(mfrow = c(1, 1)))
@@ -742,6 +755,7 @@ plot.smoothTransCopula <- function(obj) {
          main = c(paste(nmes, collapse = " "), "")[cc])
     grid()
   }
+  return(list(rho=smooth.pars[, 1], df=smooth.pars[, 2]))
 }
 
 

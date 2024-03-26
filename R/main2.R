@@ -240,62 +240,154 @@ sapply(rev(attr(mod, "initial_bp")), `[[`, "Date")
 
 
 # ----------------------------------------------------
-plot(readRDS("data/dynocop_objects/BPfit_euro_sterling_tcop_00_18.RDS"))
 
 
+# Plot Daily Parameter Values
+# ----------------------------------------------------
 
-plot_country_pairs <- function(cty, modlist, Dt)
+prep_tcop_values <- function(obj)
 {
-  require(wesanderson)
-  
-  modlist <- modlist[grepl(cty, names(modlist))]
-  stopifnot(length(modlist) > 0)
-  dts <- Reduce(range, lapply(modlist, attr, "date_names"))
-  dts <- Dt[DATE >= dts[1] & DATE <= dts[2], DATE]
-  
-  bool <- !is.na(Dt[, eval(parse(text=cty))])
-  
-  pairctrys <- lapply(strsplit(names(modlist), "_"), setdiff, c(cty, "bp"))
-  
-  f_ <- function(obj)
-  {
+  cls <- class(obj)
+  if (cls == "smoothTransCopula") {
+    rho <- obj$smooth.parameters[, 1]
+    nu <- obj$smooth.parameters[, 2]
+    ktaus <- BiCopPar2Tau(2, rho, nu)
+    tdeps <- BiCopPar2TailDep(2, rho, nu)$upper # upper tail dep
+  } else if (cls == "seqBreakPoint") {
     idx <- unique(as.vector(vapply(obj, `[[`, double(2), "points")))
     idx2 <- seq(length(diff(idx))) %% 2 != 0
     ktau <- vapply(obj, function(x) x$dep.measures$Ktau, double(1))
-    rep(ktau, diff(idx)[idx2] + 1)
+    tdep <- vapply(obj, function(x) unlist(x$dep.measures$tail_dep), double(2))
+    ktaus <- rep(ktau, diff(idx)[idx2] + 1)
+    tdeps <- rep(tdep["upper", ], diff(idx)[idx2] + 1) # upper tail dep
+  } else if (cls == "markovCopula") {
+    sp <- t(obj$regime.inference$smooth.prob)
+    ktau <- unlist(obj$copula$ktau)
+    tdep <- sapply(obj$copula$tail_dep, `[[`, 2) # upper tail dep
+    ktaus <- rowSums(sweep(sp, 2, ktau, `*`))
+    tdeps <- rowSums(sweep(sp, 2, tdep, `*`))
+  } else {
+    stop(sprintf("Function does not support obj of class '%s'", cls))
   }
-  
-  colors_ <- wes_palette("Darjeeling1", length(modlist), "continuous")
-  
-  par(bg="gray40")
-  plot(dts, rep(0, length(dts)), type="n", xlab="Date", ylab="Ktau")
-  title(cty)
-  grid()
-  legend("bottomleft", legend=pairctrys, lty=1, lwd=2, col=colors_, bg="gray40")
-  
-  for (cc in seq_along(modlist)) {
-    bool2 <- !is.na(Dt[, eval(parse(text=pairctrys[[cc]]))])
-    dts2 <- Dt[bool & bool2, DATE]
-    ktau <- f_(modlist[[cc]])
-    lines(dts2, ktau, col=colors_[[cc]], lwd=2)
-  }
+  return(data.frame(ktau=ktaus, tdep=tdeps))
 }
 
 
-for (fx in fxnames) {
-  plot_country_pairs(fx, BP_gaussian, DTU)
+# ----------------------------------------------------
+
+f1 <- c("BPfit_euro_sterling_tcop_00_18.RDS",
+        "BPfit_euro_yen_tcop_00_18.RDS",
+        "BPfit_sterling_yen_tcop_00_18.RDS",
+        "MSfit_euro_sterling_tcop_00_18_s2.RDS",
+        "MSfit_euro_yen_tcop_00_18_s2.RDS",
+        "MSfit_sterling_yen_tcop_00_18_s2.RDS",
+        "STfit_euro_sterling_tcop_00_18_s4.RDS",
+        "STfit_euro_yen_tcop_00_18_s4.RDS",
+        "STfit_sterling_yen_tcop_00_18_s3.RDS")
+
+collect <- vector("list", length(f1)); names(collect) <- f1
+for (ii in seq_along(collect)) {
+  file_ <- f1[ii]
+  file_loc <- sprintf("data/dynocop_objects/%s", file_)
+  obj_ <- readRDS(file_loc)
+  
+  tmp_dtf <- prep_tcop_values(obj_)
+  fnms <- strsplit(file_, split="_")[[1]]
+  tmp_dtf$pair <- paste(fnms[2:3], collapse = "-")
+  tmp_dtf$model <- fnms[1]
+  tmp_dtf$Date <- DT[year(DATE) %in% 2000:2018, DATE]
+  collect[[file_]] <- tmp_dtf
 }
+dtfPlot <- rbindlist(collect)
+dtfPlot[, pair := factor(pair)]
+dtfPlot[, model := factor(model)]
+
+library(ggplot2)
+
+
+par(mfrow=c(2, 1), mar=c(3, 3, 3, 2) + 0.1)
+kylim <- c(-0.2, 0.7)
+tylim <- c(-0.05, 0.6)
+mcex <- 0.85
+# Seq Break Point
+dtfPlot[pair=="euro-sterling" & model=="BPfit",
+        plot(Date, ktau, type="l",
+             xlab="", ylab="", main="Sequential Break Point: Kendall's Tau",
+             ylim=kylim,
+             lty=1,
+             cex.main=mcex)]
+dtfPlot[pair=="euro-yen" & model=="BPfit", lines(Date, ktau, lty=2)]
+dtfPlot[pair=="sterling-yen" & model=="BPfit", lines(Date, ktau, lty=3)]
+grid()
+legend("topright", legend = c("Euro-Pound", "Euro-Yen", "Pound-Yen"),
+       cex=0.5, lty=c(1, 2, 3), bty="n")
+
+dtfPlot[pair=="euro-sterling" & model=="BPfit",
+        plot(Date, tdep, type="l",
+             xlab="", ylab="", main="Sequential Break Point: Tail Dependence",
+             ylim=tylim,
+             lty=1,
+             cex.main=mcex)]
+dtfPlot[pair=="euro-yen" & model=="BPfit", lines(Date, tdep, lty=2)]
+dtfPlot[pair=="sterling-yen" & model=="BPfit", lines(Date, tdep, lty=3)]
+grid()
+legend("topright", legend = c("Euro-Pound", "Euro-Yen", "Pound-Yen"),
+       cex=0.5, lty=c(1, 2, 3), bty="n")
+
+
+
+# Markov Switching
+dtfPlot[pair=="euro-sterling" & model=="MSfit",
+        plot(Date, ktau, type="l",
+             xlab="", ylab="", main="Markov Transition: Kendall's Tau",
+             ylim=kylim,
+             lty=1,
+             cex.main=mcex)]
+dtfPlot[pair=="euro-yen" & model=="MSfit", lines(Date, ktau, lty=2)]
+dtfPlot[pair=="sterling-yen" & model=="MSfit", lines(Date, ktau, lty=3)]
+grid()
+legend("topright", legend = c("Euro-Pound", "Euro-Yen", "Pound-Yen"),
+       cex=0.5, lty=c(1, 2, 3), bty="n")
+
+dtfPlot[pair=="euro-sterling" & model=="MSfit",
+        plot(Date, tdep, type="l",
+             xlab="", ylab="", main="Markov Transition: Tail Dependence",
+             ylim=tylim,
+             lty=1,
+             cex.main=mcex)]
+dtfPlot[pair=="euro-yen" & model=="MSfit", lines(Date, tdep, lty=2)]
+dtfPlot[pair=="sterling-yen" & model=="MSfit", lines(Date, tdep, lty=3)]
+grid()
+legend("topright", legend = c("Euro-Pound", "Euro-Yen", "Pound-Yen"),
+       cex=0.5, lty=c(1, 2, 3), bty="n")
+
+
+# Smooth Transition
+dtfPlot[pair=="euro-sterling" & model=="STfit",
+        plot(Date, ktau, type="l",
+             xlab="", ylab="", main="Smooth Transition: Kendall's Tau",
+             ylim=kylim,
+             lty=1,
+             cex.main=mcex)]
+dtfPlot[pair=="euro-yen" & model=="STfit", lines(Date, ktau, lty=2)]
+dtfPlot[pair=="sterling-yen" & model=="STfit", lines(Date, ktau, lty=3)]
+grid()
+legend("topright", legend = c("Euro-Pound", "Euro-Yen", "Pound-Yen"),
+       cex=0.5, lty=c(1, 2, 3), bty="n")
+
+dtfPlot[pair=="euro-sterling" & model=="STfit",
+        plot(Date, tdep, type="l",
+             xlab="", ylab="", main="Smooth Transition: Tail Dependence",
+             ylim=tylim,
+             lty=1,
+             cex.main=mcex)]
+dtfPlot[pair=="euro-yen" & model=="STfit", lines(Date, tdep, lty=2)]
+dtfPlot[pair=="sterling-yen" & model=="STfit", lines(Date, tdep, lty=3)]
+grid()
+legend("topright", legend = c("Euro-Pound", "Euro-Yen", "Pound-Yen"),
+       cex=0.5, lty=c(1, 2, 3), bty="n")
 
 
 
 
-
-
-
-lst <- fetch_union("sterling", "euro", DTU)
-
-bpfit <- BPfit(lst$x, lst$y, fam1=2, parallel=T, ncores=4, date_names=seq.Date(lst$date_range[1], lst$date_range[2], by="day"))
-msfit <- MSfit(lst$x, lst$y, family=list(1,1,1,1))
-msfit3 <- MSfit(lst$x, lst$y, family=list(1,1,1))
-stfit <- STfit(lst$x, lst$y, family=1, regimes=4)
 

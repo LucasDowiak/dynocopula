@@ -1,65 +1,6 @@
-\documentclass[12pt]{article}
-
-\usepackage{amssymb}
-\usepackage{amsfonts}
-\usepackage{amsmath}
-\usepackage{threeparttable}
-\usepackage{geometry}
-\usepackage{pdflscape}
-\usepackage{graphicx}
-\usepackage{booktabs}
-\usepackage[parfill]{parskip}
-
-\newcommand{\Lagr}{\mathcal{L}}
-\newcommand{\boldXi}{\hat{\boldsymbol{\xi}}}
-\newcommand{\checkplus}[0]{\checkmark +}
-
-
-\newtheorem{defn}{Definition}
-\newtheorem{thm}{Theorem}
-\setlength{\parindent}{0pt}
-
-\graphicspath{{/Users/lucasdowiak/Git/dynocopula/article/images/}}
-
-\usepackage[
-  backend=biber,
-  url=false,
-  doi=true,
-  style=numeric,
-  citestyle=numeric,
-  sorting=nty
-]{biblatex}
-
-\bibliography{A_Comparison_of_Time_Varying_Copula_GARCH_models.bib}
- 
-\title{A Comparison of Dynamic Copula-GARCH Models}
-\author{Lucas C. Dowiak}
-
-\begin{document}
- 
-\maketitle{}
- 
-PhD Program in Economics, City University of New York\smallskip, Graduate Center,
-New York, NY, 10016, \textit{Email: ldowiak@gradcenter.cuny.edu}
-
-\qquad
-
-\begin{quotation}
-\textbf{Abstract:} This essay uses three separate tools to model the evolution of dependence structure between major global currencies from 2000 to 2018. It uses the ARMA-GARCH approach to time series modeling with Copula theory and multi-regime time series models to provide a flexible framework to model the return series of financial assets. The framework is applied to the log returns of the exchange rates between the US Dollar and the European Euro, British Pound, and Japanese Yen from 2000 to 2018.
-\end{quotation}
-
-\vspace{1pt}
-
-\begin{quotation}
-\textbf{Keywords}: Copulas, financial crisis, foreign exchange, time-varying dependence
-\textbf{JEL Classification}: C51, G01, G15, F31
-\end{quotation}
-
-\vspace{1pt}
-
 \section{Introduction}
 
-The field of international finance has a long-running concern regarding the distribution of asset returns. Harry Markowitz \cite{Markowitz_1952, Markowitz_1959} provided the launching pad for modern portfolio theory by using a Gaussian framework to model the returns for a portfolio composed of an arbitrary number of assets. Over the past few decades though, a consensus has conformed on the belief that assuming normality, or joint-normality, of asset returns is not always wise. Empirical evidence strongly supports the fact that returns for certain asset classes frequently exhibit traits that deviate from normality. Two famous articles \cite{Mandelbrot_1963} and \cite{Fama_1965} present evidence that the tails of the Gaussian distribution are much too narrow to account for the number of observations occurring at least two standard deviations from the mean. More recently, \cite{Longin_1996} abandons the use of elliptical distributions to describe extreme returns altogether. \cite{Ang_and_Chen_2002} and \cite{Kroner_and_Ng_1998} study asymmetric co-movements in the returns of certain equity assets. \cite{Ang_and_Chen_2002} documents stronger downside risk between a range of portfolios and the aggregate U.S. market than upside risk. \cite{Kroner_and_Ng_1998} find "significant asymmetric effects in both the variances and covariances" for large-firm and small-firm returns.
+The field of international finance has a long-running concern regarding the distribution of asset returns. \cite{Markowitz_1952, Markowitz_1959} provided the launching pad for modern portfolio theory by using a Gaussian framework to model the returns for a portfolio composed of an arbitrary number of assets. Over the past few decades though, a consensus has conformed on the belief that assuming normality, or joint-normality, of asset returns is not always wise. Empirical evidence strongly supports the fact that returns for certain asset classes frequently exhibit traits that deviate from normality. Two famous articles, \cite{Mandelbrot_1963} and \cite{Fama_1965}, present evidence that the tails of the Gaussian distribution are much too narrow to account for the number of observations occurring at least two standard deviations from the mean. More recently, \cite{Longin_1996} abandons the use of elliptical distributions to describe extreme returns altogether. \cite{Ang_and_Chen_2002} and \cite{Kroner_and_Ng_1998} study asymmetric co-movements in the returns of certain equity assets. \cite{Ang_and_Chen_2002} documents stronger downside risk between a range of portfolios and the aggregate U.S. market than upside risk. \cite{Kroner_and_Ng_1998} find "significant asymmetric effects in both the variances and covariances" for large-firm and small-firm returns.
 
 The assumption of a constant correlation has also been challenged. In a popular article, \cite{Longin_and_Solnik_1995} review the correlation of excess returns on equities for the countries of France, U.S., U.K., Sweden, Japan, Canada, and Germany using monthly data from 1960-1990. Their results suggest a rejection of a constant international conditional correlation. In a similar vein, \cite{Ramchand_and_Susmel_1998} use a Markov Transition ARCH model and find that the correlation between the U.S. and other foreign markets is significantly higher in times of elevated volatility. \cite{Rodriguez_2007} studies financial contagion during the Asian financial crisis (circa 1997) and the Mexican peso devaluation (circa 1994). By combining a Markov Transition ARCH model with copula-based distributions, \cite{Rodriguez_2007} documents a change in dependence between a high variance regime and a low variance regime.
 
@@ -67,9 +8,9 @@ In this article, we employ a framework that will allow asset returns to deviate 
 
 Daily data is required since one focus of the article concentrates on estimating the dependence between observations in the extremes of the joint distribution. Weekly or monthly data will lead to a sample size that is too small to populate the tails, leading to imprecise estimates of the dependence and distributional parameters. The source for these series will be the Bank of England, whose database on historical exchange rates includes many of the world's currencies and is easy to access. The timeframe under review will be restricted to January 4, 2000 to October 4, 2018.
 
-The layout for the rest of the paper is as follows. Section 2 discusses all relevant copula theory and important definitions. Section 3 provides the details of three popular multi-regime time series models while Section 4 focuses on estimating an ARMA-GARCH model for the exchange rates of the world's four most used currencies, by volume. Section 5 reviews the evolution of dependence between the major foreign exchange rates during the timeframe under review. Section 6 offers some concluding remarks.
+The layout for the rest of the paper is as follows. Section \ref{sec:copula_theory} discusses all relevant copula theory and important definitions. Section \ref{sec:time_varying_models} provides the details of three popular multi-regime time series models while Section \ref{sec:marginal_distributions} focuses on estimating an ARMA-GARCH model for the exchange rates of the world's four most used currencies, by volume. Section \ref{sec:Results} reviews the evolution of dependence between the major foreign exchange rates during the timeframe under review. Section \ref{sec:Copula_Conclusion} offers some concluding remarks.
 
-\section{Copula Theory}
+\section{Copula Theory} \label{sec:copula_theory}
 
 In this section, we briefly discuss the necessary copula theory and definitions that are put to use in this paper. Since our analysis pertains exclusively to bivariate distributions, all theory will be presented in the bivariate case. An accessibly treatment of basic copula theory can be found in \cite{Nelsen_2007} while additional topics on multivariate dependence can be found in \cite{Joe_1997}. For the individual in need of a concise introduction to the topic, the articles by \cite{Embrechts_et_al_2003} and \cite{Genest_and_Favre_2007} are a great entry point.
 
@@ -77,13 +18,13 @@ In this section, we briefly discuss the necessary copula theory and definitions 
 
 The term 'copula' has already been used various times in the introduction. To start, we provide a formal definition:
 
-\begin{defn} \label{defn:copula}
+\begin{definition} \label{defn:copula}
 	A bivariate copula is a function $C$ from $\left[0,1\right]^{2}$ to $\left[0,1\right]$ that satisfies (1) For every $u,w$ in $\left[0,1\right] :C\left(u,0\right) = C\left(0,w\right) = 0;$ (2) For every $u,w$ in $\left[0,1\right] :C\left(u,1\right) = u\ \ $and $\ C\left(1,w\right) = w;$ and (3) For every $u_{1}, u_{2}, w_{1}, w_{2}$ in $\left[0,1\right]$ such that $u_{1} \leq u_{2}$ and $w_{1} \leq w_{2}:C\left(u_{2}, w_{2}\right) - C\left(u_{1}, w_{2}\right) - C\left(u_{2}, w_{1}\right) + C\left(u_{1}, w_{1}\right)$ $\geq 0$. $_{\blacksquare}$
-\end{defn}
+\end{definition}
 
 Taken together, properties (1) - (3) imply that a copula is a nondecreasing function in each argument, a quality shared by all distribution functions. It is, in fact, helpful to think of copulas as distribution functions whose domain is restricted to the unit square---or the unit hypercube in higher dimensions. With this in mind, we present Sklar's theorem, the foundation for empirical applications of copulas.
 
-\begin{thm}[Sklar, 1959] \label{thm:skl}
+\begin{theorem}[Sklar, 1959] \label{thm:skl}
 	Let $F_{XY}$ be a joint distribution function with margins $F_{X}$ and $F_{Y}$. Then there exists a copula $C$ such that for all $x,y$ in $\bar{\mathbb{R}}$,
 
 	\begin{equation} \label{eq:sklars}
@@ -91,7 +32,7 @@ Taken together, properties (1) - (3) imply that a copula is a nondecreasing func
 	\end{equation}
 
 	If $F_{X}$ and $F_{Y}$ are continuous, then $C$ is unique; otherwise, $C$ is uniquely determined on $RanX\times RanY$. Conversely, if $C$ is a copula and $F_{X}$ and $F_{Y}$ are distribution functions, then the function $F_{XY}$ defined by equation (\ref{eq:sklars}) is a joint distribution function with margins $F_{X}$ and $F_{Y}$. $_{\blacksquare}$
-\end{thm}
+\end{theorem}
 
 The copula approach to multivariate distributions first transforms each marginal distribution from the extended real line $\left(\bar{\mathbb{R}}\right)$ to the unit interval through the \textit{probability integral transform} (PIT). First investigated by \cite{Rosenblatt_1952}, this transform states that if $X$ is a continuous random variable with density $f_{X}$, then the random variable $U$ defined by
 
@@ -106,7 +47,7 @@ is identically and independently distributed (iid) uniformly on the unit interva
 Taking inspiration from \cite{Hansen_1994} and their work on time-varying density estimation, \cite{Patton_2006} extends Sklar's original theorem to the case of conditional distributions. This extension paves the way for copulas with time-varying parameterizations. In the same manner as Theorem~\ref{thm:skl}, \cite{Patton_2006} decomposes the conditional distribution $\left(X,Y\right) | Z$ into conditional marginal distributions and the conditional copula.
 
 
-\begin{thm}[Patton, 2006] \label{thm:cond_skl}
+\begin{theorem}[Patton, 2006] \label{thm:cond_skl}
 	Let $F_{X|Z}(\cdot|z)$ be the conditional distribution of $X|Z=z$, $F_{Y|Z}(\cdot|z)$ be the conditional distribution of $Y|Z=z$, $F_{XY|Z}(\cdot|z)$ be the conditional distribution of $(X, Y)|Z = z$, and $\mathcal{Z}$ be the support of $Z$. Assume that $F_{X|Z}(\cdot|z)$ and $F_{X|Z}(\cdot|z)$ are continuous in $x$ and $y$ for all $z \in \mathcal{Z}$. Then there exists a unique conditional copula $C(\cdot|z)$ such that
 
 	\begin{eqnarray}
@@ -115,7 +56,7 @@ Taking inspiration from \cite{Hansen_1994} and their work on time-varying densit
 	\end{eqnarray}
 
 	Conversely, if we let $F_{X|Z}(\cdot|z)$ be the conditional distribution of $X|Z=z$, $F_{Y|Z}(\cdot|z)$ be the conditional distribution of $Y|Z=z$, and {$C(\cdot|w)$} be a family of conditional copulas that is measurable in z, then the function $F_{XY|Z}(\cdot|z)$ defined by equation (\ref{eq:cond_sklars}) is a conditional bivariate distribution function with conditional marginal distributions $F_{X|Z}(\cdot|z)$ and $F_{Y|Z}(\cdot|z)$.  $_{\blacksquare}$
-\end{thm}
+\end{theorem}
 
 \cite{Patton_2006} stresses that the same conditioning variables must be used for each margin and the copula. Using different conditioning variables for the marginal models and the copula may yield a function $\hat{F}_{XY}\left(\cdot|Z\right)$ that is not the joint distribution of $\left(X,Y\right)|Z$. In practice, this complication has the potential to offset the most attractive quality of the copula approach---modeling the marginal distributions and the copula separately. There is a way to salvage the situation, though. Say there are two conditioning variables, $Z_{1}, Z_{2} \in Z$, and we condition $X$ on $Z_{1}$ and $Y$ on $Z_{2}$. The only way $\hat{F}_{XY}\left(\cdot|Z\right)$ will be the joint distribution function of $\left(X,Y\right)|Z$ is the special case when $F_{X}\left(x|Z_{1}\right) = F_{X}\left(x|Z_{1},Z_{2}\right)$ and $F_{Y}\left(y|Z_{2}\right) = F_{Y}\left(y|Z_{1},Z_{2}\right)$. This can occur when $Z_{2}$ is orthogonal to $Y|Z_{1}$ and $Z_{1}$ is orthogonal to $X|Z_{2}$. In this essay, tests for these orthogonality conditions are included in the diagnostics checks discussed at the end of Section \ref{sec:marginal_distributions}.
 
@@ -147,13 +88,13 @@ where $Q=\Gamma\left(\frac{v}{2}\right)^{-1}\Gamma\left(\frac{\nu +1}{2}\right)^
 
 The second class we consider are referred to as Archimedean copulas. Families of these copulas are defined by their generator function $\varphi$, which usually contain one or two parameters. These parameters play a fundamental role in specifying the dependence structure between the marginal distributions. Consider the following definitions:
 
-\begin{defn} \label{def:Arch1}
+\begin{definition} \label{def:Arch1}
 	The generator $\varphi$ of an Archimedean copula is a function from $\left[0,1\right]$ to $\left[0,\infty\right]$ that is continuous, strictly decreasing, convex, and satisfies $\varphi\left(1\right) = 0$. $_{\blacksquare}$
-\end{defn}
+\end{definition}
 
-\begin{defn} \label{def:Arch2}
+\begin{definition} \label{def:Arch2}
 	The pseudo-inverse of $\varphi$ is the function $\varphi^{\left[-1\right]}$ from $\left[0,\infty\right]$ to $\left[0,1\right]$ given by $\varphi^{\left[-1\right]}\left(t\right) = \varphi^{\left[-1\right]}\left(t\right)$ for $t$ in $\left[0,\varphi\left(0\right)\right]$ and $\varphi^{\left[-1\right]}\left(t\right) = 0$ for $t$ in $\left[\varphi\left(0\right),\infty\right]$. If $\varphi\left(0\right) = \infty$, the pseudo-inverse is simply the inverse $\varphi^{-1}\left(t\right)$. $_{\blacksquare}$
-\end{defn}
+\end{definition}
 
 Given definition~\ref{def:Arch1} and definition~\ref{def:Arch2}, an Archimedean copula is constructed in the following manner:
 
@@ -220,9 +161,9 @@ There are many forms of dependence when discussing multivariate distributions. T
 
 A global measure of association, Kendall's tau is a popular measure of the degree of monotonic dependence between two random variates. Invariant to strictly increasing transformations, Kendall's tau provides a measure of correlation between the ranks of two marginal distributions. This short section begins with the definition of concordant and discordant observations.
 
-\begin{defn}
+\begin{definition}
 	For a vector of continuous random variables $\left(X,Y\right)$, let $\left(x_{i},y_{i}\right)$ and $\left(x_{j},y_{j}\right)$ represent two observations. We say $\left(x_{i},y_{i}\right)$ and $\left(x_{j},y_{j}\right)$ are concordant if $\left(x_{i} - x_{j}\right)\left(y_{i}-y_{j}\right) > 0$ and discordant if $\left(x_{i}-x_{j}\right)\left(y_{i} - y_{j}\right) < 0$. $_{\blacksquare}$
-\end{defn}
+\end{definition}
 
 The population version of Kendall's tau is defined as the probability of concordance minus the probability of discordance:
 
@@ -242,9 +183,9 @@ By choosing to represent global dependence through Kendall's tau, we are creatin
 
 Tail dependence is a localized measure of association and allows us to make probabilistic statements about observations in the upper-right corner and lower-left corner of the unit square. In our present context on exchange rates, upper tail dependence is a statement about the probability of two currency pairs experiencing strong concurrent depreciations against the dollar. Conversely, lower tail dependence is a statement about the probability of two currency pairs experiencing strong concurrent appreciations against the dollar. It is worth pointing out that tail dependence is a property of the copula and not of the marginal distributions. The following definition is due to \cite{Joe_1997}.
 
-\begin{defn} \label{defn:tail_dep}
+\begin{definition} \label{defn:tail_dep}
 	For a copula $C$, if $\lambda^{U}\equiv\lim_{t\nearrow 1}P\left[X > F_{X}^{-1}\left(t\right) | Y > F_{Y}^{-1}\left(t\right)\right] = \lim_{t\nearrow 1}\frac{1-2t+C\left(t,t\right)}{1-t}$ exists, then $C$ has upper tail dependence if $\lambda^{U}$ is in $(0,1]$ and no upper tail dependence if $\lambda^{U}=0$. Likewise, if $\lambda ^{L}\equiv \lim_{t\searrow 0}P\left[X\leq F_{X}^{-1}\left(t\right) | Y\leq F_{Y}^{-1}\left(t\right)\right] =\lim_{t\searrow 0}\frac{C\left(t,t\right)}{t}$ exists, $C$ has lower tail dependence if $\lambda ^{L}$ is in $(0,1]$ and no lower tail dependence if $\lambda^{L} = 0$. $_{\blacksquare}$
-\end{defn}
+\end{definition}
 
 When considering a mixture copula $C^{\ast}$ as described in equation (\ref{eqn:mixture}), the tail dependence is the weighted average of the tail dependence values for each component copula:
 
@@ -437,7 +378,7 @@ By collecting all the parameters in the conditional mean and variance equations 
     f(x_{t} | \mu_{t}, \sigma^{2}_{t}, \lambda, \Delta) = \frac{1}{\sqrt{h_{t}}} g(z_{t} | \lambda, \Delta)
 \end{equation}
 
-In certain times the researcher may want the capability to accurately model return values that are not perfectly symmetric which is a characteristic of the t-distribution. To produce a skewed t-distribution, this essay follows \cite{Fernandez_and_Steel_1998}. For a unimodal and symmetric density $f\left(x\right)$ that is decreasing in $\left\vert x\right\vert$, a skew parameter $\xi$ can force asymmetry upon $f\left(x\right)$, generating a new distribution $p\left(x|\xi\right)$ where
+In certain times the researcher may want the capability to accurately model return values that are not perfectly symmetric which is a characteristic of the t-distribution. To produce a skewed t-distribution, this essay follows \cite{Fernandez_Steel_1998}. For a unimodal and symmetric density $f\left(x\right)$ that is decreasing in $\left\vert x\right\vert$, a skew parameter $\xi$ can force asymmetry upon $f\left(x\right)$, generating a new distribution $p\left(x|\xi\right)$ where
 
 \begin{equation}
 	p\left(x|\xi \right) = \frac{2}{\xi + \frac{1}{\xi}} \left[f\left(x\xi\right) \mathbf{I}_{\left\{x < 0\right\}} + f\left(x\xi^{-1}\right) \mathbf{I}_{\left\{x \geq 0\right\}}\right]
@@ -522,126 +463,131 @@ Table \ref{tbl:Conditioning_Variable_Checks} summarizes the orthogonality tests 
 
 
 \begin{table}
-	\fontsize{10pt}{10pt}\selectfont
+	% \fontsize{10pt}{10pt}\selectfont
 	\centering
-	\caption{Marginal ARMA-GARCH Regressions}
-	\begin{tabular}{l l l l | l l l}
-		\midrule
-				   & \multicolumn{3}{c}{2000-2009} & \multicolumn{3}{c}{2010-2018} \\
-		\midrule
-				   & Euro & Pound & Yen & Euro & Pound & Yen \\
-		\midrule
-         $\phi_{0}$    &  -0.00024        & -0.00006     & 0.00013      &    --        &    --        & 0.00012      \\
-                       &   0.00011$^{*}$  &  0.00010     & 0.00012      &    --        &    --        & 0.00010      \\ \\
-		 $\phi_{1}$    &     --           &     --       &    --        &    --        & 0.00166      &    --        \\
-		               &     --           &     --       &    --        &    --        & 0.02098      &    --        \\ \\
-         $\omega$      &  0.00000         &  0.00000     & 0.00000      & 0.00000      & 0.00000      & 0.00000      \\
-                       &  0.00000$^{**}$  &  0.00000     & 0.00000      & 0.00000      & 0.00000      & 0.00000      \\ \\
-         $\alpha_{1}$  &  0.00000         &  0.052       & 0.032        & 0.028        & 0.032        & 0.038        \\
-                       &  0.00111         & 0.003$^{**}$ & 0.007$^{**}$ & 0.004$^{**}$ & 0.019        & 0.005$^{**}$ \\ \\
-         $\gamma_{1}$  & -0.065           & -0.023       &    --        &    --        &    --        & 0.009        \\
-                       &  0.006$^{**}$    & 0.011$^{*}$  &    --        &    --        &    --        & 0.012        \\ \\
-         $\alpha_{2}$  &  0.044           &    --        &    --        &    --        & 0.009        &    --        \\
-                       &  0.004$^{**}$    &    --        &    --        &    --        & 0.017        &    --        \\ \\
-         $\gamma_{2}$  &  0.063           &    --        &    --        &    --        &    --        &    --        \\
-                       &  0.004$^{**}$    &    --        &    --        &    --        &    --        &    --        \\ \\
-         $\beta_{1}$   &  0.952           & 0.953        & 0.957        & 0.970        & 0.878        & 0.949        \\
-                       &  0.000$^{**}$    & 0.006$^{**}$ & 0.007$^{**}$ & 0.003$^{**}$ & 0.005$^{**}$ & 0.005$^{**}$ \\ \\
-         $\beta_{2}$   &     --           &    --        &    --        &    --        & 0.074        &    --        \\
-                       &     --           &    --        &    --        &    --        & 0.004$^{**}$ &    --        \\ \\
-         shape         &  9.387           & 9.953        & 6.879        & 8.388        & 8.301        & 4.907        \\
-                       &  1.683$^{**}$    & 1.551$^{**}$ & 1.230$^{**}$ & 0.989$^{**}$ & 0.852$^{**}$ & 0.456$^{**}$ \\ \\
-		 Distribution  & T-Dist           & T-Dist       & T-Dist       & T-Dist       & T-Dist       & T-Dist       \\
-		 GARCH Spec.   & gjr              &   gjr        &    std       &    std       &    std       &  gjr         \\
-		 ARMA          &  0, 0            &  0, 0        &   0, 0       &   0, 0       &   1, 0       &  0, 0        \\
-		 GARCH         &  2, 1            &  1, 1        &   1, 1       &   1, 1       &   2, 2       &  1, 1        \\
-		\midrule
-	\end{tabular}
-	\begin{tablenotes}
-		\item{\footnotesize \textbf{Signif. Codes:} 0 '**' 0.01 '*' 0.05 '+' 0.1 ' ' 1}
-	\end{tablenotes}
-	\label{tbl:marginal_model_regressions}
+	\begin{threeparttable}
+		\caption{Marginal ARMA-GARCH Regressions}	\label{tbl:marginal_model_regressions}
+		\begin{tabular}{l l l l | l l l}
+			\midrule
+					   & \multicolumn{3}{c}{2000-2009} & \multicolumn{3}{c}{2010-2018} \\
+			\midrule
+					   & Euro & Pound & Yen & Euro & Pound & Yen \\
+			\midrule
+			 $\phi_{0}$    &  -0.00024        & -0.00006     & 0.00013      &    --        &    --        & 0.00012      \\
+						   &   0.00011$^{*}$  &  0.00010     & 0.00012      &    --        &    --        & 0.00010      \\ \\
+			 $\phi_{1}$    &     --           &     --       &    --        &    --        & 0.00166      &    --        \\
+						   &     --           &     --       &    --        &    --        & 0.02098      &    --        \\ \\
+			 $\omega$      &  0.00000         &  0.00000     & 0.00000      & 0.00000      & 0.00000      & 0.00000      \\
+						   &  0.00000$^{**}$  &  0.00000     & 0.00000      & 0.00000      & 0.00000      & 0.00000      \\ \\
+			 $\alpha_{1}$  &  0.00000         &  0.052       & 0.032        & 0.028        & 0.032        & 0.038        \\
+						   &  0.00111         & 0.003$^{**}$ & 0.007$^{**}$ & 0.004$^{**}$ & 0.019        & 0.005$^{**}$ \\ \\
+			 $\gamma_{1}$  & -0.065           & -0.023       &    --        &    --        &    --        & 0.009        \\
+						   &  0.006$^{**}$    & 0.011$^{*}$  &    --        &    --        &    --        & 0.012        \\ \\
+			 $\alpha_{2}$  &  0.044           &    --        &    --        &    --        & 0.009        &    --        \\
+						   &  0.004$^{**}$    &    --        &    --        &    --        & 0.017        &    --        \\ \\
+			 $\gamma_{2}$  &  0.063           &    --        &    --        &    --        &    --        &    --        \\
+						   &  0.004$^{**}$    &    --        &    --        &    --        &    --        &    --        \\ \\
+			 $\beta_{1}$   &  0.952           & 0.953        & 0.957        & 0.970        & 0.878        & 0.949        \\
+						   &  0.000$^{**}$    & 0.006$^{**}$ & 0.007$^{**}$ & 0.003$^{**}$ & 0.005$^{**}$ & 0.005$^{**}$ \\ \\
+			 $\beta_{2}$   &     --           &    --        &    --        &    --        & 0.074        &    --        \\
+						   &     --           &    --        &    --        &    --        & 0.004$^{**}$ &    --        \\ \\
+			 shape         &  9.387           & 9.953        & 6.879        & 8.388        & 8.301        & 4.907        \\
+						   &  1.683$^{**}$    & 1.551$^{**}$ & 1.230$^{**}$ & 0.989$^{**}$ & 0.852$^{**}$ & 0.456$^{**}$ \\ \\
+			 Distribution  & T-Dist           & T-Dist       & T-Dist       & T-Dist       & T-Dist       & T-Dist       \\
+			 GARCH Spec.   & gjr              &   gjr        &    std       &    std       &    std       &  gjr         \\
+			 ARMA          &  0, 0            &  0, 0        &   0, 0       &   0, 0       &   1, 0       &  0, 0        \\
+			 GARCH         &  2, 1            &  1, 1        &   1, 1       &   1, 1       &   2, 2       &  1, 1        \\
+			\midrule
+		\end{tabular}
+		\begin{tablenotes}
+			\item{\footnotesize \textbf{Signif. Codes:} 0 '**' 0.01 '*' 0.05 '+' 0.1 ' ' 1}
+		\end{tablenotes}
+	\end{threeparttable}
+\end{table}
+
+
+\begin{table}
+	\centering
+	\fontsize{10pt}{10pt}\selectfont
+	\begin{threeparttable}
+		\caption{Exchange Rate Model Diagnostics}	\label{tbl:margin_model_diagnostic_pvalues}
+		\begin{tabular}[c]{l l l l l c l l l}
+			\midrule
+					& & \multicolumn{3}{c}{2000 - 2009} & & \multicolumn{3}{c}{2010 - 2018} \\ \addlinespace[1mm]
+			\cline{3-5} \cline{7-9}
+		Test  & Spec                             & Euro  & Pound & Yen   & &  Euro & Pound & Yen   \\ \addlinespace[1mm]
+			\midrule
+	  ARCH-LM &        ARCH Lag[1] & 0.417 & 0.930       & 0.109       & & 0.905       & 0.063$^{+}$ & 0.761       \\
+	  ARCH-LM &        ARCH Lag[3] & 0.813 & 0.785       & 0.262       & & 0.819       & 0.238       & 0.478       \\
+	  ARCH-LM &        ARCH Lag[5] & 0.900 & 0.837       & 0.460       & & 0.807       & 0.428       & 0.651       \\ \\
+	  ARMA-LM &    Lag[1] degree=1 & 0.738 & 0.266       & 0.403       & & 0.744       & 0.998       & 0.967       \\
+	  ARMA-LM &    Lag[2] degree=1 & 0.830 & 0.375       & 0.605       & & 0.847       & 0.297       & 0.663       \\
+	  ARMA-LM &    Lag[5] degree=1 & 0.832 & 0.489       & 0.875       & & 0.892       & 0.377       & 0.829       \\
+	  ARMA-LM &    Lag[1] degree=2 & 0.782 & 0.319       & 0.921       & & 0.682       & 0.351       & 0.146       \\
+	  ARMA-LM &    Lag[2] degree=2 & 0.862 & 0.478       & 0.163       & & 0.382       & 0.489       & 0.241       \\
+	  ARMA-LM &    Lag[5] degree=2 & 0.879 & 0.756       & 0.078$^{+}$ & & 0.517       & 0.027$^{*}$ & 0.385       \\ \\
+		  GOF &             20bins & 0.122 & 0.186       & 0.291       & & 0.264       & 0.656       & 0.887       \\
+		  GOF &             30bins & 0.310 & 0.252       & 0.290       & & 0.295       & 0.312       & 0.441       \\
+		  GOF &             40bins & 0.327 & 0.425       & 0.260       & & 0.077$^{+}$ & 0.540       & 0.340       \\
+		  GOF &             50bins & 0.676 & 0.563       & 0.072$^{+}$ & & 0.291       & 0.665       & 0.734       \\ \\
+	SIGN-BIAS &       Joint Effect & 0.471 & 0.090$^{+}$ & 0.513       & & 0.591       & 0.781       & 0.097$^{+}$ \\
+	SIGN-BIAS & Negative Sign Bias & 0.376 & 0.161       & 0.647       & & 0.302       & 0.457       & 0.168       \\
+	SIGN-BIAS & Positive Sign Bias & 0.188 & 0.675       & 0.173       & & 0.532       & 0.540       & 0.562       \\
+	SIGN-BIAS &          Sign Bias & 0.234 & 0.338       & 0.510       & & 0.487       & 0.700       & 0.319       \\
+	\midrule
+	   NYBLOM &         $\phi_{0}$ & 0.161        & 0.276        & 0.118        & &    --        &      --        &   0.258        \\
+	   NYBLOM &         $\phi_{1}$ &    --        &    --        &    --        & &    --        &   0.251        &      --        \\
+	   NYBLOM &         $\omega$   & 228.7$^{**}$ & 292.1$^{**}$ & 186.3$^{**}$ & & 293.9$^{**}$ &   232.3$^{**}$ &   134.8$^{**}$ \\
+	   NYBLOM &       $\alpha_{1}$ & 0.076        & 0.232        & 0.308        & & 0.196        &   0.243        &   0.066        \\
+	   NYBLOM &       $\gamma_{1}$ & 0.131        & 0.238        &    --        & &    --        &      --        &   0.114        \\
+	   NYBLOM &       $\alpha_{2}$ & 0.076        &    --        &    --        & &    --        &   0.272        &      --        \\
+	   NYBLOM &       $\gamma_{2}$ & 0.138        &    --        &    --        & &    --        &      --        &      --        \\
+	   NYBLOM &        $\beta_{1}$ & 0.093        & 0.228        & 0.198        & & 0.173        &   0.240        &   0.105        \\
+	   NYBLOM &        $\beta_{2}$ &    --        &    --        &    --        & &    --        &   0.239        &      --        \\
+	   NYBLOM &              shape & 0.132        & 0.172        & 0.105        & & 0.459$^{+}$  &   0.971$^{**}$ &   0.032        \\
+	   NYBLOM &         Joint Test & 621.4$^{**}$ & 784.7$^{**}$ & 759.4$^{**}$ & & 598.5$^{**}$ &   687.9$^{**}$ &   524.7$^{**}$ \\		 
+	\hline \hline
+		\end{tabular}
+		\begin{tablenotes}
+			\item{\footnotesize \textbf{Signif. Codes:} 0 '**' 0.01 '*' 0.05 '+' 0.1 ' ' 1}
+			\item{\footnotesize \textbf{Note:} The values in the top part of the table are p-values for the ARCH-LM, ARMA-LM, GOF, and Sign-Bias tests.}
+			\item{\footnotesize \textbf{Note:} The bottom part of the table records the value of the test statistic for Nyblom's Test for Constancy of parameters over time. Significant code indicate if the test static exceeds threshold value for a particular significance level. Threshold levels differ between test for a single parameter or a joint test:}
+			\item{\footnotesize \textit{Individual statistic}: 10\% = 0.35, 5\%=0.47, 1\%=0.75}
+			\item{\footnotesize \textit{     Joint statistic}: 10\% = 1.69, 5\%=1.90, 1\%=2.35.}
+			%\item{\footnotesize \textbf{Note:} Goodness-of-fit tests are conducted on the standardized residuals of the marginal models. All figures in the table are p-values. The Kolmogorov-Smirnov (KS) tests checks for a uniform distribution for the standardized residuals with the unit interval as its support. The moment LM tests check the PIT for serial independence. The tests take the form of the regression $\left(u_{t} - \bar{u}\right)^{m} = \sum_{k=1}^{20}\gamma_{k}\left(u_{t-k} - \bar{u}\right)^{m} + \epsilon_{t}$ for $m = 1,...,4$. Under the null of independence, the test statistic $\left(T - 20\right) R^{2}$ for each regression is distributed as $\chi^{2}\left(20\right)$. The likelihood ratio (LR) test checks for joint normality of the mean and variance. The Jarque-Bera (JB) test checks for joint normality of the skew and kurtosis. For all tests, the null hypothesis is a well specified model.}
+		\end{tablenotes}
+	\end{threeparttable}
+
 \end{table}
 
 
 \begin{table}
 	\fontsize{10pt}{10pt}\selectfont
-	\caption{Exchange Rate Model Diagnostics}
-	\begin{tabular}[c]{l l l l l c l l l}
-		\midrule
-                & & \multicolumn{3}{c}{2000 - 2009} & & \multicolumn{3}{c}{2010 - 2018} \\ \addlinespace[1mm]
-		\cline{3-5} \cline{7-9}
-    Test  & Spec                             & Euro  & Pound & Yen   & &  Euro & Pound & Yen   \\ \addlinespace[1mm]
-		\midrule
-  ARCH-LM &        ARCH Lag[1] & 0.417 & 0.930       & 0.109       & & 0.905       & 0.063$^{+}$ & 0.761       \\
-  ARCH-LM &        ARCH Lag[3] & 0.813 & 0.785       & 0.262       & & 0.819       & 0.238       & 0.478       \\
-  ARCH-LM &        ARCH Lag[5] & 0.900 & 0.837       & 0.460       & & 0.807       & 0.428       & 0.651       \\ \\
-  ARMA-LM &    Lag[1] degree=1 & 0.738 & 0.266       & 0.403       & & 0.744       & 0.998       & 0.967       \\
-  ARMA-LM &    Lag[2] degree=1 & 0.830 & 0.375       & 0.605       & & 0.847       & 0.297       & 0.663       \\
-  ARMA-LM &    Lag[5] degree=1 & 0.832 & 0.489       & 0.875       & & 0.892       & 0.377       & 0.829       \\
-  ARMA-LM &    Lag[1] degree=2 & 0.782 & 0.319       & 0.921       & & 0.682       & 0.351       & 0.146       \\
-  ARMA-LM &    Lag[2] degree=2 & 0.862 & 0.478       & 0.163       & & 0.382       & 0.489       & 0.241       \\
-  ARMA-LM &    Lag[5] degree=2 & 0.879 & 0.756       & 0.078$^{+}$ & & 0.517       & 0.027$^{*}$ & 0.385       \\ \\
-      GOF &             20bins & 0.122 & 0.186       & 0.291       & & 0.264       & 0.656       & 0.887       \\
-      GOF &             30bins & 0.310 & 0.252       & 0.290       & & 0.295       & 0.312       & 0.441       \\
-      GOF &             40bins & 0.327 & 0.425       & 0.260       & & 0.077$^{+}$ & 0.540       & 0.340       \\
-      GOF &             50bins & 0.676 & 0.563       & 0.072$^{+}$ & & 0.291       & 0.665       & 0.734       \\ \\
-SIGN-BIAS &       Joint Effect & 0.471 & 0.090$^{+}$ & 0.513       & & 0.591       & 0.781       & 0.097$^{+}$ \\
-SIGN-BIAS & Negative Sign Bias & 0.376 & 0.161       & 0.647       & & 0.302       & 0.457       & 0.168       \\
-SIGN-BIAS & Positive Sign Bias & 0.188 & 0.675       & 0.173       & & 0.532       & 0.540       & 0.562       \\
-SIGN-BIAS &          Sign Bias & 0.234 & 0.338       & 0.510       & & 0.487       & 0.700       & 0.319       \\
-\midrule
-   NYBLOM &         $\phi_{0}$ & 0.161        & 0.276        & 0.118        & &    --        &      --        &   0.258        \\
-   NYBLOM &         $\phi_{1}$ &    --        &    --        &    --        & &    --        &   0.251        &      --        \\
-   NYBLOM &         $\omega$   & 228.7$^{**}$ & 292.1$^{**}$ & 186.3$^{**}$ & & 293.9$^{**}$ &   232.3$^{**}$ &   134.8$^{**}$ \\
-   NYBLOM &       $\alpha_{1}$ & 0.076        & 0.232        & 0.308        & & 0.196        &   0.243        &   0.066        \\
-   NYBLOM &       $\gamma_{1}$ & 0.131        & 0.238        &    --        & &    --        &      --        &   0.114        \\
-   NYBLOM &       $\alpha_{2}$ & 0.076        &    --        &    --        & &    --        &   0.272        &      --        \\
-   NYBLOM &       $\gamma_{2}$ & 0.138        &    --        &    --        & &    --        &      --        &      --        \\
-   NYBLOM &        $\beta_{1}$ & 0.093        & 0.228        & 0.198        & & 0.173        &   0.240        &   0.105        \\
-   NYBLOM &        $\beta_{2}$ &    --        &    --        &    --        & &    --        &   0.239        &      --        \\
-   NYBLOM &              shape & 0.132        & 0.172        & 0.105        & & 0.459$^{+}$  &   0.971$^{**}$ &   0.032        \\
-   NYBLOM &         Joint Test & 621.4$^{**}$ & 784.7$^{**}$ & 759.4$^{**}$ & & 598.5$^{**}$ &   687.9$^{**}$ &   524.7$^{**}$ \\		 
-\hline \hline
-	\end{tabular}
-	\begin{tablenotes}
-		\item{\footnotesize \textbf{Signif. Codes:} 0 '**' 0.01 '*' 0.05 '+' 0.1 ' ' 1}
-		\item{\footnotesize \textbf{Note:} The values in the top part of the table are p-values for the ARCH-LM, ARMA-LM, GOF, and Sign-Bias tests.}
-		\item{\footnotesize \textbf{Note:} The bottom part of the table records the value of the test statistic for Nyblom's Test for Constancy of parameters over time. Significant code indicate if the test static exceeds threshold value for a particular significance level. Threshold levels differ between test for a single parameter or a joint test:}
-		\item{\footnotesize \textit{Individual statistic}: 10\% = 0.35, 5\%=0.47, 1\%=0.75}
-		\item{\footnotesize \textit{     Joint statistic}: 10\% = 1.69, 5\%=1.90, 1\%=2.35.}
-		%\item{\footnotesize \textbf{Note:} Goodness-of-fit tests are conducted on the standardized residuals of the marginal models. All figures in the table are p-values. The Kolmogorov-Smirnov (KS) tests checks for a uniform distribution for the standardized residuals with the unit interval as its support. The moment LM tests check the PIT for serial independence. The tests take the form of the regression $\left(u_{t} - \bar{u}\right)^{m} = \sum_{k=1}^{20}\gamma_{k}\left(u_{t-k} - \bar{u}\right)^{m} + \epsilon_{t}$ for $m = 1,...,4$. Under the null of independence, the test statistic $\left(T - 20\right) R^{2}$ for each regression is distributed as $\chi^{2}\left(20\right)$. The likelihood ratio (LR) test checks for joint normality of the mean and variance. The Jarque-Bera (JB) test checks for joint normality of the skew and kurtosis. For all tests, the null hypothesis is a well specified model.}
-	\end{tablenotes}
-	\label{tbl:margin_model_diagnostic_pvalues}
-\end{table}
-
-
-\begin{table}
-	\fontsize{10pt}{10pt}\selectfont
 	\centering
-	\caption{Orthogonal Assumption Tests}
-	\begin{tabular}{l l | l l l | l l l}
-		\midrule
-				& & \multicolumn{3}{c}{2000-2009} & \multicolumn{3}{c}{2010-2018} \\
-		\midrule
-				& & Euro & Pound & Yen & Euro & Pound & Yen \\
+	\caption{Orthogonal Assumption Tests} \label{tbl:Conditioning_Variable_Checks}
+	\begin{threeparttable}
+		\begin{tabular}{l l | l l l | l l l}
+			\midrule
+					& & \multicolumn{3}{c}{2000-2009} & \multicolumn{3}{c}{2010-2018} \\
+			\midrule
+					& & Euro & Pound & Yen & Euro & Pound & Yen \\
+			\hline
+			Mean Equation     & $P_{t-1}$                            & --    & --    & --          &  0.766       & --      & 0.067$^{+}$  \\ \\ \\
+			Variance Equation & Euro $\hat{\varepsilon}^{2}_{t-1}$   & --    & 0.760 & 0.138       &  --          & 0.281   & 0.777        \\
+							  & Euro $\hat{\varepsilon}^{2}_{t-2}$   & --    & 0.256 & 0.026$^{*}$ &  --          & --      & --           \\
+							  & Joint-Test                           & --    & 0.509 & 0.024$^{*}$ &  --          & --      & --           \\ \\
+							  & Pound $\hat{\varepsilon}^{2}_{t-1}$  & 0.381 & --    & 0.189       &  0.173       & --      & 0.724        \\
+							  & Pound $\hat{\varepsilon}^{2}_{t-2}$  & --    & --    & --          &  0.577       & --      & 0.928        \\
+							  & Joint-Test                           & --    & --    & --          &  0.373       & --      & 0.939        \\ \\
+							  & Yen $\hat{\varepsilon}^{2}_{t-1}$    & 0.130 & 0.248 & --          &  0.099$^{+}$ & 0.346   & --           \\
 		\hline
-        Mean Equation     & $P_{t-1}$                            & --    & --    & --          &  0.766       & --      & 0.067$^{+}$  \\ \\ \\
-		Variance Equation & Euro $\hat{\varepsilon}^{2}_{t-1}$   & --    & 0.760 & 0.138       &  --          & 0.281   & 0.777        \\
-                          & Euro $\hat{\varepsilon}^{2}_{t-2}$   & --    & 0.256 & 0.026$^{*}$ &  --          & --      & --           \\
-						  & Joint-Test                           & --    & 0.509 & 0.024$^{*}$ &  --          & --      & --           \\ \\
-		                  & Pound $\hat{\varepsilon}^{2}_{t-1}$  & 0.381 & --    & 0.189       &  0.173       & --      & 0.724        \\
-		                  & Pound $\hat{\varepsilon}^{2}_{t-2}$  & --    & --    & --          &  0.577       & --      & 0.928        \\
-						  & Joint-Test                           & --    & --    & --          &  0.373       & --      & 0.939        \\ \\
-                          & Yen $\hat{\varepsilon}^{2}_{t-1}$    & 0.130 & 0.248 & --          &  0.099$^{+}$ & 0.346   & --           \\
-	\hline
-	\end{tabular}
-	\begin{tablenotes}
-		\item{\footnotesize \textbf{Signif. Codes:} 0 '**' 0.01 '*' 0.05 '+' 0.1 ' ' 1}
-		\item{\footnotesize \textbf{Note:} This table checks the orthogonality assumption for the conditional copula. The values in the table are the p-values reported for the coefficients in equations (\ref{eq:mean_orthogonality_assumption}) and (\ref{eq:var_orthogonality_assumption}). For the mean equations, only the 2010-2018 Pound/USD model contains an autoregressive component. Therefore, the residuals of the Euro/USD and Yen/USD are regressed against the first lag of the Pound/USD. For the variance equations all exchange rate models have at least one ARCH component while the 2000-2009 Euro/USD and the 2010-2018 Pound/USD have two ARCH components. The orthogonality test requires regressing the standardized squared residuals of one model against the lagged squared residuals of the other marginal models.}
-		\item{\footnotesize \textbf{Note:} It is clear that the orthogonality assumption is violated, at the 5\% significance level for the Euro and Yen exchange rates against the dollar during the 2000-2009 time period. The second lagged square residual is found to have explanatory power for the standard squared residual of the Yen/USD exchange rate. This implies that Theorem \ref{thm:cond_skl} may not hold and the Yen/USD and Euro/USD exchange rates may need to be modeled with a bivariate distribution rather than separate univariate models.}
-	\end{tablenotes}
-	\label{tbl:Conditioning_Variable_Checks}
+		\end{tabular}
+		\begin{tablenotes}
+			\item{\footnotesize \textbf{Signif. Codes:} 0 '**' 0.01 '*' 0.05 '+' 0.1 ' ' 1}
+			\item{\footnotesize \textbf{Note:} This table checks the orthogonality assumption for the conditional copula. The values in the table are the p-values reported for the coefficients in equations (\ref{eq:mean_orthogonality_assumption}) and (\ref{eq:var_orthogonality_assumption}). For the mean equations, only the 2010-2018 Pound/USD model contains an autoregressive component. Therefore, the residuals of the Euro/USD and Yen/USD are regressed against the first lag of the Pound/USD. For the variance equations all exchange rate models have at least one ARCH component while the 2000-2009 Euro/USD and the 2010-2018 Pound/USD have two ARCH components. The orthogonality test requires regressing the standardized squared residuals of one model against the lagged squared residuals of the other marginal models.}
+			\item{\footnotesize \textbf{Note:} It is clear that the orthogonality assumption is violated, at the 5\% significance level for the Euro and Yen exchange rates against the dollar during the 2000-2009 time period. The second lagged square residual is found to have explanatory power for the standard squared residual of the Yen/USD exchange rate. This implies that Theorem \ref{thm:cond_skl} may not hold and the Yen/USD and Euro/USD exchange rates may need to be modeled with a bivariate distribution rather than separate univariate models.}
+		\end{tablenotes}
+	\end{threeparttable}
 \end{table}
 
 \section{Results} \label{sec:Results}
@@ -656,7 +602,7 @@ The unique properties of the Sequential Break Point model can be seen in its tim
 
 When it comes to the Markov Transition models, the optimal number of regimes for each exchange rate pair is two. For pairs containing the Euro exchange rate there is one regime with high overall association---as judged by Kendall's $\tau$---with heavy tail dependence. The alternate regime has a reduced level of association and reduced tail dependence. One of the key features of the Markov Transition models used in this essay is their flexible nature. They can switch back-and-forth between their regimes on almost a daily basis, something that is not feasible with the Smooth Transition model due to its particular functional form. This characteristic of the model is easily seen in the markov transition columns of Tables \ref{tbl:regime_changes_euro_pound}, \ref{tbl:regime_changes_euro_yen}, and \ref{tbl:regime_changes_euro_pound}. The number of times the model iterates between the two regimes far exceeds the number of total regimes modeled by the other time-varying methods. Like the Sequential Break Point model, the Markov Transition model confirms the pattern of a change in dependence with the Yen/USD exchange rate precedes a change in dependence of the Euro/USD and Pound/USD exchange rates for dates up to the 2007 US mortgage backed crisis. That leading relationship breaks down, though, after 2008. The Euro-Pound pair enter a sustain period of reduced dependence from 2013 to 2017 while the dependence measures for pairs involving the Yen/USD exchange rate continue to oscillate between the two regimes.
 
-\section{Conclusion} \label{sec:Conclusion}
+\section{Conclusion} \label{sec:Copula_Conclusion}
 
 This essay explored a set of tools that can be used study financial time series and model their bivariate distributions. These tools include the ARMA-GARCH framework for modeling the conditional mean and conditional volatility process of the exchange rates studied in this essay. The ARMA-GARCH models allow the researcher to control for asymmetry in response to positive versus negative returns and periods of volatility clustering. The use of Copulas allows for flexible distributional assumptions including excessive leptokurtosis, asymmetric tail dependencies, and departures from standard elliptical distributions. The use of the Sequential Break Point, Markov Transition, and Smooth Transition models provide different paths to model changes in the dependence structure over time. 
 
@@ -666,63 +612,64 @@ The utility of using these tools in conjunction with each other was demonstrated
 \begin{landscape}
 
 \begin{table}
-	\caption{BIC Values for Estimated Copula Models}
-	\fontsize{9pt}{9pt}\selectfont
 	\centering
-	\begin{tabular}[c]{l c r r r | r r r | r r r}
-		\midrule
-		            &        & \multicolumn{3}{c}{Markov Transition} & \multicolumn{3}{c}{Smooth Trans.} & \multicolumn{3}{c}{Seq. Break$^{1}$} \\
-		\midrule
-		Exchange Rate& Regime & tCop & S. Gumbel & S. Clayton & tCop & S. Gumbel & S. Clayton & tCop & S. Gumbel & S. Clayton \\
-		\midrule
-		Euro-Pound  & 1 &          -2634.1 & -2643.2 & -2556.0 &          -2634.1 & -2643.2 & -2556.0 &           -2634.1 & -2643.2 &  -2556.0  \\		
-		            & 2 & \textbf{-2750.0} & -2727.7 & -2626.5 &          -2681.3 & -2672.5 & -2590.1 &                -- &      -- &  --       \\
-					& 3 &          -2719.2 & -2676.0 & -2565.1 &          -2671.9 & -2654.3 & -2566.1 &                -- &      -- &  --       \\
-					& 4 &          -2643.2 & -2593.0 & -2507.5 & \textbf{-2712.0} & -2699.8 & -2601.0 &  \textbf{-2748.1} & -2710.6 &  -2618.8  \\ \\
-		Euro-Yen    & 1 &           -713.5 &  -682.8 &  -638.7 &           -713.5 &  -682.8 &  -638.7 &            -713.5 &  -682.8 &   -638.7  \\
-		            & 2 &  \textbf{-939.8} &  -892.6 &  -868.5 &           -714.0 &  -686.3 &  -639.3 &                -- &      -- &  --       \\
-				    & 3 &           -880.6 &  -825.3 &  -801.1 &           -772.5 &  -733.3 &  -701.4 &                -- &      -- &  --       \\
-				    & 4 &           -805.5 &  -762.8 &  -743.2 &  \textbf{-853.8} &  -819.0 &  -781.9 &   \textbf{-840.6} &  -780.8 &   -746.4  \\ \\
-		Pound-Yen   & 1 &           -365.1 &  -309.4 &  -273.5 &           -365.1 &  -309.4 &  -273.5 &            -365.1 &  -309.4 &   -273.4  \\
-		            & 2 &  \textbf{-496.9} &  -424.1 &  -407.7 &           -416.0 &  -341.7 &  -312.8 &                -- &      -- &  --       \\
-				    & 3 &           -470.2 &  -366.0 &  -365.6 &  \textbf{-481.5} &  -347.9 &  -325.5 &                -- &      -- &  --       \\
-				    & 4 &           -406.8 &  -274.2 &  -298.5 &           -473.2 &  -397.1 &  -447.3 &   \textbf{-511.1} &  -418.0 &   -387.5  \\
-		\hline
-	\end{tabular}
-	\begin{tablenotes}
-		\item{This table records the Bayesian information criterion (BIC) for each model. The values in bold represent the minimum BIC value by exchange rate distribution and Markov Transition model.}
-		\item{\footnotesize $^{1}$ The researcher does not need to provide the number of regimes to the Sequential Break Point model.}
-	\end{tablenotes}
-	\label{tbl:BIC_model_comparison}
+	\begin{threeparttable}
+		\caption{BIC Values for Estimated Copula Models}	\label{tbl:BIC_model_comparison}
+		\begin{tabular}[c]{l c r r r | r r r | r r r}
+			\midrule
+						&        & \multicolumn{3}{c}{Markov Transition} & \multicolumn{3}{c}{Smooth Trans.} & \multicolumn{3}{c}{Seq. Break$^{1}$} \\
+			\midrule
+			Rate& Regime & tCop & Sym. G & Sym. C & tCop & Sym. G & Sym. C & tCop & Sym. G & Sym. C \\
+			\midrule
+			Euro-Pound  & 1 &          -2634.1 & -2643.2 & -2556.0 &          -2634.1 & -2643.2 & -2556.0 &           -2634.1 & -2643.2 &  -2556.0  \\		
+						& 2 & \textbf{-2750.0} & -2727.7 & -2626.5 &          -2681.3 & -2672.5 & -2590.1 &                -- &      -- &  --       \\
+						& 3 &          -2719.2 & -2676.0 & -2565.1 &          -2671.9 & -2654.3 & -2566.1 &                -- &      -- &  --       \\
+						& 4 &          -2643.2 & -2593.0 & -2507.5 & \textbf{-2712.0} & -2699.8 & -2601.0 &  \textbf{-2748.1} & -2710.6 &  -2618.8  \\ \\
+			Euro-Yen    & 1 &           -713.5 &  -682.8 &  -638.7 &           -713.5 &  -682.8 &  -638.7 &            -713.5 &  -682.8 &   -638.7  \\
+						& 2 &  \textbf{-939.8} &  -892.6 &  -868.5 &           -714.0 &  -686.3 &  -639.3 &                -- &      -- &  --       \\
+						& 3 &           -880.6 &  -825.3 &  -801.1 &           -772.5 &  -733.3 &  -701.4 &                -- &      -- &  --       \\
+						& 4 &           -805.5 &  -762.8 &  -743.2 &  \textbf{-853.8} &  -819.0 &  -781.9 &   \textbf{-840.6} &  -780.8 &   -746.4  \\ \\
+			Pound-Yen   & 1 &           -365.1 &  -309.4 &  -273.5 &           -365.1 &  -309.4 &  -273.5 &            -365.1 &  -309.4 &   -273.4  \\
+						& 2 &  \textbf{-496.9} &  -424.1 &  -407.7 &           -416.0 &  -341.7 &  -312.8 &                -- &      -- &  --       \\
+						& 3 &           -470.2 &  -366.0 &  -365.6 &  \textbf{-481.5} &  -347.9 &  -325.5 &                -- &      -- &  --       \\
+						& 4 &           -406.8 &  -274.2 &  -298.5 &           -473.2 &  -397.1 &  -447.3 &   \textbf{-511.1} &  -418.0 &   -387.5  \\
+			\hline
+		\end{tabular}
+		\begin{tablenotes}
+			\item{This table records the Bayesian information criterion (BIC) for each model. The values in bold represent the minimum BIC value by exchange rate distribution and Markov Transition model.}
+			\item{$^{1}$ The researcher does not need to provide the number of regimes to the Sequential Break Point model.}
+		\end{tablenotes}
+	\end{threeparttable}
 \end{table}
 
 
 \begin{table}
 	\centering
-	\caption{Estimated Dependence Measures from Fitted Models}
-	\begin{tabular}[c]{l c r r r | r r r | r r r}
-		\midrule
-		         &        & \multicolumn{3}{c}{\underline{Markov Transition}} & \multicolumn{3}{c}{\underline{Smooth Transition}} & \multicolumn{3}{c}{\underline{Seq. Break Point}} \\
-		Currency & Regime & $\tau$ & LTD & UTD & $\tau$ & LTD & UTD & $\tau$ & LTD & UTD \\
-		\midrule
-		Euro-Pound  & 1 &  0.558 & 0.255 & 0.255 &  0.155 & 0.004 & 0.004 &  0.381 & 0.111 & 0.111 \\
-					& 2 &  0.368 & 0.059 & 0.059 &  0.972 & 0.972 & 0.972 &  0.527 & 0.226 & 0.226 \\
-					& 3 &     -- &    -- &    -- &  0.529 & 0.154 & 0.154 &  0.621 & 0.524 & 0.524 \\
-					& 4 &     -- &    -- &    -- &  0.385 & 0.072 & 0.072 &  0.412 & 0.099 & 0.099 \\ \\
-		Euro-Yen    & 1 & -0.017 & 0.021 & 0.021 & -0.039 & 0.000 & 0.000 & -0.004 & 0.000 & 0.000 \\
-					& 2 &  0.378 & 0.078 & 0.078 &  0.393 & 0.076 & 0.076 &  0.320 & 0.089 & 0.089 \\
-					& 3 &     -- &    -- &    -- &  0.073 & 0.075 & 0.075 &  0.453 & 0.002 & 0.002 \\
-					& 4 &     -- &    -- &    -- &  0.310 & 0.186 & 0.186 &  0.180 & 0.139 & 0.139 \\ \\
-		Pound-Yen   & 1 &  0.030 & 0.041 & 0.041 &  0.102 & 0.023 & 0.023 &  0.020 & 0.004 & 0.004 \\
-		            & 2 &  0.376 & 0.015 & 0.015 & -0.584 & 0.014 & 0.014 &  0.258 & 0.069 & 0.069 \\
-		            & 3 &     -- &    -- &    -- &  0.183 & 0.084 & 0.084 &  0.439 & 0.002 & 0.002 \\
-		            & 4 &     -- &    -- &    -- &     -- &    -- &    -- &  0.073 & 0.071 & 0.071 \\
-		\hline
-	\end{tabular}
-	\begin{tablenotes}
-		\item{\footnotesize This table summarizes the changes of tail dependency and Kendall's $\tau$ as estimated from the Markov Transition, Smooth Transition, and Sequential Breakpoint models. The values of Kendall's $\tau$ and tail dependence come from the models that minimize the BIC value. This is recorded in Table 4.}
-	\end{tablenotes}
-	\label{tbl:dependence_measure_summary}
+	\begin{threeparttable}
+		\caption{Estimated Dependence Measures from Fitted Models}	\label{tbl:dependence_measure_summary}
+		\begin{tabular}[c]{l c r r r | r r r | r r r}
+			\midrule
+					 &        & \multicolumn{3}{c}{\underline{Markov Transition}} & \multicolumn{3}{c}{\underline{Smooth Transition}} & \multicolumn{3}{c}{\underline{Seq. Break Point}} \\
+			Currency & Regime & $\tau$ & LTD & UTD & $\tau$ & LTD & UTD & $\tau$ & LTD & UTD \\
+			\midrule
+			Euro-Pound  & 1 &  0.558 & 0.255 & 0.255 &  0.155 & 0.004 & 0.004 &  0.381 & 0.111 & 0.111 \\
+						& 2 &  0.368 & 0.059 & 0.059 &  0.972 & 0.972 & 0.972 &  0.527 & 0.226 & 0.226 \\
+						& 3 &     -- &    -- &    -- &  0.529 & 0.154 & 0.154 &  0.621 & 0.524 & 0.524 \\
+						& 4 &     -- &    -- &    -- &  0.385 & 0.072 & 0.072 &  0.412 & 0.099 & 0.099 \\ \\
+			Euro-Yen    & 1 & -0.017 & 0.021 & 0.021 & -0.039 & 0.000 & 0.000 & -0.004 & 0.000 & 0.000 \\
+						& 2 &  0.378 & 0.078 & 0.078 &  0.393 & 0.076 & 0.076 &  0.320 & 0.089 & 0.089 \\
+						& 3 &     -- &    -- &    -- &  0.073 & 0.075 & 0.075 &  0.453 & 0.002 & 0.002 \\
+						& 4 &     -- &    -- &    -- &  0.310 & 0.186 & 0.186 &  0.180 & 0.139 & 0.139 \\ \\
+			Pound-Yen   & 1 &  0.030 & 0.041 & 0.041 &  0.102 & 0.023 & 0.023 &  0.020 & 0.004 & 0.004 \\
+						& 2 &  0.376 & 0.015 & 0.015 & -0.584 & 0.014 & 0.014 &  0.258 & 0.069 & 0.069 \\
+						& 3 &     -- &    -- &    -- &  0.183 & 0.084 & 0.084 &  0.439 & 0.002 & 0.002 \\
+						& 4 &     -- &    -- &    -- &     -- &    -- &    -- &  0.073 & 0.071 & 0.071 \\
+			\hline
+		\end{tabular}
+		\begin{tablenotes}
+			\item{\footnotesize This table summarizes the changes of tail dependency and Kendall's $\tau$ as estimated from the Markov Transition, Smooth Transition, and Sequential Breakpoint models. The values of Kendall's $\tau$ and tail dependence come from the models that minimize the BIC value. This is recorded in Table 4.}
+		\end{tablenotes}
+	\end{threeparttable}
 \end{table}
 
 \end{landscape}
@@ -750,147 +697,146 @@ The utility of using these tools in conjunction with each other was demonstrated
 
 \begin{table}
 	\centering
-	\caption{Dates of Regime Change: Euro-Pound}
-	\begin{tabular}[c]{r r | r r | r r}
-		\midrule
-		\multicolumn{2}{c}{Markov Transition} & \multicolumn{2}{c}{Smooth Trans.} & \multicolumn{2}{c}{Seq. Break} \\
-		\midrule
-		Date & Regime & Date & Regime & Date & Regime \\
-		\midrule
-		2000-01-04 &  1 & 2000-01-04 &  1 & 2000-01-04 &  1 \\
-		2000-02-03 &  2 &         -- &  1 &         -- &  1 \\
-		        -- &  2 & 2000-12-06 &  2 &         -- &  1 \\
-		2001-08-16 &  1 &         -- &  2 &         -- &  1 \\
-		        -- &  1 &         -- &  2 & 2001-10-11 &  2 \\
-		2003-01-30 &  2 &         -- &  2 &         -- &  2 \\
-		2003-10-17 &  1 &         -- &  2 &         -- &  2 \\
-		        -- &  1 &         -- &  2 & 2004-12-29 &  3 \\
-				-- &  1 & 2007-04-17 &  3 &         -- &  3 \\
-		        -- &  1 &         -- &  3 & 2007-07-13 &  4 \\				
-		2007-09-11 &  2 &         -- &  3 &         -- &  4 \\
-		2008-06-12 &  1 &         -- &  3 &         -- &  4 \\
-		2008-11-11 &  2 &         -- &  3 &         -- &  4 \\
-		2009-03-25 &  1 &         -- &  3 &         -- &  4 \\
-		2009-08-26 &  2 &         -- &  3 &         -- &  4 \\
-		2011-06-09 &  1 &         -- &  3 &         -- &  4 \\
-		2012-12-31 &  2 &         -- &  3 &         -- &  4 \\
-		        -- &  2 & 2013-01-08 &  4 &         -- &  4 \\
-		2017-12-13 &  1 &         -- &  4 &         -- &  4 \\
-		\hline
-	\end{tabular}
-	\begin{tablenotes}
-		\item{\footnotesize This table records the dates of regime switching as indicated by each model. The Sequential Break Point model returns the day of each regime explicitly. For the Smooth Transition model the date implied by parameter $c$ from equation (\ref{eqn:smoothTrans}) is reported. For the Markov Transition model, the reported regime switching dates are the days the implied state probability of equation (\ref{eqn:Kim_smooth_probability}) crosses the 0.5 value in either direction.}
-	\end{tablenotes}
-	\label{tbl:regime_changes_euro_pound}
+	\begin{threeparttable}
+		\caption{Dates of Regime Change: Euro-Pound}	\label{tbl:regime_changes_euro_pound}
+		\begin{tabular}[c]{r r | r r | r r}
+			\midrule
+			\multicolumn{2}{c}{Markov Transition} & \multicolumn{2}{c}{Smooth Trans.} & \multicolumn{2}{c}{Seq. Break} \\
+			\midrule
+			Date & Regime & Date & Regime & Date & Regime \\
+			\midrule
+			2000-01-04 &  1 & 2000-01-04 &  1 & 2000-01-04 &  1 \\
+			2000-02-03 &  2 &         -- &  1 &         -- &  1 \\
+					-- &  2 & 2000-12-06 &  2 &         -- &  1 \\
+			2001-08-16 &  1 &         -- &  2 &         -- &  1 \\
+					-- &  1 &         -- &  2 & 2001-10-11 &  2 \\
+			2003-01-30 &  2 &         -- &  2 &         -- &  2 \\
+			2003-10-17 &  1 &         -- &  2 &         -- &  2 \\
+					-- &  1 &         -- &  2 & 2004-12-29 &  3 \\
+					-- &  1 & 2007-04-17 &  3 &         -- &  3 \\
+					-- &  1 &         -- &  3 & 2007-07-13 &  4 \\				
+			2007-09-11 &  2 &         -- &  3 &         -- &  4 \\
+			2008-06-12 &  1 &         -- &  3 &         -- &  4 \\
+			2008-11-11 &  2 &         -- &  3 &         -- &  4 \\
+			2009-03-25 &  1 &         -- &  3 &         -- &  4 \\
+			2009-08-26 &  2 &         -- &  3 &         -- &  4 \\
+			2011-06-09 &  1 &         -- &  3 &         -- &  4 \\
+			2012-12-31 &  2 &         -- &  3 &         -- &  4 \\
+					-- &  2 & 2013-01-08 &  4 &         -- &  4 \\
+			2017-12-13 &  1 &         -- &  4 &         -- &  4 \\
+			\hline
+		\end{tabular}
+		\begin{tablenotes}
+			\item{\footnotesize This table records the dates of regime switching as indicated by each model. The Sequential Break Point model returns the day of each regime explicitly. For the Smooth Transition model the date implied by parameter $c$ from equation (\ref{eqn:smoothTrans}) is reported. For the Markov Transition model, the reported regime switching dates are the days the implied state probability of equation (\ref{eqn:Kim_smooth_probability}) crosses the 0.5 value in either direction.}
+		\end{tablenotes}
+	\end{threeparttable}
 \end{table}
 
 
 \begin{table}
 	\centering
-	\caption{Dates of Regime Change: Euro-Yen}
-	\begin{tabular}[c]{r r | r r | r r}
-		\midrule
-		\multicolumn{2}{c}{Markov Transition} & \multicolumn{2}{c}{Smooth Trans.} & \multicolumn{2}{c}{Seq. Break} \\
-		\midrule
-		Date & Regime & Date & Regime & Date & Regime \\
-		\midrule
-		2000-01-04 &  1 & 2000-01-04 &  1 & 2000-01-04 &  1 \\
-		        -- &  1 &         -- &  1 & 2001-03-02 &  2 \\
-		2001-06-11 &  2 &         -- &  1 &         -- &  2 \\
-		        -- &  2 & 2001-07-03 &  2 &         -- &  2 \\
-		2001-12-12 &  1 &         -- &  2 &         -- &  2 \\
-		2002-02-20 &  2 &         -- &  2 &         -- &  2 \\
-		2003-08-01 &  1 &         -- &  2 &         -- &  2 \\
-		2003-09-19 &  2 &         -- &  2 &         -- &  2 \\
-		        -- &  2 &         -- &  2 & 2004-07-02 &  3 \\
-				-- &  2 &         -- &  2 & 2007-01-03 &  4 \\
-				-- &  2 & 2007-02-23 &  3 &         -- &  4 \\
-		2007-05-29 &  1 &         -- &  3 &         -- &  4 \\
-		2008-02-13 &  2 &         -- &  3 &         -- &  4 \\
-		2008-08-13 &  1 &         -- &  3 &         -- &  4 \\
-		2009-06-04 &  2 &         -- &  3 &         -- &  4 \\
-		2009-06-10 &  1 &         -- &  3 &         -- &  4 \\
-		2009-09-08 &  2 &         -- &  3 &         -- &  4 \\
-		2009-10-12 &  1 &         -- &  3 &         -- &  4 \\
-		2009-12-10 &  2 &         -- &  3 &         -- &  4 \\
-		2010-01-15 &  1 &         -- &  3 &         -- &  4 \\
-		2010-07-19 &  2 &         -- &  3 &         -- &  4 \\
-		2010-08-27 &  1 &         -- &  3 &         -- &  4 \\
-		2010-09-07 &  2 &         -- &  3 &         -- &  4 \\
-		2011-03-09 &  1 &         -- &  3 &         -- &  4 \\
-		2011-10-20 &  2 &         -- &  3 &         -- &  4 \\
-		2012-01-27 &  1 &         -- &  3 &         -- &  4 \\
-		        -- &  1 & 2013-04-26 &  4 &         -- &  4 \\
-		2013-04-30 &  2 &         -- &  4 &         -- &  4 \\
-		2013-11-08 &  1 &         -- &  4 &         -- &  4 \\
-		2014-03-18 &  2 &         -- &  4 &         -- &  4 \\
-		2016-06-08 &  1 &         -- &  4 &         -- &  4 \\
-		2016-07-18 &  2 &         -- &  4 &         -- &  4 \\
-		2017-04-18 &  1 &         -- &  4 &         -- &  4 \\
-		2017-05-05 &  2 &         -- &  4 &         -- &  4 \\
-		2018-05-16 &  1 &         -- &  4 &         -- &  4 \\
-		\hline
-	\end{tabular}
-	\begin{tablenotes}
-		\item{\footnotesize This table records the dates of regime switching as indicated by each model. The Sequential Break Point model returns the day of each regime explicitly. For the Smooth Transition model the date implied by parameter $c$ from equation (\ref{eqn:smoothTrans}) is reported. For the Markov Transition model, the reported regime switching dates are the days the implied state probability of equation (\ref{eqn:Kim_smooth_probability}) crosses the 0.5 value in either direction.}
-	\end{tablenotes}
-	\label{tbl:regime_changes_euro_yen}
+	\begin{threeparttable}
+		\caption{Dates of Regime Change: Euro-Yen}	\label{tbl:regime_changes_euro_yen}
+		\begin{tabular}[c]{r r | r r | r r}
+			\midrule
+			\multicolumn{2}{c}{Markov Transition} & \multicolumn{2}{c}{Smooth Trans.} & \multicolumn{2}{c}{Seq. Break} \\
+			\midrule
+			Date & Regime & Date & Regime & Date & Regime \\
+			\midrule
+			2000-01-04 &  1 & 2000-01-04 &  1 & 2000-01-04 &  1 \\
+					-- &  1 &         -- &  1 & 2001-03-02 &  2 \\
+			2001-06-11 &  2 &         -- &  1 &         -- &  2 \\
+					-- &  2 & 2001-07-03 &  2 &         -- &  2 \\
+			2001-12-12 &  1 &         -- &  2 &         -- &  2 \\
+			2002-02-20 &  2 &         -- &  2 &         -- &  2 \\
+			2003-08-01 &  1 &         -- &  2 &         -- &  2 \\
+			2003-09-19 &  2 &         -- &  2 &         -- &  2 \\
+					-- &  2 &         -- &  2 & 2004-07-02 &  3 \\
+					-- &  2 &         -- &  2 & 2007-01-03 &  4 \\
+					-- &  2 & 2007-02-23 &  3 &         -- &  4 \\
+			2007-05-29 &  1 &         -- &  3 &         -- &  4 \\
+			2008-02-13 &  2 &         -- &  3 &         -- &  4 \\
+			2008-08-13 &  1 &         -- &  3 &         -- &  4 \\
+			2009-06-04 &  2 &         -- &  3 &         -- &  4 \\
+			2009-06-10 &  1 &         -- &  3 &         -- &  4 \\
+			2009-09-08 &  2 &         -- &  3 &         -- &  4 \\
+			2009-10-12 &  1 &         -- &  3 &         -- &  4 \\
+			2009-12-10 &  2 &         -- &  3 &         -- &  4 \\
+			2010-01-15 &  1 &         -- &  3 &         -- &  4 \\
+			2010-07-19 &  2 &         -- &  3 &         -- &  4 \\
+			2010-08-27 &  1 &         -- &  3 &         -- &  4 \\
+			2010-09-07 &  2 &         -- &  3 &         -- &  4 \\
+			2011-03-09 &  1 &         -- &  3 &         -- &  4 \\
+			2011-10-20 &  2 &         -- &  3 &         -- &  4 \\
+			2012-01-27 &  1 &         -- &  3 &         -- &  4 \\
+					-- &  1 & 2013-04-26 &  4 &         -- &  4 \\
+			2013-04-30 &  2 &         -- &  4 &         -- &  4 \\
+			2013-11-08 &  1 &         -- &  4 &         -- &  4 \\
+			2014-03-18 &  2 &         -- &  4 &         -- &  4 \\
+			2016-06-08 &  1 &         -- &  4 &         -- &  4 \\
+			2016-07-18 &  2 &         -- &  4 &         -- &  4 \\
+			2017-04-18 &  1 &         -- &  4 &         -- &  4 \\
+			2017-05-05 &  2 &         -- &  4 &         -- &  4 \\
+			2018-05-16 &  1 &         -- &  4 &         -- &  4 \\
+			\hline
+		\end{tabular}
+		\begin{tablenotes}
+			\item{\footnotesize This table records the dates of regime switching as indicated by each model. The Sequential Break Point model returns the day of each regime explicitly. For the Smooth Transition model the date implied by parameter $c$ from equation (\ref{eqn:smoothTrans}) is reported. For the Markov Transition model, the reported regime switching dates are the days the implied state probability of equation (\ref{eqn:Kim_smooth_probability}) crosses the 0.5 value in either direction.}
+		\end{tablenotes}
+	\end{threeparttable}
 \end{table}
 
 
 \begin{table}
 	\centering
-	\caption{Dates of Regime Change: Pound-Yen}
-	\begin{tabular}[c]{r r | r r | r r}
-		\midrule
-		\multicolumn{2}{c}{Markov Transition} & \multicolumn{2}{c}{Smooth Trans.} & \multicolumn{2}{c}{Seq. Break} \\
-		\midrule
-		Date & Regime & Date & Regime & Date & Regime \\
-		\midrule
-		2000-01-04 &  1 & 2000-01-04 &  1 & 2000-01-04 &  1 \\
-		        -- &  1 &         -- &  1 & 2001-06-21 &  2 \\
-		2001-10-11 &  2 &         -- &  1 &         -- &  2 \\
-		2001-12-04 &  1 &         -- &  1 &         -- &  2 \\
-		2002-04-09 &  2 &         -- &  1 &         -- &  2 \\
-		2003-02-12 &  1 &         -- &  1 &         -- &  2 \\
-		2003-03-24 &  2 &         -- &  1 &         -- &  2 \\
-		2003-04-25 &  1 &         -- &  1 &         -- &  2 \\
-		2004-02-12 &  2 &         -- &  1 &         -- &  2 \\
-		        -- &  2 &         -- &  1 & 2004-04-06 &  3 \\
-		2006-12-22 &  1 &         -- &  1 &         -- &  3 \\
-		        -- &  1 &         -- &  1 & 2007-01-03 &  4 \\
-		        -- &  1 & 2007-01-08 &  2 &         -- &  4 \\
-				-- &  1 & 2007-01-09 &  3 &         -- &  4 \\
-		2007-04-30 &  2 &         -- &  3 &         -- &  4 \\
-		2007-05-23 &  1 &         -- &  3 &         -- &  4 \\
-		2008-06-10 &  2 &         -- &  3 &         -- &  4 \\
-		2008-07-23 &  1 &         -- &  3 &         -- &  4 \\
-		2010-10-04 &  2 &         -- &  3 &         -- &  4 \\
-		2011-01-20 &  1 &         -- &  3 &         -- &  4 \\
-		2011-11-22 &  2 &         -- &  3 &         -- &  4 \\
-		2012-01-13 &  1 &         -- &  3 &         -- &  4 \\
-		2013-04-29 &  2 &         -- &  3 &         -- &  4 \\
-		2013-09-02 &  1 &         -- &  3 &         -- &  4 \\
-		2013-09-04 &  2 &         -- &  3 &         -- &  4 \\
-		2013-11-08 &  1 &         -- &  3 &         -- &  4 \\
-		2014-10-27 &  2 &         -- &  3 &         -- &  4 \\
-		2015-01-19 &  1 &         -- &  3 &         -- &  4 \\
-		2015-02-09 &  2 &         -- &  3 &         -- &  4 \\
-		2015-06-30 &  1 &         -- &  3 &         -- &  4 \\
-		2015-09-24 &  2 &         -- &  3 &         -- &  4 \\
-		2015-12-14 &  1 &         -- &  3 &         -- &  4 \\
-		2016-12-23 &  2 &         -- &  3 &         -- &  4 \\
-		2017-03-30 &  1 &         -- &  3 &         -- &  4 \\
-		\hline
-	\end{tabular}
-	\begin{tablenotes}
-		\item{\footnotesize This table records the dates of regime switching as indicated by each model. The Sequential Break Point model returns the day of each regime explicitly. For the Smooth Transition model the date implied by parameter $c$ from equation (\ref{eqn:smoothTrans}) is reported. For the Markov Transition model, the reported regime switching dates are the days the implied state probability of equation (\ref{eqn:Kim_smooth_probability}) crosses the 0.5 value in either direction.}
-	\end{tablenotes}
-	\label{tbl:regime_changes_pound_yen}
+	\begin{threeparttable}
+		\caption{Dates of Regime Change: Pound-Yen}	\label{tbl:regime_changes_pound_yen}
+		\begin{tabular}[c]{r r | r r | r r}
+			\midrule
+			\multicolumn{2}{c}{Markov Transition} & \multicolumn{2}{c}{Smooth Trans.} & \multicolumn{2}{c}{Seq. Break} \\
+			\midrule
+			Date & Regime & Date & Regime & Date & Regime \\
+			\midrule
+			2000-01-04 &  1 & 2000-01-04 &  1 & 2000-01-04 &  1 \\
+					-- &  1 &         -- &  1 & 2001-06-21 &  2 \\
+			2001-10-11 &  2 &         -- &  1 &         -- &  2 \\
+			2001-12-04 &  1 &         -- &  1 &         -- &  2 \\
+			2002-04-09 &  2 &         -- &  1 &         -- &  2 \\
+			2003-02-12 &  1 &         -- &  1 &         -- &  2 \\
+			2003-03-24 &  2 &         -- &  1 &         -- &  2 \\
+			2003-04-25 &  1 &         -- &  1 &         -- &  2 \\
+			2004-02-12 &  2 &         -- &  1 &         -- &  2 \\
+					-- &  2 &         -- &  1 & 2004-04-06 &  3 \\
+			2006-12-22 &  1 &         -- &  1 &         -- &  3 \\
+					-- &  1 &         -- &  1 & 2007-01-03 &  4 \\
+					-- &  1 & 2007-01-08 &  2 &         -- &  4 \\
+					-- &  1 & 2007-01-09 &  3 &         -- &  4 \\
+			2007-04-30 &  2 &         -- &  3 &         -- &  4 \\
+			2007-05-23 &  1 &         -- &  3 &         -- &  4 \\
+			2008-06-10 &  2 &         -- &  3 &         -- &  4 \\
+			2008-07-23 &  1 &         -- &  3 &         -- &  4 \\
+			2010-10-04 &  2 &         -- &  3 &         -- &  4 \\
+			2011-01-20 &  1 &         -- &  3 &         -- &  4 \\
+			2011-11-22 &  2 &         -- &  3 &         -- &  4 \\
+			2012-01-13 &  1 &         -- &  3 &         -- &  4 \\
+			2013-04-29 &  2 &         -- &  3 &         -- &  4 \\
+			2013-09-02 &  1 &         -- &  3 &         -- &  4 \\
+			2013-09-04 &  2 &         -- &  3 &         -- &  4 \\
+			2013-11-08 &  1 &         -- &  3 &         -- &  4 \\
+			2014-10-27 &  2 &         -- &  3 &         -- &  4 \\
+			2015-01-19 &  1 &         -- &  3 &         -- &  4 \\
+			2015-02-09 &  2 &         -- &  3 &         -- &  4 \\
+			2015-06-30 &  1 &         -- &  3 &         -- &  4 \\
+			2015-09-24 &  2 &         -- &  3 &         -- &  4 \\
+			2015-12-14 &  1 &         -- &  3 &         -- &  4 \\
+			2016-12-23 &  2 &         -- &  3 &         -- &  4 \\
+			2017-03-30 &  1 &         -- &  3 &         -- &  4 \\
+			\hline
+		\end{tabular}
+		\begin{tablenotes}
+			\item{\footnotesize This table records the dates of regime switching as indicated by each model. The Sequential Break Point model returns the day of each regime explicitly. For the Smooth Transition model the date implied by parameter $c$ from equation (\ref{eqn:smoothTrans}) is reported. For the Markov Transition model, the reported regime switching dates are the days the implied state probability of equation (\ref{eqn:Kim_smooth_probability}) crosses the 0.5 value in either direction.}
+		\end{tablenotes}
+	\end{threeparttable}
 \end{table}
 
 \clearpage
-
-\printbibliography
-
-\end{document}

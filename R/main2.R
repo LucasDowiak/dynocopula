@@ -10,6 +10,7 @@ source("R/normality_tests.R")
 
 # DTU is the data.frame that contains the iid uniform marginals
 files_ <- list.files("./data/model_objects/")
+files_ <- files_[-5]
 collect_u <- vector("list", length(files_)); names(collect_u) <- files_
 collect_e <- collect_u
 for (f_ in files_) {
@@ -272,9 +273,6 @@ prep_tcop_values <- function(obj)
   return(data.frame(ktau=ktaus, tdep=tdeps))
 }
 
-
-# ----------------------------------------------------
-
 f1 <- c("BPfit_euro_sterling_tcop_00_18.RDS",
         "BPfit_euro_yen_tcop_00_18.RDS",
         "BPfit_sterling_yen_tcop_00_18.RDS",
@@ -302,9 +300,8 @@ dtfPlot <- rbindlist(collect)
 dtfPlot[, pair := factor(pair)]
 dtfPlot[, model := factor(model)]
 
-library(ggplot2)
-
-
+# Plots
+# ---
 par(mfrow=c(2, 1), mar=c(3, 3, 3, 2) + 0.1)
 kylim <- c(-0.2, 0.7)
 tylim <- c(-0.05, 0.6)
@@ -389,5 +386,17 @@ legend("topright", legend = c("Euro-Pound", "Euro-Yen", "Pound-Yen"),
 
 
 
+# Rolling Kendall' Tau
+# ------------------------------------------------------------------------------
+taus <- c()
+w <- 60
+for (rr in (w + 1):(nrow(dtfU) - w)) {
+  tau <- dtfU[rr:(rr + w - 1), cor(sterling, yen, method="kendall")]
+  taus <- c(taus, tau)
+}
 
 
+
+
+
+# ------------------------------------------------------------------------------

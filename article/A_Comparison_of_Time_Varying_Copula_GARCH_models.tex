@@ -289,7 +289,7 @@ A brief survey of various time-varying copulas in the literature is provided by 
 
 \subsection{Sequential Break Point Analysis}
 
-This first method we use to introduce time-varying dependence is the most simple. \cite{Dias_and_Embrechts_2004} and \cite{Dias_and_Embrechts_2009} outline a framework to detect structural breaks in the parameters of a copula over time. We employ that framework here. Consider the random vectors $\left(\boldsymbol{u}, \boldsymbol{w}\right)$ created by the PIT from our marginal models where $u_{t}\equiv F_{X}\left(x_{t}|Z\right)$ and $w_{t}\equiv F_{Y}\left(y_{t} | Z\right)$. The dependence at each date can be modeled by a copula $C\left(u_{t}, v_{t};~\boldsymbol{\theta}_{t}\right)$ with parameter vector $\boldsymbol{\theta}_{t}=(\theta_{1,t},...,\theta_{N,t})$. The vector $\boldsymbol{\theta}_{t}$ should contain the weights $\pi _{i,t}$ for any mixture copula described in Section \ref{sec:mixtureCopula}. The idea is to test the null hypothesis of an absence of any structural break in the copula parameters
+This first method we use to introduce time-varying dependence is the most simple. \cite{Dias_and_Embrechts_2004} and \cite{Dias_and_Embrechts_2009} outline a framework to detect structural breaks in the parameters of a copula over time. That framework is employed here. Consider the random vectors $\left(\boldsymbol{u}, \boldsymbol{w}\right)$ created by the PIT from the marginal models where $u_{t}\equiv F_{X}\left(x_{t}|Z\right)$ and $u_{t}\equiv F_{Y}\left(y_{t} | Z\right)$. The dependence at each date can be modeled by a copula $C\left(u_{t}, v_{t};~\boldsymbol{\theta}_{t}\right)$ with parameter vector $\boldsymbol{\theta}_{t}=(\theta_{1,t},...,\theta_{N,t})$. The vector $\boldsymbol{\theta}_{t}$ should contain the weights $\pi _{i,t}$ for any mixture copula described in Section \ref{sec:mixtureCopula}. The idea is to test the null hypothesis of an absence of any structural break in the copula parameters
 
 \begin{equation}
 	H_{0}:\boldsymbol{\theta}_{t} = \boldsymbol{\theta}
@@ -357,14 +357,14 @@ For each of the $k$ possible states, a copula is used to model the dependence fo
 \end{array}
 \right] = \left[
 \begin{array}{c}
-c_{1}\left(F_{X}\left(x_{t} | Z\right), F_{Y}\left(y_{t} | Z\right) ;\mathbf{\theta}_{1}\right) \\ 
+c\left(F_{X}\left(x_{t} | \boldsymbol{z}_{t}\right), F_{Y}\left(y_{t} | \boldsymbol{z}_{t}\right) | \boldsymbol{z}_{t} ;\mathbf{\theta}_{1}\right) \\ 
 \vdots \\ 
-c_{k}\left(F_{X}\left(x_{t} | Z\right), F_{Y}\left(y_{t} | Z\right) ;\mathbf{\theta }_{k}\right)
+c\left(F_{X}\left(x_{t} | \boldsymbol{z}_{t}\right), F_{Y}\left(y_{t} | \boldsymbol{z}_{t}\right) | \boldsymbol{z}_{t} ;\mathbf{\theta }_{k}\right)
 \end{array}
 \right]
 \end{equation}
 
-Since we can not know for sure which state the process is in at any given date, inference must be made using all the information available at that time. At each date, we assign a probability that the dependence governing the exchange rate returns comes from a state $P\left[s_{t}=j~|~x_{t},x_{t-1},...,y_{t},y_{t-1},...,\mathbf{\theta}_{1},...,\mathbf{\theta}_{k}\right]$. These conditional probabilities are collected into another $k\times 1$ vector denoted $\boldXi_{t|t}$. Given a set of initial probabilities $\boldXi_{1|0}$, optimal inferences are found by iterating on the following equations:
+Since the current state of the process is unknown at any given date, inference must be made. At each date, the probability that the dependence governing the exchange rate returns comes from state $j$ is defined as $P\left[s_{t}=j~|~x_{t},x_{t-1},...,y_{t},y_{t-1},...,\mathbf{\theta}_{1},...,\mathbf{\theta}_{k}\right]$. These conditional probabilities are collected into another $k\times 1$ vector denoted $\boldXi_{t|t}$. Given a set of initial probabilities $\boldXi_{1|0}$, optimal inferences are found by iterating on the following equations:
 
 \begin{eqnarray}
 	\boldXi_{t|t} &=& \frac{\boldXi_{t|t-1}\odot\boldsymbol{\eta}_{t}}{\mathbf{1}^{\top}\left(\boldXi_{t|t-1}\odot \boldsymbol{\eta}_{t}\right)} \\
@@ -486,7 +486,7 @@ In \cite{Fisher_Gallagher_2012}, the authors also provide a test for the correct
 
 Here, $b$ is the ARCH order from equation (\ref{eq:gjrGARCH_definition}). Under the null hypothesis of a correctly specified model, the statistic $L_{W}(b,m)$ is asymptotically distributed as $\sum_{k=1}^{m} w_{k} \chi_{k}^{2}$ where $\chi_{k}^{2}$ are independent chi-squared random variables with one degree of freedom and weight term equal to $(m - j + b + 1) / m$.
 
-To verify the choice of the conditional distribution, $g$, a Pearson's Goodness-of-Fit Test is used to compare the histograms of the standard residuals and the theoretical distribution. The test is run multiple times with different number of bins.
+To verify the choice of the conditional distribution, $g$, the Goodness-of-Fit test from \cite{VlaadPalm1993} is used to compare the histograms of the standard residuals after they are transformed into their unit interval equivalents. The unit interval is broken into $b$ equal width bins and the empirical frequency of the resulting histogram is checked against the theoretical expectation. The test statistic is distrbuted as $\chi^{2}_{(b-1)}$.
 
 The fourth diagnostic check reported here checks for the presence of any asymmetric effects remaining in the fitted residuals. The Joint Sign-Bias Test of \cite{Engle_Ng_1993} is run with the following regression:
 
